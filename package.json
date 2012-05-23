@@ -1,0 +1,35 @@
+{
+	"name": "rest-template",
+	"version": "0.0.1",
+	"description": "HTTP client library inspired by the Spring Framework's RestTemplate",
+	"keywords": ["rest", "http", "client", "rest-template", "spring"],
+	"licenses": [
+		{
+			"type": "MIT",
+			"url": "http://www.opensource.org/licenses/mit-license.php"
+		}
+	],
+	"repositories": [
+		{
+			"type": "git",
+			"url": "https://github.com/scothis/rest"
+		}
+	],
+	"bugs": "https://github.com/scothis/rest/issues",
+	"maintainers": [
+		{
+			"name": "Scott Andrews",
+			"web": "http://twitter.com/scothis"
+		}
+	],
+	"dependencies": {
+		"when": "https://github.com/cujojs/when/tarball/1.1.1"
+	},
+	"devDependencies": {
+		"buster": "~0.5"
+	},
+	"main": "./src/rest",
+	"scripts": {
+		"test": "buster test -e node"
+	}
+}
