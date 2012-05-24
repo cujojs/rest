@@ -1,10 +1,16 @@
 Rest Template
 =============
 
-[![Build Status](https://secure.travis-ci.org/scothis/rest.png?branch=master)](http://travis-ci.org/scothis/rest)
-
-
 ...in progress...
+
+
+Build Status
+------------
+
+<table>
+  <tr><td>Master</td><td><a href="http://travis-ci.org/scothis/rest" target="_blank"><img src="https://secure.travis-ci.org/scothis/rest.png?branch=master" /></a></tr>
+  <tr><td>Development</td><td><a href="http://travis-ci.org/scothis/rest" target="_blank"><img src="https://secure.travis-ci.org/scothis/rest.png?branch=dev" /></a></tr>
+</table>
 
 
 Getting Started
@@ -37,11 +43,13 @@ The core client behavior can be augmented with interceptors.  An interceptor wra
 
 ### Making a basic request: ###
 
-    define(['rest'], function(client) {
-        client({ path: '/' }).then(function(response) {
-            console.log('response: ', response);
-        });
+```javascript
+define(['rest'], function(client) {
+    client({ path: '/' }).then(function(response) {
+        console.log('response: ', response);
     });
+});
+```
 
 In this example, you can see that the request object is very simple, it just includes the path.  All of the attributes of a request are optional.
 
@@ -52,30 +60,34 @@ The response should look familiar as well, it contains all the fields you would 
 
 If you're paying attention, you may have noticed that the response.entity in the previous example is a String.  Often we need to work with more complex data types.  For this, Rest supports a rich set of MIME type conversions with the `mime` interceptor.  The correct converter will automatically be chosen based on the Content-Type response header.  Custom converts can be registered for a MIME type, more on that later...
 
-    define(['rest/interceptor/mime'], function(mime) {
-        var client = mime();
-        client({ path: '/data.json' }).then(function(response) {
-            console.log('response: ', response);
-        });
+```javascript
+define(['rest/interceptor/mime'], function(mime) {
+    var client = mime();
+    client({ path: '/data.json' }).then(function(response) {
+        console.log('response: ', response);
     });
+});
+```
 
 Before an interceptor can be used, it needs to be configured.  In this case, we will accept the default configuration, and obtain a client.  Now when we see the response, the entity will be a JS object instead of a String.
 
 
 ### Composing Interceptors: ###
 
-    define(['rest/interceptor/mime', 'rest/interceptor/errorCode'], function(mime, errorCode) {
-        var client = mime();
-        client = errorCode(client, { code: 500 });
-        client({ path: '/data.json' }).then(
-            function(response) {
-                console.log('response: ', response);
-            },
-            function(response) {
-                console.error('response error: ', response);
-            }
-        );
-    });
+```javascript
+define(['rest/interceptor/mime', 'rest/interceptor/errorCode'], function(mime, errorCode) {
+    var client = mime();
+    client = errorCode(client, { code: 500 });
+    client({ path: '/data.json' }).then(
+        function(response) {
+            console.log('response: ', response);
+        },
+        function(response) {
+            console.error('response error: ', response);
+        }
+    );
+});
+```
 
 In this example, we take the client create by the `mime` interceptor, and wrap it in the `errorCode` interceptor.  The errorCode interceptor can accept a configuration object that indicates what status codes should be considered an error.  In this case we override the default value of <=400, to only reject with 500 or greater status code.
 
@@ -86,20 +98,22 @@ Clients can continue to be composed with interceptors as needed.  At any point t
 
 ### Custom MIME Converters: ###
 
-    define(['rest/mime/registry'], function(registry) {
-       registry.register('application/vnd.com.example', {
-           read: function(str) {
-               var obj = str;
-               // do string to object conversions
-               return obj;
-           },
-           write: function(obj) {
-               var str = obj;
-               // do object to string conversions
-               return str;
-           }
-       });
-    });
+```javascript
+define(['rest/mime/registry'], function(registry) {
+   registry.register('application/vnd.com.example', {
+       read: function(str) {
+           var obj = str;
+           // do string to object conversions
+           return obj;
+       },
+       write: function(obj) {
+           var str = obj;
+           // do object to string conversions
+           return str;
+       }
+   });
+});
+```
 
 Registering a custom converter is a simple as calling the register function on the mime registry with the type and converter.  A converter has just two methods: `read` and `write`.  Read converts a String to a more complex Object.  Write converts an Object back into a String to be sent to the server.  HTTP is fundamentally a text based protocol after all.
 
@@ -142,4 +156,3 @@ Change Log
 ----------
 
 No releases yet, soon
-
