@@ -1,6 +1,7 @@
 (function(define) {
 
 define(['./_base', '../util/base64'], function(base, base64){
+	"use strict";
 
 	/**
 	 * Authenticates the request using HTTP Basic Authentication (rfc2617)

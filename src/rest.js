@@ -2,6 +2,7 @@
 
 // TODO use has! to choose the appropriate client impl
 define(['./rest/client/xhr'], function(client){
+	"use strict";
 
 	/**
 	 * Plain JS Object containing properties that represent an HTTP request

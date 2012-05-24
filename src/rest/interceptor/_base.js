@@ -1,6 +1,7 @@
 (function(define) {
 
 define(['../../rest', 'when'], function(defaultClient, when) {
+	"use strict";
 
 	/**
 	 * Interceptors have the ability to intercept the request and/org response

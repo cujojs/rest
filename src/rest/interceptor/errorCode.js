@@ -1,6 +1,7 @@
 (function(define) {
 
 define(['./_base', 'when'], function(base, when) {
+	"use strict";
 
 	/**
 	 * Rejects the response promise based on the status code.

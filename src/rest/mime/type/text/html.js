@@ -1,6 +1,8 @@
 (function(define) {
 
 define(['../application/html'], function(html) {
+	"use strict";
+
 	return html;
 });
 

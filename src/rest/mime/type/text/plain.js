@@ -1,6 +1,8 @@
 (function(define) {
 
 define([], function(){
+	"use strict";
+
 	return {
 
 		read: function(str) {

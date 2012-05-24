@@ -1,6 +1,7 @@
 (function(define) {
 
 define(['./_base', '../mime/registry', 'when'], function(base, registry, when){
+	"use strict";
 
 	/**
 	 * MIME type support for request and response entities.  Entities are

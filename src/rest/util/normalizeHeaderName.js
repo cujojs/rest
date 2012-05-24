@@ -1,6 +1,7 @@
 (function(define) {
 
 define([], function(){
+	"use strict";
 
 	/**
 	 * Normalize HTTP header names using the pseudo camel case.

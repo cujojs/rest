@@ -7,6 +7,7 @@
  * Converted to AMD
  */
 define([], function(){
+	"use strict";
 
 	var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
@@ -121,7 +122,7 @@ define([], function(){
 	function _utf8_decode(utftext) {
 		var string = "";
 		var i = 0;
-		var c = c1 = c2 = 0;
+		var c = 0, c1 = 0, c2 = 0, c3;
 
 		while ( i < utftext.length ) {
 

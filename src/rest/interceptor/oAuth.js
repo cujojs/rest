@@ -1,6 +1,7 @@
 (function(global, define){
 
 define(['../../rest', 'when', '../UrlBuilder', '../util/pubsub'], function(defaultClient, when, UrlBuilder, pubsub){
+	"use strict";
 
 	function defaultOAuthCallback(hash) {
 		var params, queryString, regex, m;

@@ -1,6 +1,7 @@
 (function(define) {
 
 define([], function() {
+	"use strict";
 
 	// derived from dojo.mixin
 

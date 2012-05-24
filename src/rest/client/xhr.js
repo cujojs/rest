@@ -1,6 +1,7 @@
 (function(XMLHttpRequest, define) {
 
 define(["when", "../UrlBuilder", "../util/normalizeHeaderName"], function(when, UrlBuilder, normalizeHeaderName) {
+	"use strict";
 
 	var headerSplitRE;
 
@@ -50,7 +51,7 @@ define(["when", "../UrlBuilder", "../util/normalizeHeaderName"], function(when, 
 	}
 
 	function xhr(request) {
-		var d, xhr, method, url, headers, entity;
+		var d, xhr, method, url, headers, entity, response;
 
 		d = when.defer();
 		xhr = new XMLHttpRequest();

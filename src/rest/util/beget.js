@@ -1,6 +1,7 @@
 (function(define) {
 
 define(['./mixin'], function(mixin) {
+	"use strict";
 
 	// derived from dojo.delegate
 

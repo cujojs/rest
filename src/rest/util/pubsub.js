@@ -1,6 +1,7 @@
 (function(define) {
 
 define([], function(){
+	"use strict";
 
 	// A poor man's pub-sub.  A single listener is supported per topic.  When
 	// the topic is published, the listener is unsubscribed.

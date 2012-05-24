@@ -1,6 +1,7 @@
 (function(doc, define) {
 
 define(['./util/beget'], function(beget) {
+	"use strict";
 
 	var absoluteUrlRE, urlEncodedBraceOpenRE, urlEncodedBraceCloseRE;
 

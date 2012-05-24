@@ -1,6 +1,7 @@
 (function(define) {
 
 define(['./_base'], function(base) {
+	"use strict";
 
 	/**
 	 * Returns the response entity as the response, discarding other response

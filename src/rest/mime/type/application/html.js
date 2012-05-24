@@ -1,6 +1,8 @@
 (function(define) {
 
 define(['../text/plain'], function(plain) {
+	"use strict";
+
 	//TODO: handle as HTML instead of text/plain
 	return plain;
 });

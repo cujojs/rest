@@ -1,6 +1,7 @@
 (function(define) {
 
 define(['./_base'], function(base) {
+	"use strict";
 
 	function startsWith(str, prefix) {
 		return str.indexOf(prefix) === 0;

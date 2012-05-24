@@ -1,7 +1,8 @@
-(function(define) {
+(function(define, global) {
 
 // include ./type/text/plain and ./type/application/json as hints to a build tool
 define(['when', 'require', './type/text/plain', './type/application/json'], function(when, require) {
+	"use strict";
 
 	var load, registry = {};
 
@@ -58,8 +59,8 @@ define(['when', 'require', './type/text/plain', './type/application/json'], func
 		d = when.defer();
 		name = 'rest_mime_type_' + mime.replace('/', '_');
 
-		if (name in this) {
-			d.resolve(this[name]);
+		if (name in global) {
+			d.resolve(global[name]);
 		}
 		else {
 			d.reject();
@@ -107,6 +108,7 @@ define(['when', 'require', './type/text/plain', './type/application/json'], func
 	: function(deps, factory) { typeof module != 'undefined'
 		? (module.exports = factory.apply(this, deps.map(function(dep){ return dep == 'require' ? require : require(dep); })))
 		: (this.rest_mime_registry = factory(this.when, this.require));
-	}
+	},
+	this
 	// Boilerplate for AMD, Node, and browser global
 );
