@@ -1,6 +1,9 @@
 Rest Template
 =============
 
+[![Build Status](https://secure.travis-ci.org/scothis/rest.png?branch=master,dev)](http://travis-ci.org/scothis/rest)
+
+
 ...in progress...
 
 
