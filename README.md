@@ -1,7 +1,7 @@
 Rest Template
 =============
 
-[![Build Status](https://secure.travis-ci.org/scothis/rest.png?branch=master,dev)](http://travis-ci.org/scothis/rest)
+[![Build Status](https://secure.travis-ci.org/scothis/rest.png?branch=master)](http://travis-ci.org/scothis/rest)
 
 
 ...in progress...
@@ -20,9 +20,9 @@ From source:
 
     $ npm install
 
-Rest is designed to run in a browser environment, utilizing AMD modules, or within Node.js.  [curl](https://github.com/cujojs/curl) is highly recommended as an AMD loader, although any loader should work.
+Rest is designed to run in a browser environment, utilizing [AMD modules](https://github.com/amdjs/amdjs-api/wiki/AMD), or within [Node.js](http://nodejs.org/).  [curl](https://github.com/cujojs/curl) is highly recommended as an AMD loader, although any loader should work.
 
-An ECMAScript 5 compatible environment is assumed.  Older browsers that do not support ES5 natively can be shimmed.  Any shim should work, although we've tested against cujo's [poly](https://github.com/cujojs/poly)
+An ECMAScript 5 compatible environment is assumed.  Older browsers, ::cough:: IE, that do not support ES5 natively can be shimmed.  Any shim should work, although we've tested against cujo's [poly](https://github.com/cujojs/poly)
 
 
 Usage
@@ -117,7 +117,7 @@ Feature requests are also welcome.
 Running the Tests
 -----------------
 
-The test suite can be run in two different modes: in node, or in a browser.  We use Buster.JS as the test harness, buster will be installed by npm for the node tests.  For browser tests, you may need to run `npm install -g buster` to make the buster commands available.
+The test suite can be run in two different modes: in node, or in a browser.  We use [Buster.JS](http://busterjs.org/) as the test driver, buster will be installed by [npm](http://npmjs.org/) for the node tests.  For browser tests, you may need to run `npm install -g buster` to make the buster commands available.
 
 To run the suite in node:
 
@@ -125,12 +125,8 @@ To run the suite in node:
 
 To run the suite in a browser:
 
-    $ buster server &
-    browse to http://localhost:1111/capture in the browser(s) you wish to test, tests can be run concurrently across multiple browsers
-
-    $ buster test -e browser
-
-    kill the server process or keep it in the background for further test runs
+    $ buster static
+    browse to http://localhost:8282/ in the browser(s) you wish to test
 
 
 Thanks
