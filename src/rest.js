@@ -1,6 +1,5 @@
 (function(define) {
 
-// TODO use has! to choose the appropriate client impl
 define(['./rest/client/xhr'], function(client){
 	"use strict";
 
@@ -37,6 +36,10 @@ define(['./rest/client/xhr'], function(client){
 	 *
 	 * @class Client
 	 */
+
+	if (process && process.versions && process.versions.node) {
+		return require('./rest/client/node');
+	}
 
 	return client;
 });

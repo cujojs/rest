@@ -8,30 +8,17 @@ define(["when", "../UrlBuilder", "../util/normalizeHeaderName"], function(when, 
 	// according to the spec, the line break is '\r\n', but doesn't hold true in practice
 	headerSplitRE = /[\r|\n]+/;
 
-	function parseResponse(request, xhr) {
-		var response;
-
-		response = {};
-		response.request = request;
-		response.raw = xhr;
-		response.status = {};
-		response.status.code = xhr.status;
-		response.status.text = xhr.statusText;
-		response.headers = parseHeaders(xhr.getAllResponseHeaders());
-		response.entity = xhr.responseText;
-
-		return response;
-	}
-
 	function parseHeaders(raw) {
 		// Note: Set-Cookie will be removed by the browser
-		if (!raw) { return; }
-		var headers = {}
+		var headers = {};
+
+		if (!raw) { return headers; }
+
 		raw.trim().split(headerSplitRE).forEach(function(header) {
-			var boundry, name, value;
-			boundry = header.indexOf(":");
-			name = normalizeHeaderName(header.substring(0, boundry).trim());
-			value = header.substring(boundry + 1).trim();
+			var boundary, name, value;
+			boundary = header.indexOf(":");
+			name = normalizeHeaderName(header.substring(0, boundary).trim());
+			value = header.substring(boundary + 1).trim();
 			if (headers[name]) {
 				if (Array.isArray(headers[name])) {
 					// add to an existing array
@@ -47,6 +34,7 @@ define(["when", "../UrlBuilder", "../util/normalizeHeaderName"], function(when, 
 				headers[name] = value;
 			}
 		});
+
 		return headers;
 	}
 
@@ -54,25 +42,43 @@ define(["when", "../UrlBuilder", "../util/normalizeHeaderName"], function(when, 
 		var d, xhr, method, url, headers, entity;
 
 		d = when.defer();
-		xhr = new XMLHttpRequest();
 
-		method = request.method || 'GET';
-		url = new UrlBuilder(request.path || "", request.params).build();
-		xhr.open(method, url, true);
+		try {
+			xhr = new XMLHttpRequest();
 
-		headers = request.headers;
-		for (var header in headers) {
-			xhr.setRequestHeader(header, headers[header]);
-		}
+			method = request.method || 'GET';
+			url = new UrlBuilder(request.path || "", request.params).build();
+			xhr.open(method, url, true);
 
-		xhr.onreadystatechange = function (e) {
-			if (xhr.readyState == XMLHttpRequest.DONE) {
-				d.resolve(parseResponse(request, xhr));
+			headers = request.headers;
+			for (var header in headers) {
+				xhr.setRequestHeader(header, headers[header]);
 			}
-		};
 
-		entity = request.entity;
-		xhr.send(entity);
+			xhr.onreadystatechange = function (e) {
+				var response;
+
+				if (xhr.readyState == XMLHttpRequest.DONE) {
+					response = {};
+					response.request = request;
+					response.raw = xhr;
+					response.status = {
+						code: xhr.status,
+						text: xhr.statusText
+					};
+					response.headers = parseHeaders(xhr.getAllResponseHeaders());
+					response.entity = xhr.responseText;
+
+					d.resolve(response);
+				}
+			};
+
+			entity = request.entity;
+			xhr.send(entity);
+		}
+		catch (e) {
+			d.reject(e);
+		}
 
 		return d.promise;
 	}

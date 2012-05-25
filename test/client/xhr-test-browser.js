@@ -1,4 +1,4 @@
-(function(buster, xhr) {
+(function(buster, xhr, rest) {
 
 var assert, refute;
 
@@ -38,10 +38,14 @@ buster.testCase('rest/client/xhr', {
 			}
 		);
 	},
+	'should be the default client': function() {
+		assert.same(client, rest);
+	}
 	// TODO spy XmlHttpRequest
 });
 
 })(
 	this.buster || require('buster'),
-	this.rest_client_xhr || require('../../src/rest/client/xhr')
+	this.rest_client_xhr || require('../../src/rest/client/xhr'),
+	this.rest || require('../../src/rest')
 );
