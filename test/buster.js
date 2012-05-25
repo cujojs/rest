@@ -3,7 +3,11 @@ var config = exports;
 config['rest:node'] = {
 	environment: 'node',
 	rootPath: '../',
-	tests: ['test/**/*-test.js']
+	tests: [
+		'test/**/*-test.js',
+		'test/**/*-test-node.js'
+	],
+
 };
 
 config['rest:browser'] = {

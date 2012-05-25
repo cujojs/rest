@@ -51,7 +51,7 @@ define(["when", "../UrlBuilder", "../util/normalizeHeaderName"], function(when, 
 	}
 
 	function xhr(request) {
-		var d, xhr, method, url, headers, entity, response;
+		var d, xhr, method, url, headers, entity;
 
 		d = when.defer();
 		xhr = new XMLHttpRequest();
@@ -72,7 +72,6 @@ define(["when", "../UrlBuilder", "../util/normalizeHeaderName"], function(when, 
 		};
 
 		entity = request.entity;
-		response = {};
 		xhr.send(entity);
 
 		return d.promise;
