@@ -26,10 +26,11 @@
 		"when": "https://github.com/cujojs/when/tarball/1.1.1"
 	},
 	"devDependencies": {
-		"buster": "~0.5"
+		"buster": "~0.5",
+		"jshint": "~0"
 	},
 	"main": "./src/rest",
 	"scripts": {
-		"test": "buster test -e node"
+		"test": "jshint src && jshint test && buster test -e node"
 	}
 }

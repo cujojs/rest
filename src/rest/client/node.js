@@ -21,7 +21,7 @@ function node(request) {
 	options = parser.parse(url);
 	options.method = request.method || 'GET';
 	headers = options.headers = {};
-	Object.keys(request.headers || {}).forEach(function(name) {
+	Object.keys(request.headers || {}).forEach(function (name) {
 		headers[normalizeHeaderName(name)] = request.headers[name];
 	});
 	entity = request.entity;
@@ -30,7 +30,7 @@ function node(request) {
 	}
 
 	try {
-		clientRequest = client.request(options, function(clientResponse) {
+		clientRequest = client.request(options, function (clientResponse) {
 			var response;
 
 			response = {};
@@ -41,14 +41,14 @@ function node(request) {
 				// node doesn't provide access to the status text
 			};
 			response.headers = {};
-			Object.keys(clientResponse.headers).forEach(function(name) {
+			Object.keys(clientResponse.headers).forEach(function (name) {
 				response.headers[normalizeHeaderName(name)] = clientResponse.headers[name];
 			});
 
-			clientResponse.on('data', function(data) {
+			clientResponse.on('data', function (data) {
 				response.entity = !response.entity ? data : (response.entity + data);
 			});
-			clientResponse.on('end', function() {
+			clientResponse.on('end', function () {
 				d.resolve(response);
 			});
 		});
@@ -58,7 +58,7 @@ function node(request) {
 		}
 		clientRequest.end();
 	}
-	catch(e) {
+	catch (e) {
 		d.reject(e);
 	}
 

@@ -1,51 +1,62 @@
-(function(buster, xhr, rest) {
+(function (buster, xhr, rest) {
 
-var assert, refute;
+	var assert, refute;
 
-assert = buster.assert;
-refute = buster.refute;
+	assert = buster.assert;
+	refute = buster.refute;
 
-buster.testCase('rest/client/xhr', {
-	'should make a GET by default': function(done) {
-		var request = { path: '/' };
-		xhr(request).then(
-			function(response) {
-				var xhr = response.raw;
-				assert.same(request, response.request);
-				assert.equals(xhr.responseText, response.entity);
-				assert.equals(xhr.status, response.status.code);
-				assert.equals(xhr.statusText, response.status.text);
-				for (var name in response.headers) {
-					assert.equals(xhr.getResponseHeader(name), response.headers[name]);
-				}
-				done();
-			}
-		);
-	},
-	'should make a POST with an entity': function(done) {
-		var request = { path: '/', method: 'post', entity: 'hello world' };
-		xhr(request).then(
-			function(response) {
-				var xhr = response.raw;
-				assert.same(request, response.request);
-				assert.equals(xhr.responseText, response.entity);
-				assert.equals(xhr.status, response.status.code);
-				assert.equals(xhr.statusText, response.status.text);
-				for (var name in response.headers) {
-					assert.equals(xhr.getResponseHeader(name), response.headers[name]);
-				}
-				done();
-			}
-		);
-	},
-	'should be the default client': function() {
-		assert.same(client, rest);
+	function never(done) {
+		return function () {
+			assert(false, 'this method should never be invoked');
+			done();
+		};
 	}
-	// TODO spy XmlHttpRequest
-});
 
-})(
-	this.buster || require('buster'),
-	this.rest_client_xhr || require('../../src/rest/client/xhr'),
-	this.rest || require('../../src/rest')
-);
+	buster.testCase('rest/client/xhr', {
+		'should make a GET by default': function (done) {
+			var request = { path: '/' };
+			xhr(request).then(
+				function (response) {
+					var xhr, name;
+					xhr = response.raw;
+					assert.same(request, response.request);
+					assert.equals(xhr.responseText, response.entity);
+					assert.equals(xhr.status, response.status.code);
+					assert.equals(xhr.statusText, response.status.text);
+					for (name in response.headers) {
+						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
+					}
+					done();
+				},
+				never(done)
+			);
+		},
+		'should make a POST with an entity': function (done) {
+			var request = { path: '/', method: 'post', entity: 'hello world' };
+			xhr(request).then(
+				function (response) {
+					var xhr, name;
+					xhr = response.raw;
+					assert.same(request, response.request);
+					assert.equals(xhr.responseText, response.entity);
+					assert.equals(xhr.status, response.status.code);
+					assert.equals(xhr.statusText, response.status.text);
+					for (name in response.headers) {
+						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
+					}
+					done();
+				},
+				never(done)
+			);
+		},
+		'should be the default client': function () {
+			assert.same(xhr, rest);
+		}
+		// TODO spy XmlHttpRequest
+	});
+
+}(
+	this.buster,
+	this.rest_client_xhr,
+	this.rest
+));
