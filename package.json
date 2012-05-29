@@ -27,10 +27,10 @@
 	},
 	"devDependencies": {
 		"buster": "~0.5",
-		"jshint": "~0"
+		"jshint": ""
 	},
 	"main": "./src/rest",
 	"scripts": {
-		"test": "jshint src && jshint test && buster test -e node"
+		"test": "jshint src test && buster test -e node --color none --reporter specification"
 	}
 }
