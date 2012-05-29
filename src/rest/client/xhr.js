@@ -58,7 +58,7 @@
 				client.onreadystatechange = function (e) {
 					var response;
 
-					if (client.readyState === XMLHttpRequest.DONE) {
+					if (client.readyState === (XMLHttpRequest.DONE || 4)) {
 						response = {};
 						response.request = request;
 						response.raw = client;

@@ -23,14 +23,15 @@
 		}
 	],
 	"dependencies": {
-		"when": "https://github.com/cujojs/when/tarball/1.1.1"
+		"when": "~1.2"
 	},
 	"devDependencies": {
+		"poly": "https://github.com/scothis/poly/tarball/npm",
 		"buster": "~0.5",
-		"jshint": "~0"
+		"jshint": ""
 	},
 	"main": "./src/rest",
 	"scripts": {
-		"test": "jshint src && jshint test && buster test -e node"
+		"test": "jshint src test && buster test -e node --color none --reporter specification"
 	}
 }
