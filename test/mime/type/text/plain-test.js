@@ -1,11 +1,19 @@
-(function (buster, plain) {
+(function (buster, define) {
 
-	var assert, refute;
+	var plain, assert, refute;
 
 	assert = buster.assert;
 	refute = buster.refute;
 
 	buster.testCase('rest/mime/type/text/plain', {
+		setUp: function (done) {
+			if (plain) { return done(); }
+			define('rest/mime/type/text/plain-test', ['rest/mime/type/text/plain'], function (p) {
+				plain = p;
+				done();
+			});
+		},
+
 		'should not change when writing string values': function () {
 			assert.equals('7', plain.write('7'));
 		},
@@ -19,5 +27,8 @@
 
 }(
 	this.buster || require('buster'),
-	this.rest_mime_type_text_plain || require('../../../../src/rest/mime/type/text/plain')
+	typeof define === 'function' ? define : function (id, deps, factory) {
+		factory(require('../../../../src/rest/mime/type/text/plain'));
+	}
+	// Boilerplate for AMD and Node
 ));

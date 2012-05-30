@@ -1,11 +1,19 @@
-(function (buster, json) {
+(function (buster, define) {
 
-	var assert, refute;
+	var json, assert, refute;
 
 	assert = buster.assert;
 	refute = buster.refute;
 
-	buster.testCase('rest/mime/type/text/json', {
+	buster.testCase('rest/mime/type/application/json', {
+		setUp: function (done) {
+			if (json) { return done(); }
+			define('rest/mime/type/application/json-test', ['rest/mime/type/application/json'], function (j) {
+				json = j;
+				done();
+			});
+		},
+
 		'should read json': function () {
 			assert.equals({ foo: 'bar' }, json.read('{"foo":"bar"}'));
 		},
@@ -16,5 +24,8 @@
 
 }(
 	this.buster || require('buster'),
-	this.rest_mime_type_application_json || require('../../../../src/rest/mime/type/application/json')
+	typeof define === 'function' ? define : function (id, deps, factory) {
+		factory(require('../../../../src/rest/mime/type/application/json'));
+	}
+	// Boilerplate for AMD and Node
 ));

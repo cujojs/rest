@@ -23,9 +23,11 @@
 		}
 	],
 	"dependencies": {
-		"when": "https://github.com/cujojs/when/tarball/1.1.1"
+		"when": "~1.2"
 	},
 	"devDependencies": {
+		"curl": "https://github.com/scothis/curl/tarball/npm",
+		"poly": "https://github.com/scothis/poly/tarball/npm",
 		"buster": "~0.5",
 		"jshint": ""
 	},

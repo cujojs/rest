@@ -1,11 +1,19 @@
-(function (buster, base64) {
+(function (buster, define) {
 
-	var assert, refute;
+	var base64, assert, refute;
 
 	assert = buster.assert;
 	refute = buster.refute;
 
 	buster.testCase('rest/util/base64', {
+		setUp: function (done) {
+			if (base64) { return done(); }
+			define('rest/util/base64-test', ['rest/util/base64'], function (b64) {
+				base64 = b64;
+				done();
+			});
+		},
+
 		'should base64 encode strings': function () {
 			assert.equals('Zm9v', base64.encode('foo'));
 		},
@@ -16,5 +24,8 @@
 
 }(
 	this.buster || require('buster'),
-	this.rest_util_base64 || require('../../src/rest/util/base64')
+	typeof define === 'function' ? define : function (id, deps, factory) {
+		factory(require('../../src/rest/util/base64'));
+	}
+	// Boilerplate for AMD and Node
 ));

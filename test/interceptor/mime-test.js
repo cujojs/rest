@@ -1,11 +1,19 @@
-(function (buster, mime) {
+(function (buster, define) {
 
-	var assert, refute;
+	var mime, assert, refute;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
 	buster.testCase('rest/interceptor/mime', {
+		setUp: function (done) {
+			if (mime) { return done(); }
+			define('rest/interceptor/mime-test', ['rest/interceptor/mime'], function (m) {
+				mime = m;
+				done();
+			});
+		},
+
 		'should return the response entity decoded': function (done) {
 			var client;
 
@@ -41,5 +49,8 @@
 
 }(
 	this.buster || require('buster'),
-	this.rest_interceptor_mime || require('../../src/rest/interceptor/mime')
+	typeof define === 'function' ? define : function (id, deps, factory) {
+		factory(require('../../src/rest/interceptor/mime'));
+	}
+	// Boilerplate for AMD and Node
 ));

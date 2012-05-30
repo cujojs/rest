@@ -46,10 +46,8 @@
 
 }(
 	typeof define === 'function' ? define : function (deps, factory) {
-		return typeof module !== 'undefined' ?
-			(module.exports = factory.apply(this, deps.map(require))) :
-			(this.rest = factory(this.rest_client_xhr));
+		module.exports = factory.apply(this, deps.map(require));
 	},
 	typeof process === 'undefined' ? undefined : process
-	// Boilerplate for AMD, Node, and browser global
+	// Boilerplate for AMD and Node
 ));

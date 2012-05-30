@@ -1,11 +1,19 @@
-(function (buster, entity) {
+(function (buster, define) {
 
-	var assert, refute;
+	var entity, assert, refute;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
 	buster.testCase('rest/interceptor/entity', {
+		setUp: function (done) {
+			if (entity) { return done(); }
+			define('rest/interceptor/entity-test', ['rest/interceptor/entity'], function (e) {
+				entity = e;
+				done();
+			});
+		},
+
 		'should return the response entity': function (done) {
 			var client, body;
 
@@ -36,5 +44,8 @@
 
 }(
 	this.buster || require('buster'),
-	this.rest_interceptor_entity || require('../../src/rest/interceptor/entity')
+	typeof define === 'function' ? define : function (id, deps, factory) {
+		factory(require('../../src/rest/interceptor/entity'));
+	}
+	// Boilerplate for AMD and Node
 ));

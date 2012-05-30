@@ -32,9 +32,7 @@
 
 }(
 	typeof define === 'function' ? define : function (deps, factory) {
-		return typeof module !== 'undefined' ?
-			(module.exports = factory.apply(this, deps.map(require))) :
-			(this.rest_interceptor_basicAuth = factory(this.rest_interceptor_base, this.rest_util_base64));
+		module.exports = factory.apply(this, deps.map(require));
 	}
-	// Boilerplate for AMD, Node, and browser global
+	// Boilerplate for AMD and Node
 ));

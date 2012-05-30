@@ -1,11 +1,19 @@
-(function (buster, errorCode) {
+(function (buster, define) {
 
-	var assert, refute;
+	var errorCode, assert, refute;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
 	buster.testCase('rest/interceptor/errorCode', {
+		setUp: function (done) {
+			if (errorCode) { return done(); }
+			define('rest/interceptor/errorCode-test', ['rest/interceptor/errorCode'], function (ec) {
+				errorCode = ec;
+				done();
+			});
+		},
+
 		'should resolve for less than 400 by default': function (done) {
 			var client = errorCode(
 				function () { return { status: { code: 399 } }; }
@@ -56,5 +64,8 @@
 
 }(
 	this.buster || require('buster'),
-	this.rest_interceptor_errorCode || require('../../src/rest/interceptor/errorCode')
+	typeof define === 'function' ? define : function (id, deps, factory) {
+		factory(require('../../src/rest/interceptor/errorCode'));
+	}
+	// Boilerplate for AMD and Node
 ));

@@ -1,11 +1,19 @@
-(function (buster, UrlBuilder) {
+(function (buster, define) {
 
-	var assert, refute, undef;
+	var UrlBuilder, assert, refute, undef;
 
 	assert = buster.assert;
 	refute = buster.refute;
 
 	buster.testCase('rest/UrlBuilder', {
+		setUp: function (done) {
+			if (UrlBuilder) { return done(); }
+			define('rest/UrlBuilder-test', ['rest/UrlBuilder'], function (UB) {
+				UrlBuilder = UB;
+				done();
+			});
+		},
+
 		'should use the provided template': function () {
 			assert.equals('/foo/bar', new UrlBuilder('/foo/bar').build());
 		},
@@ -51,5 +59,8 @@
 
 }(
 	this.buster || require('buster'),
-	this.rest_UrlBuilder || require('../src/rest/UrlBuilder')
+	typeof define === 'function' ? define : function (id, deps, factory) {
+		factory(require('../src/rest/UrlBuilder'));
+	}
+	// Boilerplate for AMD and Node
 ));

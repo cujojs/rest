@@ -1,6 +1,6 @@
-(function (buster, registry, when) {
+(function (buster, define) {
 
-	var assert, refute;
+	var registry, when, assert, refute;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
@@ -13,6 +13,15 @@
 	}
 
 	buster.testCase('rest/mime/registry', {
+		setUp: function (done) {
+			if (registry) { return done(); }
+			define('rest/mime/registry-test', ['rest/mime/registry', 'when'], function (r, w) {
+				registry = r;
+				when = w;
+				done();
+			});
+		},
+
 		'should discover unregisted serializers': function (done) {
 			when(
 				registry.lookup('text/plain'),
@@ -50,6 +59,8 @@
 
 }(
 	this.buster || require('buster'),
-	this.rest_mime_registry || require('../../src/rest/mime/registry'),
-	this.when || require('../../node_modules/when/when')
+	typeof define === 'function' ? define : function (id, deps, factory) {
+		factory(require('../../src/rest/mime/registry'), require('../../node_modules/when/when'));
+	}
+	// Boilerplate for AMD and Node
 ));
