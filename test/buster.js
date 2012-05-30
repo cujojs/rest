@@ -6,8 +6,7 @@ config['rest:node'] = {
 	tests: [
 		'test/**/*-test.js',
 		'test/**/*-test-node.js'
-	],
-
+	]
 };
 
 config['rest:browser'] = {
