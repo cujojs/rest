@@ -1,11 +1,19 @@
-(function (buster, normalizeHeaderName) {
+(function (buster, define) {
 
-	var assert, refute;
+	var normalizeHeaderName, assert, refute;
 
 	assert = buster.assert;
 	refute = buster.refute;
 
 	buster.testCase('rest/util/normalizeHeaderName', {
+		setUp: function (done) {
+			if (normalizeHeaderName) { return done(); }
+			define('rest/util/normalizeHeaderName-test', ['rest/util/normalizeHeaderName'], function (nhn) {
+				normalizeHeaderName = nhn;
+				done();
+			});
+		},
+
 		'should normalize header names': function () {
 			assert.equals('Accept', normalizeHeaderName('accept'));
 			assert.equals('Accept', normalizeHeaderName('ACCEPT'));
@@ -16,5 +24,8 @@
 
 }(
 	this.buster || require('buster'),
-	this.rest_util_normalizeHeaderName || require('../../src/rest/util/normalizeHeaderName')
+	typeof define === 'function' ? define : function (id, deps, factory) {
+		factory(require('../../src/rest/util/normalizeHeaderName'));
+	}
+	// Boilerplate for AMD and Node
 ));

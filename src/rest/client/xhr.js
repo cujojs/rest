@@ -90,9 +90,7 @@
 }(
 	this.XMLHttpRequest,
 	typeof define === 'function' ? define : function (deps, factory) {
-		return typeof module !== 'undefined' ?
-			(module.exports = factory.apply(this, deps.map(require))) :
-			(this.rest_client_xhr = factory(this.when, this.rest_UrlBuilder, this.rest_util_normalizeHeaderName));
+		module.exports = factory.apply(this, deps.map(require));
 	}
-	// Boilerplate for AMD, Node, and browser global
+	// Boilerplate for AMD and Node
 ));

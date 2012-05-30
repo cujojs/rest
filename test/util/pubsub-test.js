@@ -1,11 +1,19 @@
-(function (buster, pubsub) {
+(function (buster, define) {
 
-	var assert, refute;
+	var pubsub, assert, refute;
 
 	assert = buster.assert;
 	refute = buster.refute;
 
 	buster.testCase('rest/util/pubsub', {
+		setUp: function (done) {
+			if (pubsub) { return done(); }
+			define('rest/util/pubsub-test', ['rest/util/pubsub'], function (ps) {
+				pubsub = ps;
+				done();
+			});
+		},
+
 		'should pass arguments to subscribed listener': function () {
 			var callback = this.spy(function (value) {
 				assert.equals('result', value);
@@ -43,5 +51,8 @@
 
 }(
 	this.buster || require('buster'),
-	this.rest_util_pubsub || require('../../src/rest/util/pubsub')
+	typeof define === 'function' ? define : function (id, deps, factory) {
+		factory(require('../../src/rest/util/pubsub'));
+	}
+	// Boilerplate for AMD and Node
 ));

@@ -127,9 +127,7 @@
 }(
 	this.document,
 	typeof define === 'function' ? define : function (deps, factory) {
-		return typeof module !== 'undefined' ?
-			(module.exports = factory.apply(this, deps.map(require))) :
-			(this.rest_UrlBuilder = factory(this.rest_util_beget));
+		module.exports = factory.apply(this, deps.map(require));
 	}
-	// Boilerplate for AMD, Node, and browser global
+	// Boilerplate for AMD and Node
 ));

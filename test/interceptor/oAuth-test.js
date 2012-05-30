@@ -1,11 +1,20 @@
-(function (global, buster, oAuth, pubsub) {
+(function (global, buster, define) {
 
-	var assert, refute;
+	var oAuth, pubsub, assert, refute;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
 	buster.testCase('rest/interceptor/oAuth', {
+		setUp: function (done) {
+			if (oAuth) { return done(); }
+			define('rest/interceptor/oAuth-test', ['rest/interceptor/oAuth', 'rest/util/pubsub'], function (oa, ps) {
+				oAuth = oa;
+				pubsub = ps;
+				done();
+			});
+		},
+
 		'should authenticate the request for a known token': function (done) {
 			var client;
 
@@ -63,6 +72,8 @@
 }(
 	typeof global === 'undefined' ? this : global,
 	this.buster || require('buster'),
-	this.rest_interceptor_oAuth || require('../../src/rest/interceptor/oAuth'),
-	this.rest_util_pubsub || require('../../src/rest/util/pubsub')
+	typeof define === 'function' ? define : function (id, deps, factory) {
+		factory(require('../../src/rest/interceptor/oAuth'), require('../../src/rest/util/pubsub'));
+	}
+	// Boilerplate for AMD and Node
 ));

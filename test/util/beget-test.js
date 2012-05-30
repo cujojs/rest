@@ -1,11 +1,19 @@
-(function (buster, beget) {
+(function (buster, define) {
 
-	var assert, refute;
+	var beget, assert, refute;
 
 	assert = buster.assert;
 	refute = buster.refute;
 
 	buster.testCase('rest/util/beget', {
+		setUp: function (done) {
+			if (beget) { return done(); }
+			define('rest/util/beget-test', ['rest/util/beget'], function (b) {
+				beget = b;
+				done();
+			});
+		},
+
 		'should return an emtpy object for no args': function () {
 			var result, prop;
 			result = beget();
@@ -37,5 +45,8 @@
 
 }(
 	this.buster || require('buster'),
-	this.rest_util_beget || require('../../src/rest/util/beget')
+	typeof define === 'function' ? define : function (id, deps, factory) {
+		factory(require('../../src/rest/util/beget'));
+	}
+	// Boilerplate for AMD and Node
 ));

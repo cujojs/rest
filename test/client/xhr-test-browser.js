@@ -1,6 +1,6 @@
-(function (buster, xhr, rest) {
+(function (buster, define) {
 
-	var assert, refute;
+	var xhr, rest, assert, refute;
 
 	assert = buster.assert;
 	refute = buster.refute;
@@ -13,6 +13,15 @@
 	}
 
 	buster.testCase('rest/client/xhr', {
+		setUp: function (done) {
+			if (xhr) { return done(); }
+			define('rest/client/xhr-test', ['rest/client/xhr', 'rest'], function (x, r) {
+				xhr = x;
+				rest = r;
+				done();
+			});
+		},
+
 		'should make a GET by default': function (done) {
 			var request = { path: '/' };
 			xhr(request).then(
@@ -56,7 +65,9 @@
 	});
 
 }(
-	this.buster,
-	this.rest_client_xhr,
-	this.rest
+	this.buster || require('buster'),
+	typeof define === 'function' ? define : function (id, deps, factory) {
+		factory(require('../../../../src/rest/client/xhr'), require('../../../../src/rest'));
+	}
+	// Boilerplate for AMD and Node
 ));

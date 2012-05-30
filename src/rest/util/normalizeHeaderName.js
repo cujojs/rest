@@ -3,6 +3,8 @@
 	define([], function () {
 		"use strict";
 
+		var re = /^[a-z]|-[a-z]/g;
+
 		/**
 		 * Normalize HTTP header names using the pseudo camel case.
 		 *
@@ -27,9 +29,7 @@
 
 }(
 	typeof define === 'function' ? define : function (deps, factory) {
-		return typeof module !== 'undefined' ?
-			(module.exports = factory.apply(this, deps.map(require))) :
-			(this.rest_util_normalizeHeaderName = factory());
+		module.exports = factory.apply(this, deps.map(require));
 	}
-	// Boilerplate for AMD, Node, and browser global
+	// Boilerplate for AMD and Node
 ));

@@ -1,11 +1,19 @@
-(function (buster, pathPrefix) {
+(function (buster, define) {
 
-	var assert, refute;
+	var pathPrefix, assert, refute;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
 	buster.testCase('rest/interceptor/pathPrefix', {
+		setUp: function (done) {
+			if (pathPrefix) { return done(); }
+			define('rest/interceptor/pathPrefix-test', ['rest/interceptor/pathPrefix'], function (pp) {
+				pathPrefix = pp;
+				done();
+			});
+		},
+
 		'should prepend prefix before path': function (done) {
 			var client = pathPrefix(
 				function (request) { return { request: request }; },
@@ -46,5 +54,8 @@
 
 }(
 	this.buster || require('buster'),
-	this.rest_interceptor_pathPrefix || require('../../src/rest/interceptor/pathPrefix')
+	typeof define === 'function' ? define : function (id, deps, factory) {
+		factory(require('../../src/rest/interceptor/pathPrefix'));
+	}
+	// Boilerplate for AMD and Node
 ));

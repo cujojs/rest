@@ -44,28 +44,12 @@
 				d.reject();
 			}, 1000);
 
-			require(['./type/' + mime], function (m) {
+			// 'define' is a bit of a hack, but other options are non-standard
+			define('rest/mime/type/' + mime + '-' + Math.random(), ['./type/' + mime], function (m) {
 				clearTimeout(timeout);
 				timeout = null;
 				d.resolve(m);
 			});
-
-			return d.promise;
-		}
-
-		function load_browser_globals(mime) {
-			// TODO remove when buster supports proper amd loading
-			var d, name;
-
-			d = when.defer();
-			name = 'rest_mime_type_' + mime.replace('/', '_');
-
-			if (name in global) {
-				d.resolve(global[name]);
-			}
-			else {
-				d.reject();
-			}
 
 			return d.promise;
 		}
@@ -90,11 +74,7 @@
 		 * @return {*} the converter for the MIME type
 		 */
 		load = (
-			typeof require === 'function' && require.amd ?
-				load_amd :
-				process && process.versions && process.versions.node ?
-					load_node :
-					load_browser_globals
+			typeof require === 'function' && require.amd ? load_amd : load_node
 		);
 
 		return {
@@ -106,11 +86,9 @@
 
 }(
 	typeof define === 'function' ? define : function (deps, factory) {
-		return typeof module !== 'undefined' ?
-			(module.exports = factory.apply(this, deps.map(function (dep) { return dep === 'require' ? require : require(dep); }))) :
-			(this.rest_mime_registry = factory(this.when, this.require));
+		module.exports = factory.apply(this, deps.map(function (dep) { return dep === 'require' ? require : require(dep); }));
 	},
 	typeof global === 'undefined' ? this : global,
 	typeof process === 'undefined' ? undefined : process
-	// Boilerplate for AMD, Node, and browser global
+	// Boilerplate for AMD and Node
 ));

@@ -1,11 +1,19 @@
-(function (buster, mixin) {
+(function (buster, define) {
 
-	var assert, refute;
+	var mixin, assert, refute;
 
 	assert = buster.assert;
 	refute = buster.refute;
 
 	buster.testCase('rest/util/mixin', {
+		setUp: function (done) {
+			if (mixin) { return done(); }
+			define('rest/util/mixin-test', ['rest/util/mixin'], function (mi) {
+				mixin = mi;
+				done();
+			});
+		},
+
 		'should return an emtpy object for no args': function () {
 			var mixed, prop;
 			mixed = mixin();
@@ -32,5 +40,8 @@
 
 }(
 	this.buster || require('buster'),
-	this.rest_util_mixin || require('../../src/rest/util/mixin')
+	typeof define === 'function' ? define : function (id, deps, factory) {
+		factory(require('../../src/rest/util/mixin'));
+	}
+	// Boilerplate for AMD and Node
 ));

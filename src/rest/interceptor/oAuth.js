@@ -153,9 +153,7 @@
 }(
 	typeof global === 'undefined' ? this : global,
 	typeof define === 'function' ? define : function (deps, factory) {
-		return typeof module !== 'undefined' ?
-			(module.exports = factory.apply(this, deps.map(require))) :
-			(this.rest_interceptor_oAuth = factory(this.rest, this.when, this.rest_UrlBuilder, this.rest_util_pubsub));
+		module.exports = factory.apply(this, deps.map(require));
 	}
-	// Boilerplate for AMD, Node, and browser global
+	// Boilerplate for AMD and Node
 ));
