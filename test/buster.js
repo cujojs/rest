@@ -14,6 +14,7 @@ config['rest:browser'] = {
 	rootPath: '../',
 	resources: [
 		'node_modules/curl/**',
+		'node_modules/dojo/**',
 		'node_modules/poly/**',
 		'node_modules/when/**',
 		'lib/**',

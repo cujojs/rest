@@ -27,6 +27,7 @@
 	},
 	"devDependencies": {
 		"curl": "https://github.com/scothis/curl/tarball/npm",
+		"dojo": "https://github.com/dojo/dojo/tarball/1.7.2",
 		"poly": "https://github.com/scothis/poly/tarball/npm",
 		"buster": "~0.5",
 		"jshint": ""
