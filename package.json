@@ -29,6 +29,7 @@
 		"curl": "https://github.com/scothis/curl/tarball/npm",
 		"dojo": "https://github.com/dojo/dojo/tarball/1.7.2",
 		"poly": "https://github.com/scothis/poly/tarball/npm",
+		"wire": "https://github.com/cujojs/wire/tarball/0.8.0",
 		"buster": "~0.5",
 		"jshint": ""
 	},

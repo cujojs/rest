@@ -17,8 +17,10 @@ config['rest:browser'] = {
 		'node_modules/dojo/**',
 		'node_modules/poly/**',
 		'node_modules/when/**',
+		'node_modules/wire/**',
 		'lib/**',
-		'src/**'
+		'src/**',
+		'test/**'
 	],
 	libs: [
 		'lib/curl-config.js',
