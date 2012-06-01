@@ -1,8 +1,8 @@
 var buster, rest, client, server, assert, refute;
 
 buster = require('buster');
-rest = require('../../src/rest');
-client = require('../../src/rest/client/node');
+rest = require('../../rest');
+client = require('../../client/node');
 server = require('http').createServer();
 assert = buster.assert;
 refute = buster.refute;

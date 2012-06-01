@@ -41,7 +41,7 @@
 }(
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../src/rest/util/mixin'));
+		factory(require('../../util/mixin'));
 	}
 	// Boilerplate for AMD and Node
 ));

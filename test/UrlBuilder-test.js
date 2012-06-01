@@ -60,7 +60,7 @@
 }(
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../src/rest/UrlBuilder'));
+		factory(require('../UrlBuilder'));
 	}
 	// Boilerplate for AMD and Node
 ));

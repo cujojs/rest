@@ -1,6 +1,6 @@
 (function (define, process) {
 
-	define(['./rest/client/xhr'], function (client) {
+	define(['./client/xhr'], function (client) {
 		"use strict";
 
 		/**
@@ -38,7 +38,7 @@
 		 */
 
 		if (process && process.versions && process.versions.node) {
-			return require('./rest/client/node');
+			return require('./client/node');
 		}
 
 		return client;

@@ -13,14 +13,7 @@ config['rest:browser'] = {
 	environment: 'browser',
 	rootPath: '../',
 	resources: [
-		'node_modules/curl/**',
-		'node_modules/dojo/**',
-		'node_modules/poly/**',
-		'node_modules/when/**',
-		'node_modules/wire/**',
-		'lib/**',
-		'src/**',
-		'test/**'
+		'**'
 	],
 	libs: [
 		'lib/curl-config.js',

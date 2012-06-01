@@ -25,7 +25,7 @@
 }(
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../../../src/rest/mime/type/application/json'));
+		factory(require('../../../../mime/type/application/json'));
 	}
 	// Boilerplate for AMD and Node
 ));

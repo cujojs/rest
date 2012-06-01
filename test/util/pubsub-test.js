@@ -52,7 +52,7 @@
 }(
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../src/rest/util/pubsub'));
+		factory(require('../../util/pubsub'));
 	}
 	// Boilerplate for AMD and Node
 ));

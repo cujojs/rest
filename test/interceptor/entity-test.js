@@ -45,7 +45,7 @@
 }(
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../src/rest/interceptor/entity'));
+		factory(require('../../interceptor/entity'));
 	}
 	// Boilerplate for AMD and Node
 ));

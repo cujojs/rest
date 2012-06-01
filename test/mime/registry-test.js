@@ -60,7 +60,7 @@
 }(
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../src/rest/mime/registry'), require('../../node_modules/when/when'));
+		factory(require('../../mime/registry'), require('when'));
 	}
 	// Boilerplate for AMD and Node
 ));

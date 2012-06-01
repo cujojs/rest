@@ -46,7 +46,7 @@
 }(
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../src/rest/util/beget'));
+		factory(require('../../util/beget'));
 	}
 	// Boilerplate for AMD and Node
 ));

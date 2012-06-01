@@ -52,7 +52,7 @@
 }(
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../src/rest/client/jsonp'), require('../../src/rest/interceptor/jsonp'), require('../../src/rest'));
+		factory(require('../rest/client/jsonp'), require('../rest/interceptor/jsonp'), require('../rest'));
 	}
 	// Boilerplate for AMD and Node
 ));

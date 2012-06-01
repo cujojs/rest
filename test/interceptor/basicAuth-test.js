@@ -53,7 +53,7 @@
 }(
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../src/rest/interceptor/basicAuth'));
+		factory(require('../../interceptor/basicAuth'));
 	}
 	// Boilerplate for AMD and Node
 ));

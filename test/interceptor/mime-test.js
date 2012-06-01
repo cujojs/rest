@@ -50,7 +50,7 @@
 }(
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../src/rest/interceptor/mime'));
+		factory(require('../../interceptor/mime'));
 	}
 	// Boilerplate for AMD and Node
 ));

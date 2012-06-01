@@ -55,7 +55,7 @@
 }(
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../src/rest/interceptor/pathPrefix'));
+		factory(require('../../interceptor/pathPrefix'));
 	}
 	// Boilerplate for AMD and Node
 ));

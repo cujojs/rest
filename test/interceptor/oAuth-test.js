@@ -73,7 +73,7 @@
 	typeof global === 'undefined' ? this : global,
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../src/rest/interceptor/oAuth'), require('../../src/rest/util/pubsub'));
+		factory(require('../../interceptor/oAuth'), require('../../util/pubsub'));
 	}
 	// Boilerplate for AMD and Node
 ));

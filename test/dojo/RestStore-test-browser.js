@@ -126,7 +126,7 @@
 }(
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../src/rest/dojo/RestStore'));
+		factory(require('../rest/dojo/RestStore'));
 	}
 	// Boilerplate for AMD and Node
 ));

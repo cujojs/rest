@@ -94,7 +94,7 @@
 }(
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../src/rest/dojo/wire'), require('wire'), require('when'));
+		factory(require('./rest/dojo/wire'), require('wire'), require('when'));
 	}
 	// Boilerplate for AMD and Node
 ));
