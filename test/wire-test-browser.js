@@ -61,7 +61,7 @@
 				spec.client({}).then(
 					undefined,
 					function (response) {
-						assert.equals('bar', response.entity.foo);
+						assert.equals('bar', response.foo);
 					}
 				);
 			}).always(done);
@@ -77,7 +77,7 @@
 			};
 			wire(spec).then(function (spec) {
 				spec.client({}).then(function (response) {
-					assert.equals('bar', response.entity.foo);
+					assert.equals('bar', response.foo);
 				});
 			}).always(done);
 		},
@@ -96,7 +96,7 @@
 				});
 			}).always(done);
 		},
-		'should use JSON as the default Content-Type for POSTs': function (done) {
+		'should use x-www-form-urlencoded as the default Content-Type for POSTs': function (done) {
 			var spec, client;
 			client = function (request) {
 				return { request: request, status: { code: 200 }, headers: { 'Content-Type': 'application/json' }, entity: '{"foo":"bar"}' };
@@ -107,9 +107,9 @@
 			};
 			wire(spec).then(function (spec) {
 				spec.client({ method: 'post', entity: { bleep: 'bloop' } }).then(function (response) {
-					assert.equals('{"bleep":"bloop"}', response.request.entity);
-					assert.equals(0, response.request.headers.Accept.indexOf('application/json'));
-					assert.equals('application/json', response.request.headers['Content-Type']);
+					assert.equals('bleep=bloop', response.request.entity);
+					assert.equals(0, response.request.headers.Accept.indexOf('application/x-www-form-urlencoded'));
+					assert.equals('application/x-www-form-urlencoded', response.request.headers['Content-Type']);
 				});
 			}).always(done);
 		}

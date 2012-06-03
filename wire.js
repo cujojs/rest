@@ -26,7 +26,7 @@
 					client = errorCode(client, { code: config.errorCode });
 				}
 				if (config.mime !== false) {
-					client = mime(client, { mime: config.mime || 'application/json', accept: config.accept });
+					client = mime(client, { mime: config.mime || 'application/x-www-form-urlencoded', accept: config.accept });
 				}
 				if (config.entity !== false) {
 					client = entity(client);
