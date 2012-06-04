@@ -19,21 +19,22 @@
 		 */
 		return base({
 			request: function (request, config) {
-				var mime, accept, headers, serializer, requestReady;
+				var mime, headers, serializer, requestReady;
 
-				mime = config.mime || 'text/plain';
-				accept = config.accept || mime + ", application/json;q=0.8, text/plain;q=0.5, */*;q=0.2";
 				headers = request.headers || (request.headers = {});
+				mime = headers['Content-Type'] || config.mime || 'text/plain';
+				headers.Accept = headers.Accept || config.accept || mime + ", application/json;q=0.8, text/plain;q=0.5, */*;q=0.2";
+
+				if (!('entity' in request)) {
+					return request;
+				}
+
 				serializer = registry.lookup(mime);
 				requestReady = when.defer();
 
 				when(serializer, function (serializer) {
-					headers.Accept = accept;
-
-					if (request.entity) {
-						request.entity = serializer.write(request.entity);
-						headers['Content-Type'] = mime;
-					}
+					request.entity = serializer.write(request.entity);
+					headers['Content-Type'] = mime;
 
 					requestReady.resolve(request);
 				});
