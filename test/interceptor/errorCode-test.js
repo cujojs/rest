@@ -1,6 +1,6 @@
 (function (buster, define) {
 
-	var errorCode, assert, refute;
+	var errorCode, rest, assert, refute;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
@@ -8,8 +8,9 @@
 	buster.testCase('rest/interceptor/errorCode', {
 		setUp: function (done) {
 			if (errorCode) { return done(); }
-			define('rest/interceptor/errorCode-test', ['rest/interceptor/errorCode'], function (ec) {
+			define('rest/interceptor/errorCode-test', ['rest/interceptor/errorCode', 'rest'], function (ec, r) {
 				errorCode = ec;
+				rest = r;
 				done();
 			});
 		},
@@ -46,13 +47,16 @@
 					assert.equals(300, response.status.code);
 				}
 			).always(done);
+		},
+		'//should have the default client as the parent by default': function () {
+			assert.same(rest, errorCode().skip());
 		}
 	});
 
 }(
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../interceptor/errorCode'));
+		factory(require('../../interceptor/errorCode'), require('../../rest'));
 	}
 	// Boilerplate for AMD and Node
 ));

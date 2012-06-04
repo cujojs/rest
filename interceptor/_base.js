@@ -1,6 +1,6 @@
 (function (define) {
 
-	define(['../../rest', 'when'], function (defaultClient, when) {
+	define(['../rest', 'when'], function (defaultClient, when) {
 		"use strict";
 
 		/**
@@ -35,10 +35,12 @@
 			var requestHandler, successResponseHandler, errorResponseHandler;
 
 			requestHandler         = handlers.request || defaultRequestHandler;
-			successResponseHandler = handlers.response || defaultResponseHandler;
-			errorResponseHandler   = handlers.error || handlers.response || defaultResponseHandler;
+			successResponseHandler = handlers.success || handlers.response || defaultResponseHandler;
+			errorResponseHandler   = handlers.error   || handlers.response || defaultResponseHandler;
 
 			return function (client, config) {
+				var interceptor;
+
 				if (typeof client === 'object') {
 					config = client;
 				}
@@ -47,7 +49,7 @@
 				}
 				config = config || {};
 
-				return function (request) {
+				interceptor = function (request) {
 					return when(requestHandler(request, config)).then(function (request) {
 						return when(client(request)).then(
 							function (response) {
@@ -61,6 +63,11 @@
 						);
 					});
 				};
+				interceptor.skip = function () {
+					return client;
+				};
+
+				return interceptor;
 			};
 		};
 

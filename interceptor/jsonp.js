@@ -19,6 +19,8 @@
 		 * @returns {Client}
 		 */
 		return function (client, config) {
+			var interceptor;
+
 			if (typeof client === 'object') {
 				config = client;
 			}
@@ -28,12 +30,17 @@
 			config = config || {};
 			config.callback = config.callback || {};
 
-			return function (request) {
+			interceptor = function (request) {
 				request.callback = request.callback || {};
 				request.callback.param = request.callback.param || config.callback.param;
 				request.callback.prefix = request.callback.prefix || config.callback.prefix;
 				return client(request);
 			};
+			interceptor.skip = function () {
+				return client;
+			};
+
+			return interceptor;
 		};
 
 	});

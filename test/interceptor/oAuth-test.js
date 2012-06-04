@@ -1,6 +1,6 @@
 (function (global, buster, define) {
 
-	var oAuth, pubsub, assert, refute;
+	var oAuth, rest, pubsub, assert, refute;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
@@ -8,9 +8,10 @@
 	buster.testCase('rest/interceptor/oAuth', {
 		setUp: function (done) {
 			if (oAuth) { return done(); }
-			define('rest/interceptor/oAuth-test', ['rest/interceptor/oAuth', 'rest/util/pubsub'], function (oa, ps) {
+			define('rest/interceptor/oAuth-test', ['rest/interceptor/oAuth', 'rest/util/pubsub', 'rest'], function (oa, ps, r) {
 				oAuth = oa;
 				pubsub = ps;
+				rest = r;
 				done();
 			});
 		},
@@ -60,6 +61,9 @@
 				assert.equals('bearer abcxyz', response.request.headers.Authorization);
 				assert.called(windowStrategyClose);
 			}).always(done);
+		},
+		'//should have the default client as the parent by default': function () {
+			assert.same(rest, oAuth({ token: 'bearer abcxyz' }).skip());
 		}
 	});
 
@@ -67,7 +71,7 @@
 	typeof global === 'undefined' ? this : global,
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../interceptor/oAuth'), require('../../util/pubsub'));
+		factory(require('../../interceptor/oAuth'), require('../../util/pubsub'), require('../../rest'));
 	}
 	// Boilerplate for AMD and Node
 ));

@@ -1,6 +1,6 @@
 (function (buster, define) {
 
-	var basicAuth, assert, refute;
+	var basicAuth, rest, assert, refute;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
@@ -8,8 +8,9 @@
 	buster.testCase('rest/interceptor/basicAuth', {
 		setUp: function (done) {
 			if (basicAuth) { return done(); }
-			define('rest/interceptor/basicAuth-test', ['rest/interceptor/basicAuth'], function (ba) {
+			define('rest/interceptor/basicAuth-test', ['rest/interceptor/basicAuth', 'rest'], function (ba, r) {
 				basicAuth = ba;
+				rest = r;
 				done();
 			});
 		},
@@ -38,13 +39,16 @@
 			client({}).then(function (response) {
 				refute.defined(response.request.headers.Authorization);
 			}).always(done);
+		},
+		'//should have the default client as the parent by default': function () {
+			assert.same(rest, basicAuth().skip());
 		}
 	});
 
 }(
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../interceptor/basicAuth'));
+		factory(require('../../interceptor/basicAuth'), require('../../rest'));
 	}
 	// Boilerplate for AMD and Node
 ));

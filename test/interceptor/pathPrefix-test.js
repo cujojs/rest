@@ -1,6 +1,6 @@
 (function (buster, define) {
 
-	var pathPrefix, assert, refute;
+	var pathPrefix, rest, assert, refute;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
@@ -8,8 +8,9 @@
 	buster.testCase('rest/interceptor/pathPrefix', {
 		setUp: function (done) {
 			if (pathPrefix) { return done(); }
-			define('rest/interceptor/pathPrefix-test', ['rest/interceptor/pathPrefix'], function (pp) {
+			define('rest/interceptor/pathPrefix-test', ['rest/interceptor/pathPrefix', 'rest'], function (pp, r) {
 				pathPrefix = pp;
+				rest = r;
 				done();
 			});
 		},
@@ -40,13 +41,16 @@
 			client({ path: 'bar' }).then(function (response) {
 				assert.equals('/foo/bar', response.request.path);
 			}).always(done);
+		},
+		'//should have the default client as the parent by default': function () {
+			assert.same(rest, pathPrefix().skip());
 		}
 	});
 
 }(
 	this.buster || require('buster'),
 	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../interceptor/pathPrefix'));
+		factory(require('../../interceptor/pathPrefix'), require('../../rest'));
 	}
 	// Boilerplate for AMD and Node
 ));

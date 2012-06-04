@@ -59,13 +59,14 @@
 		 * @returns {Client}
 		 */
 		return function (client, config) {
-			if (arguments.length < 2) {
-				// provide default client
+			if (typeof client === 'object') {
 				config = client;
+			}
+			if (typeof client !== 'function') {
 				client = defaultClient;
 			}
 
-			var authorization, clientId, authorizationUrlBase, redirectUrl, scope, windowStrategy;
+			var interceptor, authorization, clientId, authorizationUrlBase, redirectUrl, scope, windowStrategy;
 
 			authorization = config.token;
 			clientId = config.clientId;
@@ -100,7 +101,7 @@
 				return d.promise;
 			}
 
-			return function (request) {
+			interceptor = function (request) {
 				var response;
 
 				response = when.defer();
@@ -146,6 +147,11 @@
 
 				return response.promise;
 			};
+			interceptor.skip = function () {
+				return client;
+			};
+
+			return interceptor;
 		};
 
 	});
