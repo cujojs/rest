@@ -48,7 +48,7 @@
 				}
 			).always(done);
 		},
-		'//should have the default client as the parent by default': function () {
+		'should have the default client as the parent by default': function () {
 			assert.same(rest, errorCode().skip());
 		}
 	});

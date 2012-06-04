@@ -47,9 +47,7 @@
 				}
 			).always(done);
 		},
-		'//should be the default client': function () {
-			// FIXME curl has a bug that allow duplicate script loads, even though it's the same function in the same script === will return false
-			// https://github.com/cujojs/curl/issues/93
+		'should be the default client': function () {
 			assert.same(xhr, rest);
 		}
 		// TODO spy XmlHttpRequest

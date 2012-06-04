@@ -62,7 +62,7 @@
 				assert.called(windowStrategyClose);
 			}).always(done);
 		},
-		'//should have the default client as the parent by default': function () {
+		'should have the default client as the parent by default': function () {
 			assert.same(rest, oAuth({ token: 'bearer abcxyz' }).skip());
 		}
 	});

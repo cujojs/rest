@@ -42,7 +42,7 @@
 				assert.equals('/foo/bar', response.request.path);
 			}).always(done);
 		},
-		'//should have the default client as the parent by default': function () {
+		'should have the default client as the parent by default': function () {
 			assert.same(rest, pathPrefix().skip());
 		}
 	});

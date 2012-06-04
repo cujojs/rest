@@ -41,7 +41,7 @@
 				}
 			).always(done);
 		},
-		'//should have the jsonp client as the parent by default': function () {
+		'should have the jsonp client as the parent by default': function () {
 			refute.same(rest, jsonp().skip());
 			assert.same(jsonpClient, jsonp().skip());
 		}
