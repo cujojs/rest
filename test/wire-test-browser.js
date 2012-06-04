@@ -5,13 +5,6 @@
 	assert = buster.assert;
 	refute = buster.refute;
 
-	function never(done) {
-		return function () {
-			assert(false, 'should never be called');
-			done();
-		};
-	}
-
 	buster.testCase('rest/wire', {
 		setUp: function (done) {
 			if (clientPlugin) { return done(); }
@@ -33,14 +26,10 @@
 				plugins: [{ module: 'rest/wire' }]
 			};
 			wire(spec).then(function (spec) {
-				when(spec.client({}),
-					function (response) {
-						assert.equals('bar', response.foo);
-						done();
-					},
-					never(done)
-				);
-			});
+				spec.client({}).then(function (response) {
+					assert.equals('bar', response.foo);
+				});
+			}).always(done);
 		},
 		'should use client! config with entity interceptor disabled': function (done) {
 			var spec, client;
@@ -52,16 +41,12 @@
 				plugins: [{ module: 'rest/wire' }]
 			};
 			wire(spec).then(function (spec) {
-				when(spec.client({ path: 'to/somewhere' }),
-					function (response) {
-						assert.equals('path/to/somewhere', response.request.path);
-						assert.equals('text/plain', response.request.headers.Accept);
-						assert.equals('bar', response.entity.foo);
-						done();
-					},
-					never(done)
-				);
-			});
+				spec.client({ path: 'to/somewhere' }).then(function (response) {
+					assert.equals('path/to/somewhere', response.request.path);
+					assert.equals('text/plain', response.request.headers.Accept);
+					assert.equals('bar', response.entity.foo);
+				});
+			}).always(done);
 		},
 		'should be rejected for a server error status code': function (done) {
 			var spec, client;
@@ -73,14 +58,13 @@
 				plugins: [{ module: 'rest/wire' }]
 			};
 			wire(spec).then(function (spec) {
-				when(spec.client({}),
-					never(done()),
+				spec.client({}).then(
+					undefined,
 					function (response) {
 						assert.equals('bar', response.entity.foo);
-						done();
 					}
 				);
-			});
+			}).always(done);
 		},
 		'should ignore status code when errorCode interceptor is disabled': function (done) {
 			var spec, client;
@@ -92,14 +76,10 @@
 				plugins: [{ module: 'rest/wire' }]
 			};
 			wire(spec).then(function (spec) {
-				when(spec.client({}),
-					function (response) {
-						assert.equals('bar', response.entity.foo);
-						done();
-					},
-					never(done())
-				);
-			});
+				spec.client({}).then(function (response) {
+					assert.equals('bar', response.entity.foo);
+				});
+			}).always(done);
 		},
 		'should ignore Content-Type and entity when mime interceptor is disabled': function (done) {
 			var spec, client;
@@ -111,14 +91,10 @@
 				plugins: [{ module: 'rest/wire' }]
 			};
 			wire(spec).then(function (spec) {
-				when(spec.client({}),
-					function (response) {
-						assert.isString(response);
-						done();
-					},
-					never(done())
-				);
-			});
+				spec.client({}).then(function (response) {
+					assert.isString(response);
+				});
+			}).always(done);
 		},
 		'should use JSON as the default Content-Type for POSTs': function (done) {
 			var spec, client;
@@ -130,16 +106,12 @@
 				plugins: [{ module: 'rest/wire' }]
 			};
 			wire(spec).then(function (spec) {
-				when(spec.client({ method: 'post', entity: { bleep: 'bloop' } }),
-					function (response) {
-						assert.equals('{"bleep":"bloop"}', response.request.entity);
-						assert.equals(0, response.request.headers.Accept.indexOf('application/json'));
-						assert.equals('application/json', response.request.headers['Content-Type']);
-						done();
-					},
-					never(done())
-				);
-			});
+				spec.client({ method: 'post', entity: { bleep: 'bloop' } }).then(function (response) {
+					assert.equals('{"bleep":"bloop"}', response.request.entity);
+					assert.equals(0, response.request.headers.Accept.indexOf('application/json'));
+					assert.equals('application/json', response.request.headers['Content-Type']);
+				});
+			}).always(done);
 		}
 	});
 

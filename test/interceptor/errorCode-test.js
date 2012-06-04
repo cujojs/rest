@@ -21,28 +21,19 @@
 			client({}).then(
 				function (response) {
 					assert.equals(399, response.status.code);
-					done();
-				},
-				function (response) {
-					assert.fail('error handler should not be involved');
-					done();
 				}
-			);
+			).always(done);
 		},
 		'should reject for 400 or greater by default': function (done) {
 			var client = errorCode(
 				function () { return { status: { code: 400 } }; }
 			);
 			client({}).then(
-				function (response) {
-					assert.fail('success handler should not be involved');
-					done();
-				},
+				undefined,
 				function (response) {
 					assert.equals(400, response.status.code);
-					done();
 				}
-			);
+			).always(done);
 		},
 		'should reject lower then 400 with a custom code': function (done) {
 			var client = errorCode(
@@ -50,15 +41,11 @@
 				{ code: 300 }
 			);
 			client({}).then(
-				function (response) {
-					assert.fail('success handler should not be involved');
-					done();
-				},
+				undefined,
 				function (response) {
 					assert.equals(300, response.status.code);
-					done();
 				}
-			);
+			).always(done);
 		}
 	});
 

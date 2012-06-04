@@ -5,13 +5,6 @@
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
-	function never(done) {
-		return function () {
-			assert(false, 'should never be called');
-			done();
-		};
-	}
-
 	buster.testCase('rest/mime/registry', {
 		setUp: function (done) {
 			if (registry) { return done(); }
@@ -28,10 +21,8 @@
 				function (serializer) {
 					assert.isFunction(serializer.read);
 					assert.isFunction(serializer.write);
-					done();
-				},
-				never(done)
-			);
+				}
+			).always(done);
 		},
 		'should return registed serializer': function (done) {
 			var serializer = {};
@@ -40,20 +31,17 @@
 				registry.lookup('application/vnd.com.foo'),
 				function (s) {
 					assert.same(serializer, s);
-					done();
-				},
-				never(done)
-			);
+				}
+			).always(done);
 		},
 		'should reject for non-existant serializer': function (done) {
 			when(
 				registry.lookup('application/bogus'),
-				never(done),
+				undefined,
 				function () {
 					assert(true);
-					done();
 				}
-			);
+			).always(done);
 		}
 	});
 

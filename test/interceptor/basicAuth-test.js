@@ -19,34 +19,25 @@
 				function (request) { return { request: request }; },
 				{ username: 'user', password: 'pass'}
 			);
-			client({}).then(
-				function (response) {
-					assert.equals('dXNlcjpwYXNz', response.request.headers.Authorization);
-					done();
-				}
-			);
+			client({}).then(function (response) {
+				assert.equals('dXNlcjpwYXNz', response.request.headers.Authorization);
+			}).always(done);
 		},
 		'should authenticate the requst from the request': function (done) {
 			var client = basicAuth(
 				function (request) { return { request: request }; }
 			);
-			client({ username: 'user', password: 'pass'}).then(
-				function (response) {
-					assert.equals('dXNlcjpwYXNz', response.request.headers.Authorization);
-					done();
-				}
-			);
+			client({ username: 'user', password: 'pass'}).then(function (response) {
+				assert.equals('dXNlcjpwYXNz', response.request.headers.Authorization);
+			}).always(done);
 		},
 		'should not authenticate without a username': function (done) {
 			var client = basicAuth(
 				function (request) { return { request: request }; }
 			);
-			client({}).then(
-				function (response) {
-					refute.defined(response.request.headers.Authorization);
-					done();
-				}
-			);
+			client({}).then(function (response) {
+				refute.defined(response.request.headers.Authorization);
+			}).always(done);
 		}
 	});
 

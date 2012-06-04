@@ -21,12 +21,9 @@
 				return { entity: '{}', headers: { 'Content-Type': 'application/json' } };
 			});
 
-			client({}).then(
-				function (response) {
-					assert.equals({}, response.entity);
-					done();
-				}
-			);
+			client({}).then(function (response) {
+				assert.equals({}, response.entity);
+			}).always(done);
 		},
 		'should encode the request entity': function (done) {
 			var client;
@@ -38,12 +35,9 @@
 				{ mime: 'application/json' }
 			);
 
-			client({ entity: {} }).then(
-				function (response) {
-					assert.equals('{}', response.request.entity);
-					done();
-				}
-			);
+			client({ entity: {} }).then(function (response) {
+				assert.equals('{}', response.request.entity);
+			}).always(done);
 		}
 	});
 

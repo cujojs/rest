@@ -5,13 +5,6 @@
 	assert = buster.assert;
 	refute = buster.refute;
 
-	function never(done) {
-		return function () {
-			assert(false, 'this method should never be invoked');
-			done();
-		};
-	}
-
 	buster.testCase('rest/client/xhr', {
 		setUp: function (done) {
 			if (xhr) { return done(); }
@@ -35,10 +28,8 @@
 					for (name in response.headers) {
 						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 					}
-					done();
-				},
-				never(done)
-			);
+				}
+			).always(done);
 		},
 		'should make a POST with an entity': function (done) {
 			var request = { path: '/', method: 'post', entity: 'hello world' };
@@ -53,10 +44,8 @@
 					for (name in response.headers) {
 						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 					}
-					done();
-				},
-				never(done)
-			);
+				}
+			).always(done);
 		},
 		'//should be the default client': function () {
 			// FIXME curl has a bug that allow duplicate script loads, even though it's the same function in the same script === will return false

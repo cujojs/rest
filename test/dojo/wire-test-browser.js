@@ -5,13 +5,6 @@
 	assert = buster.assert;
 	refute = buster.refute;
 
-	function never(done) {
-		return function () {
-			assert(false, 'should never be called');
-			done();
-		};
-	}
-
 	function client(request) {
 		return when({ request: request, status: { code: 200 }, headers: { 'Content-Type': 'application/json' }, entity: '{"foo":"bar"}' });
 	}
@@ -35,14 +28,8 @@
 				plugins: [{ module: 'rest/dojo/wire' }]
 			};
 			wire(spec).then(function (spec) {
-				when(spec.store,
-					function (store) {
-						assert(store instanceof RestStore);
-						done();
-					},
-					never(done)
-				);
-			});
+				assert(spec.store instanceof RestStore);
+			}).always(done);
 		},
 		'should get with resource! returning a promise': function (done) {
 			var spec;
@@ -51,15 +38,11 @@
 				plugins: [{ module: 'rest/dojo/wire' }]
 			};
 			wire(spec).then(function (spec) {
-				spec.resource.then(
-					function (resource) {
-						assert.equals('bar', resource.entity.foo);
-						assert.equals('test/dojo/hello.json', resource.request.path);
-						done();
-					},
-					never(done)
-				);
-			});
+				spec.resource.then(function (resource) {
+					assert.equals('bar', resource.entity.foo);
+					assert.equals('test/dojo/hello.json', resource.request.path);
+				});
+			}).always(done);
 		},
 		'should get with resource! returning data': function (done) {
 			var spec;
@@ -70,8 +53,7 @@
 			wire(spec).then(function (spec) {
 				assert.equals('bar', spec.resource.entity.foo);
 				assert.equals('test/dojo/hello.json', spec.resource.request.path);
-				done();
-			});
+			}).always(done);
 		},
 		'should support client!': function (done) {
 			var spec;
@@ -80,14 +62,12 @@
 				plugins: [{ module: 'rest/dojo/wire' }]
 			};
 			wire(spec).then(function (spec) {
-				when(spec.client({}),
+				spec.client({}).then(
 					function (response) {
 						assert.equals('bar', response.foo);
-						done();
-					},
-					never(done)
+					}
 				);
-			});
+			}).always(done);
 		}
 	});
 

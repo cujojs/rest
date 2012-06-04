@@ -16,29 +16,29 @@
 			});
 		},
 
-		'should include callback info from config in request by default': function () {
+		'should include callback info from config in request by default': function (done) {
 			var client = jsonp(
-				function (request) { return { request: request }; },
+				function (request) { return when({ request: request }); },
 				{ callback: { param: 'callback', prefix: 'jsonp' } }
 			);
-			when(client({})).then(
+			client({}).then(
 				function (response) {
 					assert.equals('callback', response.request.callback.param);
 					assert.equals('jsonp', response.request.callback.prefix);
 				}
-			);
+			).always(done);
 		},
-		'should include callback info from request overridding config values': function () {
+		'should include callback info from request overridding config values': function (done) {
 			var client = jsonp(
-				function (request) { return { request: request }; },
+				function (request) { return when({ request: request }); },
 				{ callback: { param: 'callback', prefix: 'jsonp' } }
 			);
-			when(client({ callback: { param: 'customCallback', prefix: 'customPrefix' } })).then(
+			client({ callback: { param: 'customCallback', prefix: 'customPrefix' } }).then(
 				function (response) {
 					assert.equals('customCallback', response.request.callback.param);
 					assert.equals('customPrefix', response.request.callback.prefix);
 				}
-			);
+			).always(done);
 		}
 	});
 

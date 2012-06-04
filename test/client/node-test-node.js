@@ -44,9 +44,8 @@ buster.testCase('rest/client/node', {
 				assert.equals(response.status.code, 200);
 				assert.equals('text/plain', response.headers['Content-Type']);
 				assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
-				done();
 			}
-		);
+		).always(done);
 	},
 
 	'should make a POST with an entity': function (done) {
@@ -59,9 +58,8 @@ buster.testCase('rest/client/node', {
 				assert.equals(response.status.code, 200);
 				assert.equals('text/plain', response.headers['Content-Type']);
 				assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
-				done();
 			}
-		);
+		).always(done);
 	},
 
 	'should be the default client': function () {

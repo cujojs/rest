@@ -20,12 +20,9 @@
 			body = {};
 			client = entity(function () { return { entity: body }; });
 
-			client().then(
-				function (response) {
-					assert.same(body, response);
-					done();
-				}
-			);
+			client().then(function (response) {
+				assert.same(body, response);
+			}).always(done);
 		},
 		'should return the whole response if there is no entity': function (done) {
 			var client, response;
@@ -33,12 +30,9 @@
 			response = {};
 			client = entity(function () { return response; });
 
-			client().then(
-				function (r) {
-					assert.same(response, r);
-					done();
-				}
-			);
+			client().then(function (r) {
+				assert.same(response, r);
+			}).always(done);
 		}
 	});
 

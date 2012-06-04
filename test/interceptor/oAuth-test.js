@@ -23,12 +23,9 @@
 				{ token: 'bearer abcxyz' }
 			);
 
-			client({}).then(
-				function (response) {
-					assert.equals('bearer abcxyz', response.request.headers.Authorization);
-					done();
-				}
-			);
+			client({}).then(function (response) {
+				assert.equals('bearer abcxyz', response.request.headers.Authorization);
+			}).always(done);
 		},
 		'should use implicit flow to authenticate the request': function (done) {
 			var client, windowStrategy, windowStrategyClose, oAuthCallbackName;
@@ -59,13 +56,10 @@
 				}
 			);
 
-			client({}).then(
-				function (response) {
-					assert.equals('bearer abcxyz', response.request.headers.Authorization);
-					assert.called(windowStrategyClose);
-					done();
-				}
-			);
+			client({}).then(function (response) {
+				assert.equals('bearer abcxyz', response.request.headers.Authorization);
+				assert.called(windowStrategyClose);
+			}).always(done);
 		}
 	});
 
