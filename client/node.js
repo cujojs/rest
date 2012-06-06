@@ -15,7 +15,7 @@ function node(request) {
 
 	d = when.defer();
 
-	url = new UrlBuilder(request.path || "", request.params).build();
+	url = new UrlBuilder(request.path || '', request.params).build();
 	client = url.match(httpsExp) ? https : http;
 
 	options = parser.parse(url);
@@ -46,7 +46,11 @@ function node(request) {
 			});
 
 			clientResponse.on('data', function (data) {
-				response.entity = !response.entity ? data : (response.entity + data);
+				if (!('entity' in response)) {
+					response.entity = '';
+				}
+				// normalize Buffer to a String
+				response.entity += data.toString();
 			});
 			clientResponse.on('end', function () {
 				d.resolve(response);
