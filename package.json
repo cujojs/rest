@@ -30,12 +30,12 @@
 		"dojo": "https://github.com/dojo/dojo/tarball/1.7.2",
 		"poly": "https://github.com/cujojs/poly/tarball/0.4",
 		"wire": "https://github.com/cujojs/wire/tarball/0.8.0",
-		"buster": "~0.5",
+		"buster": "",
 		"jshint": ""
 	},
 	"main": "./rest",
 	"scripts": {
 		"test": "jshint client dojo interceptor mime test util *.js && buster test -e node --color none --reporter specification",
-		"static": "buster static"
+		"browser": "buster static -e browser"
 	}
 }
