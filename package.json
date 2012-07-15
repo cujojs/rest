@@ -26,7 +26,7 @@
 		"when": "~1.2"
 	},
 	"devDependencies": {
-		"curl": "https://github.com/scothis/curl/tarball/npm",
+		"curl": "https://github.com/cujojs/curl/tarball/dev",
 		"dojo": "https://github.com/dojo/dojo/tarball/1.7.2",
 		"poly": "https://github.com/cujojs/poly/tarball/0.4",
 		"wire": "https://github.com/cujojs/wire/tarball/0.8.0",
