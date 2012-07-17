@@ -1,7 +1,7 @@
 Rest Template
 =============
 
-...in progress...
+Just enough client, as you need it.  Make HTTP requests from a browser or Node.js applying the only the client features you need.  Configure a client once, and share it safely throughout your application.  Easily extend with interceptors that wrap the request and/or response, or MIME type converters for rich data formats.
 
 
 Build Status
@@ -36,7 +36,7 @@ Usage
 
 Using Rest is easy.  The core clients provide limited functionality around the request and response lifecycle.  The input and response objects are normalized to support portability between browser and server environments.
 
-The response from a client is a promise that will be resolved when the remote request is finished.
+The response from a client is a promise that is resolved when the remote request finishes.
 
 The core client behavior can be augmented with interceptors.  An interceptor wraps the client and transforms the request and response.  For example: an interceptor may authenticate a request, or reject the promise if an error is encountered.  Interceptors may be combined to create a client with the desired behavior.  A configured interceptor acts just like a client.
 
@@ -159,4 +159,5 @@ Thanks
 Change Log
 ----------
 
-No releases yet, soon
+0.7.5
+- Initial release, everything is new

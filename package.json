@@ -1,6 +1,6 @@
 {
 	"name": "rest-template",
-	"version": "0.0.1",
+	"version": "0.7.5",
 	"description": "HTTP client library inspired by the Spring Framework's RestTemplate",
 	"keywords": ["rest", "http", "client", "rest-template", "spring"],
 	"licenses": [
