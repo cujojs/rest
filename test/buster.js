@@ -16,7 +16,7 @@ config['rest:browser'] = {
 		'**'
 	],
 	libs: [
-		'lib/curl-config.js',
+		'test/curl-config.js',
 		'node_modules/curl/src/curl.js'
 	],
 	sources: [

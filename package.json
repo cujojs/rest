@@ -23,7 +23,7 @@
 		}
 	],
 	"dependencies": {
-		"when": "~1.2"
+		"when": "~1"
 	},
 	"devDependencies": {
 		"curl": "https://github.com/cujojs/curl/tarball/dev",
@@ -36,6 +36,6 @@
 	"main": "./rest",
 	"scripts": {
 		"test": "jshint client dojo interceptor mime test util *.js && buster test -e node --color none --reporter specification",
-		"browser": "buster static -e browser"
+		"start": "buster static -e browser"
 	}
 }

@@ -102,12 +102,12 @@ Clients can continue to be composed with interceptors as needed.  At any point t
 define(['rest/mime/registry'], function(registry) {
    registry.register('application/vnd.com.example', {
        read: function(str) {
-           var obj = str;
+           var obj;
            // do string to object conversions
            return obj;
        },
        write: function(obj) {
-           var str = obj;
+           var str;
            // do object to string conversions
            return str;
        }
@@ -123,7 +123,7 @@ Built in converters are available under `rest/mime/type/{type}`, as an example, 
 Reporting Issues
 ----------------
 
-Please report issues on [GitHub](https://github.com/scothis/rest/issues).  Include a brief description of the error, detailed information about the runtime (including shims) and any error messages.
+Please report issues on [GitHub](https://github.com/scothis/rest/issues).  Include a brief description of the error, information about the runtime (including shims) and any error messages.
 
 Feature requests are also welcome.
 
@@ -131,7 +131,11 @@ Feature requests are also welcome.
 Running the Tests
 -----------------
 
-The test suite can be run in two different modes: in node, or in a browser.  We use [Buster.JS](http://busterjs.org/) as the test driver, buster will be installed by [npm](http://npmjs.org/) for the node tests.  For browser tests, you may need to run `npm install -g buster` to make the buster commands available.
+The test suite can be run in two different modes: in node, or in a browser.  We use [Buster.JS](http://busterjs.org/) as the test driver, buster is installed automatically with other dependencies.
+
+Before running the test suite for the first time:
+
+    $ npm install
 
 To run the suite in node:
 
@@ -139,8 +143,8 @@ To run the suite in node:
 
 To run the suite in a browser:
 
-    $ buster static
-    browse to http://localhost:8282/ in the browser(s) you wish to test
+    $ npm start
+    browse to http://localhost:8282/ in the browser(s) you wish to test.  It can take a few seconds to start.
 
 
 Thanks
