@@ -53,12 +53,12 @@
 					return when(requestHandler(request, config)).then(function (request) {
 						return when(client(request)).then(
 							function (response) {
-								return successResponseHandler(response, config);
+								return successResponseHandler(response, config, client);
 							},
 							function (response) {
 								// Propagate the rejection, but with the result of the
 								// registered error response handler
-								return when.reject(errorResponseHandler(response, config));
+								return when.reject(errorResponseHandler(response, config, client));
 							}
 						);
 					});
