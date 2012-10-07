@@ -159,5 +159,11 @@ Thanks
 Change Log
 ----------
 
+.next
+- introduced 'location' interceptor which follows Location response headers, issuing a GET for the specified URL
+- response handlers now have access to the request client to issue subsequent requests
+- interceptors may specify their default client
+- renamed `rest/interceptor/_base` to `rest/interceptor`
+
 0.7.5
 - Initial release, everything is new
