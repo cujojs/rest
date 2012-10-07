@@ -1,6 +1,6 @@
 (function (define) {
 
-	define(['../client/jsonp'], function (defaultClient) {
+	define(['../interceptor', '../client/jsonp'], function (interceptor, jsonpClient) {
 		"use strict";
 
 		/**
@@ -18,30 +18,16 @@
 		 *
 		 * @returns {Client}
 		 */
-		return function (client, config) {
-			var interceptor;
-
-			if (typeof client === 'object') {
-				config = client;
-			}
-			if (typeof client !== 'function') {
-				client = defaultClient;
-			}
-			config = config || {};
-			config.callback = config.callback || {};
-
-			interceptor = function (request) {
+		return interceptor({
+			client: jsonpClient,
+			request: function (request, config) {
+				config.callback = config.callback || {};
 				request.callback = request.callback || {};
 				request.callback.param = request.callback.param || config.callback.param;
 				request.callback.prefix = request.callback.prefix || config.callback.prefix;
-				return client(request);
-			};
-			interceptor.skip = function () {
-				return client;
-			};
-
-			return interceptor;
-		};
+				return request;
+			}
+		});
 
 	});
 
