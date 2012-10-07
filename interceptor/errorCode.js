@@ -1,6 +1,6 @@
 (function (define) {
 
-	define(['./_base', 'when'], function (base, when) {
+	define(['../interceptor', 'when'], function (interceptor, when) {
 		"use strict";
 
 		/**
@@ -14,7 +14,7 @@
 		 *
 		 * @returns {Client}
 		 */
-		return base({
+		return interceptor({
 			response: function (response, config) {
 				var code = config.code || 400;
 				if (response.status && response.status.code >= code) {

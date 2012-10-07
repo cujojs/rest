@@ -1,6 +1,6 @@
 (function (define) {
 
-	define(['./_base', 'when'], function (base, when) {
+	define(['../interceptor'], function (interceptor) {
 		"use strict";
 
 		/**
@@ -19,7 +19,7 @@
 		 *
 		 * @returns {Client}
 		 */
-		return base({
+		return interceptor({
 			success: function (response, config, client) {
 				if (response.headers && response.headers.Location) {
 					return (config.client || client)({

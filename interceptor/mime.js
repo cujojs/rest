@@ -1,6 +1,6 @@
 (function (define) {
 
-	define(['./_base', '../mime/registry', 'when'], function (base, registry, when) {
+	define(['../interceptor', '../mime/registry', 'when'], function (interceptor, registry, when) {
 		"use strict";
 
 		/**
@@ -17,7 +17,7 @@
 		 *
 		 * @returns {Client}
 		 */
-		return base({
+		return interceptor({
 			request: function (request, config) {
 				var mime, headers, serializer, requestReady;
 

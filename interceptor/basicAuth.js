@@ -1,6 +1,6 @@
 (function (define) {
 
-	define(['./_base', '../util/base64'], function (base, base64) {
+	define(['../interceptor', '../util/base64'], function (interceptor, base64) {
 		"use strict";
 
 		/**
@@ -12,7 +12,7 @@
 		 *
 		 * @returns {Client}
 		 */
-		return base({
+		return interceptor({
 			request: function handleRequest(request, config) {
 				var headers, username, password;
 

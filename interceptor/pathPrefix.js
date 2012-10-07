@@ -1,6 +1,6 @@
 (function (define) {
 
-	define(['./_base'], function (base) {
+	define(['../interceptor'], function (interceptor) {
 		"use strict";
 
 		function startsWith(str, prefix) {
@@ -19,7 +19,7 @@
 		 *
 		 * @returns {Client}
 		 */
-		return base({
+		return interceptor({
 			request: function (request, config) {
 				var path;
 

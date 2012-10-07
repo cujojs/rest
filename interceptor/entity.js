@@ -1,6 +1,6 @@
 (function (define) {
 
-	define(['./_base'], function (base) {
+	define(['../interceptor'], function (interceptor) {
 		"use strict";
 
 		/**
@@ -11,7 +11,7 @@
 		 *
 		 * @returns {Client}
 		 */
-		return base({
+		return interceptor({
 			response: function (response) {
 				if ('entity' in response) {
 					return response.entity;
