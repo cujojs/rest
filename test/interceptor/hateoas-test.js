@@ -6,6 +6,18 @@
 	refute = buster.assertions.refute;
 
 	buster.testCase('rest/interceptor/hateoas', {
+		requiresSupportFor: {
+			'Object.defineProperty': function () {
+				try {
+					var obj = {};
+					Object.defineProperty(obj, 'test', { enumerable: false, configurable: true, value: true });
+					return obj.test;
+				}
+				catch (e) {
+					return false;
+				}
+			}
+		},
 		setUp: function (done) {
 			if (hateoas) { return done(); }
 			define('rest/interceptor/hateoas-test', ['rest/interceptor/hateoas', 'rest', 'when'], function (h, r, w) {
