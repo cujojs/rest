@@ -161,6 +161,7 @@ Change Log
 
 .next
 - npm name change 'rest-template' -> 'rest'
+- introduced experimental HATEOAS support
 - introduced 'location' interceptor which follows Location response headers, issuing a GET for the specified URL
 - response handlers now have access to the request client to issue subsequent requests
 - interceptors may specify their default client

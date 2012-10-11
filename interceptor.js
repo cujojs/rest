@@ -63,6 +63,7 @@
 				config = config || {};
 
 				interceptor = function (request) {
+					request = request || {};
 					return when(requestHandler(request, config)).then(function (request) {
 						return when(client(request)).then(
 							function (response) {
