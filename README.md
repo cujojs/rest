@@ -159,6 +159,8 @@ Thanks
 Change Log
 ----------
 
+.next
+
 0.8.0
 - npm name change 'rest-template' -> 'rest'
 - introduced experimental HATEOAS support
