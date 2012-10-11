@@ -159,7 +159,7 @@ Thanks
 Change Log
 ----------
 
-.next
+0.8.0
 - npm name change 'rest-template' -> 'rest'
 - introduced experimental HATEOAS support
 - introduced 'location' interceptor which follows Location response headers, issuing a GET for the specified URL
