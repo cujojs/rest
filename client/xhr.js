@@ -46,7 +46,9 @@
 			try {
 				client = new XMLHttpRequest();
 
-				method = request.method || 'GET';
+				entity = request.entity;
+				request.method = request.method || entity ? 'POST' : 'GET';
+				method = request.method;
 				url = new UrlBuilder(request.path || '', request.params).build();
 				client.open(method, url, true);
 
@@ -73,7 +75,6 @@
 					}
 				};
 
-				entity = request.entity;
 				client.send(entity);
 			}
 			catch (e) {

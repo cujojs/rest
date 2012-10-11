@@ -19,12 +19,13 @@ function node(request) {
 	client = url.match(httpsExp) ? https : http;
 
 	options = parser.parse(url);
-	options.method = request.method || 'GET';
+	entity = request.entity;
+	request.method = request.method || entity ? 'POST' : 'GET';
+	options.method = request.method;
 	headers = options.headers = {};
 	Object.keys(request.headers || {}).forEach(function (name) {
 		headers[normalizeHeaderName(name)] = request.headers[name];
 	});
-	entity = request.entity;
 	if (!headers['Content-Length']) {
 		headers['Content-Length'] = entity ? Buffer.byteLength(entity, 'utf8') : 0;
 	}

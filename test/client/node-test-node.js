@@ -40,6 +40,7 @@ buster.testCase('rest/client/node', {
 			function (response) {
 				assert(response.raw);
 				assert.same(request, response.request);
+				assert.equals(response.request.method, 'GET');
 				assert.equals(response.entity, 'hello world');
 				assert.equals(response.status.code, 200);
 				assert.equals('text/plain', response.headers['Content-Type']);
@@ -49,11 +50,12 @@ buster.testCase('rest/client/node', {
 	},
 
 	'should make a POST with an entity': function (done) {
-		var request = { path: 'http://localhost:8080/', method: 'POST', entity: 'echo' };
+		var request = { path: 'http://localhost:8080/', entity: 'echo' };
 		client(request).then(
 			function (response) {
 				assert(response.raw);
 				assert.same(request, response.request);
+				assert.equals(response.request.method, 'POST');
 				assert.equals(response.entity, 'echo');
 				assert.equals(response.status.code, 200);
 				assert.equals('text/plain', response.headers['Content-Type']);

@@ -163,6 +163,7 @@ Change Log
 - npm name change 'rest-template' -> 'rest'
 - introduced experimental HATEOAS support
 - introduced 'location' interceptor which follows Location response headers, issuing a GET for the specified URL
+- default method to POST when request contains an entity
 - response handlers now have access to the request client to issue subsequent requests
 - interceptors may specify their default client
 - renamed `rest/interceptor/_base` to `rest/interceptor`
