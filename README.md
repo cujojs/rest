@@ -159,7 +159,7 @@ Thanks
 Change Log
 ----------
 
-.next
+0.8.1
 - fixed bug where http method may be overwritten
 
 0.8.0
