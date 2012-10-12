@@ -32,8 +32,42 @@
 				}
 			).always(done);
 		},
+		'should make an explicit GET': function (done) {
+			var request = { path: '/', method: 'GET' };
+			xhr(request).then(
+				function (response) {
+					var xhr, name;
+					xhr = response.raw;
+					assert.same(request, response.request);
+					assert.equals(response.request.method, 'GET');
+					assert.equals(xhr.responseText, response.entity);
+					assert.equals(xhr.status, response.status.code);
+					assert.equals(xhr.statusText, response.status.text);
+					for (name in response.headers) {
+						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
+					}
+				}
+			).always(done);
+		},
 		'should make a POST with an entity': function (done) {
 			var request = { path: '/', entity: 'hello world' };
+			xhr(request).then(
+				function (response) {
+					var xhr, name;
+					xhr = response.raw;
+					assert.same(request, response.request);
+					assert.equals(response.request.method, 'POST');
+					assert.equals(xhr.responseText, response.entity);
+					assert.equals(xhr.status, response.status.code);
+					assert.equals(xhr.statusText, response.status.text);
+					for (name in response.headers) {
+						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
+					}
+				}
+			).always(done);
+		},
+		'should make an explicit POST with an entity': function (done) {
+			var request = { path: '/', entity: 'hello world', method: 'POST' };
 			xhr(request).then(
 				function (response) {
 					var xhr, name;

@@ -20,7 +20,7 @@ function node(request) {
 
 	options = parser.parse(url);
 	entity = request.entity;
-	request.method = request.method || entity ? 'POST' : 'GET';
+	request.method = request.method || (entity ? 'POST' : 'GET');
 	options.method = request.method;
 	headers = options.headers = {};
 	Object.keys(request.headers || {}).forEach(function (name) {

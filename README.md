@@ -160,6 +160,7 @@ Change Log
 ----------
 
 .next
+- fixed bug where http method may be overwritten
 
 0.8.0
 - npm name change 'rest-template' -> 'rest'

@@ -24,12 +24,10 @@ server.on('request', function (request, response) {
 });
 
 buster.testCase('rest/client/node', {
-
 	setUp: function () {
 		// TODO check that port is free
 		server.listen(8080);
 	},
-
 	tearDown: function () {
 		server.close();
 	},
@@ -48,7 +46,20 @@ buster.testCase('rest/client/node', {
 			}
 		).always(done);
 	},
-
+	'should make an explicit GET': function (done) {
+		var request = { path: 'http://localhost:8080/', method: 'GET' };
+		client(request).then(
+			function (response) {
+				assert(response.raw);
+				assert.same(request, response.request);
+				assert.equals(response.request.method, 'GET');
+				assert.equals(response.entity, 'hello world');
+				assert.equals(response.status.code, 200);
+				assert.equals('text/plain', response.headers['Content-Type']);
+				assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
+			}
+		).always(done);
+	},
 	'should make a POST with an entity': function (done) {
 		var request = { path: 'http://localhost:8080/', entity: 'echo' };
 		client(request).then(
@@ -63,9 +74,21 @@ buster.testCase('rest/client/node', {
 			}
 		).always(done);
 	},
-
+	'should make an explicit POST with an entity': function (done) {
+		var request = { path: 'http://localhost:8080/', entity: 'echo', method: 'POST' };
+		client(request).then(
+			function (response) {
+				assert(response.raw);
+				assert.same(request, response.request);
+				assert.equals(response.request.method, 'POST');
+				assert.equals(response.entity, 'echo');
+				assert.equals(response.status.code, 200);
+				assert.equals('text/plain', response.headers['Content-Type']);
+				assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
+			}
+		).always(done);
+	},
 	'should be the default client': function () {
 		assert.same(client, rest);
 	}
-
 });
