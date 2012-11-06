@@ -1,167 +1,148 @@
-/*jshint bitwise: false */
+/*
+ * Base 64 implementation in JavaScript
+ * Copyright (c) 2009 Nicholas C. Zakas. All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+/*
+ * Original source available at https://raw.github.com/nzakas/computer-science-in-javascript/02a2745b4aa8214f2cae1bf0b15b447ca1a91b23/encodings/base64/base64.js
+ *
+ * Converted to AMD and linter refinement by Scott Andrews
+ */
+
 (function (define) {
 
-	/*
-	 * Base64 encode / decode
-	 * http://www.webtoolkit.info/
-	 *
-	 * Converted to AMD
-	 */
+	/*jshint bitwise: false */
 	define(function (require) {
 		"use strict";
 
-		var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+		var digits = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 		/**
-		 * Base64 encode input
-		 *
-		 * @param {String} input value to encode
-		 * @return {String} the encoded value
+		 * Base64-encodes a string of text.
+		 * @param {String} text The text to encode.
+		 * @return {String} The base64-encoded string.
 		 */
-		function encode(input) {
-			var output, chr1, chr2, chr3, enc1, enc2, enc3, enc4, i;
+		function base64Encode(text) {
 
-			output = "";
-			i = 0;
-			input = _utf8_encode(input);
-
-			while (i < input.length) {
-
-				chr1 = input.charCodeAt(i);
-				i += 1;
-				chr2 = input.charCodeAt(i);
-				i += 1;
-				chr3 = input.charCodeAt(i);
-				i += 1;
-
-				enc1 = chr1 >> 2;
-				enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-				enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-				enc4 = chr3 & 63;
-
-				if (isNaN(chr2)) {
-					enc3 = enc4 = 64;
-				} else if (isNaN(chr3)) {
-					enc4 = 64;
-				}
-
-				output = output +
-				chars.charAt(enc1) + chars.charAt(enc2) +
-				chars.charAt(enc3) + chars.charAt(enc4);
-
+			if (/([^\u0000-\u00ff])/.test(text)) {
+				throw new Error("Can't base64 encode non-ASCII characters.");
 			}
 
-			return output;
+			var i = 0,
+				cur, prev, byteNum,
+				result = [];
+
+			while (i < text.length) {
+
+				cur = text.charCodeAt(i);
+				byteNum = i % 3;
+
+				switch (byteNum) {
+				case 0: //first byte
+					result.push(digits.charAt(cur >> 2));
+					break;
+
+				case 1: //second byte
+					result.push(digits.charAt((prev & 3) << 4 | (cur >> 4)));
+					break;
+
+				case 2: //third byte
+					result.push(digits.charAt((prev & 0x0f) << 2 | (cur >> 6)));
+					result.push(digits.charAt(cur & 0x3f));
+					break;
+				}
+
+				prev = cur;
+				i += 1;
+			}
+
+			if (byteNum === 0) {
+				result.push(digits.charAt((prev & 3) << 4));
+				result.push('==');
+			} else if (byteNum === 1) {
+				result.push(digits.charAt((prev & 0x0f) << 2));
+				result.push('=');
+			}
+
+			return result.join('');
 		}
 
 		/**
-		 * Base64 decode input
-		 *
-		 * @param {String} input the value to decode
-		 * @return {String} the decoded value
+		 * Base64-decodes a string of text.
+		 * @param {String} text The text to decode.
+		 * @return {String} The base64-decoded string.
 		 */
-		function decode(input) {
-			var output, chr1, chr2, chr3, enc1, enc2, enc3, enc4, i;
+		function base64Decode(text) {
 
-			output = "";
-			i = 0;
-			input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+			//ignore white space
+			text = text.replace(/\s/g, '');
 
-			while (i < input.length) {
-
-				enc1 = chars.indexOf(input.charAt(i));
-				i += 1;
-				enc2 = chars.indexOf(input.charAt(i));
-				i += 1;
-				enc3 = chars.indexOf(input.charAt(i));
-				i += 1;
-				enc4 = chars.indexOf(input.charAt(i));
-				i += 1;
-
-				chr1 = (enc1 << 2) | (enc2 >> 4);
-				chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-				chr3 = ((enc3 & 3) << 6) | enc4;
-
-				output = output + String.fromCharCode(chr1);
-
-				if (enc3 !== 64) {
-					output = output + String.fromCharCode(chr2);
-				}
-				if (enc4 !== 64) {
-					output = output + String.fromCharCode(chr3);
-				}
-
+			//first check for any unexpected input
+			if (!(/^[a-z0-9\+\/\s]+\={0,2}$/i.test(text)) || text.length % 4 > 0) {
+				throw new Error("Not a base64-encoded string.");
 			}
 
-			output = _utf8_decode(output);
+			//local variables
+			var cur, prev, digitNum,
+				i = 0,
+				result = [];
 
-			return output;
+			//remove any equals signs
+			text = text.replace(/\=/g, '');
 
-		}
+			//loop over each character
+			while (i < text.length) {
 
-		function _utf8_encode(string) {
-			var utftext, n, c;
+				cur = digits.indexOf(text.charAt(i));
+				digitNum = i % 4;
 
-			utftext = "";
-			string = string.replace(/\r\n/g, '\n');
+				switch (digitNum) {
 
-			for (n = 0; n < string.length; n += 1) {
+				//case 0: first digit - do nothing, not enough info to work with
 
-				c = string.charCodeAt(n);
+				case 1: //second digit
+					result.push(String.fromCharCode(prev << 2 | cur >> 4));
+					break;
 
-				if (c < 128) {
-					utftext += String.fromCharCode(c);
+				case 2: //third digit
+					result.push(String.fromCharCode((prev & 0x0f) << 4 | cur >> 2));
+					break;
+
+				case 3: //fourth digit
+					result.push(String.fromCharCode((prev & 3) << 6 | cur));
+					break;
 				}
-				else if ((c > 127) && (c < 2048)) {
-					utftext += String.fromCharCode((c >> 6) | 192);
-					utftext += String.fromCharCode((c & 63) | 128);
-				}
-				else {
-					utftext += String.fromCharCode((c >> 12) | 224);
-					utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-					utftext += String.fromCharCode((c & 63) | 128);
-				}
 
+				prev = cur;
+				i += 1;
 			}
 
-			return utftext;
-		}
+			//return a string
+			return result.join('');
 
-		function _utf8_decode(utftext) {
-			var string, i, c, c1, c2, c3;
-
-			string = "";
-			i = 0;
-			c = c1 = c2 = 0;
-
-			while (i < utftext.length) {
-
-				c = utftext.charCodeAt(i);
-
-				if (c < 128) {
-					string += String.fromCharCode(c);
-					i += 1;
-				}
-				else if ((c > 191) && (c < 224)) {
-					c2 = utftext.charCodeAt(i + 1);
-					string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-					i += 2;
-				}
-				else {
-					c2 = utftext.charCodeAt(i + 1);
-					c3 = utftext.charCodeAt(i + 2);
-					string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-					i += 3;
-				}
-
-			}
-
-			return string;
 		}
 
 		return {
-			encode: encode,
-			decode: decode
+			encode: base64Encode,
+			decode: base64Decode
 		};
 
 	});

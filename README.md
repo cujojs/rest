@@ -161,6 +161,7 @@ Change Log
 
 .next
 - convert modules to UMD format; no functional impact
+- replaced rest/util/base64 with an MIT licenced impl; no functional impact
 
 0.8.1
 - fixed bug where http method may be overwritten
