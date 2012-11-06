@@ -1,11 +1,17 @@
 (function (define, global, process) {
 
-	// include ./type/text/plain and ./type/application/json as hints to a build tool
-	define(['when', 'require', './type/text/plain', './type/application/json'], function (when, require) {
+	define(function (require) {
+		"use strict";
 
-		var load, registry;
+		var when, load, registry;
 
-		registry = {};
+		when = require('when');
+
+		// include text/plain and application/json by default
+		registry = {
+			'text/plain': require('./type/text/plain'),
+			'application/json': require('./type/application/json')
+		};
 
 		/**
 		 * Lookup the converter for a MIME type
@@ -73,9 +79,7 @@
 		 * @param {String} mime the MIME type
 		 * @return {*} the converter for the MIME type
 		 */
-		load = (
-			typeof require === 'function' && require.amd ? load_amd : load_node
-		);
+		load = typeof require === 'function' && require.amd ? load_amd : load_node;
 
 		return {
 			lookup: lookup,
@@ -85,9 +89,7 @@
 	});
 
 }(
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(function (dep) { return dep === 'require' ? require : require(dep); }));
-	},
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); },
 	typeof global === 'undefined' ? this : global,
 	typeof process === 'undefined' ? undefined : process
 	// Boilerplate for AMD and Node

@@ -1,7 +1,12 @@
 (function (define) {
 
-	define(['../interceptor', '../util/base64'], function (interceptor, base64) {
+	define(function (require) {
 		"use strict";
+
+		var interceptor, base64;
+
+		interceptor = require('../interceptor');
+		base64 = require('../util/base64');
 
 		/**
 		 * Authenticates the request using HTTP Basic Authentication (rfc2617)
@@ -31,8 +36,6 @@
 	});
 
 }(
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	}
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
 	// Boilerplate for AMD and Node
 ));

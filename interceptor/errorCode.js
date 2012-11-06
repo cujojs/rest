@@ -1,7 +1,12 @@
 (function (define) {
 
-	define(['../interceptor', 'when'], function (interceptor, when) {
+	define(function (require) {
 		"use strict";
+
+		var interceptor, when;
+
+		interceptor = require('../interceptor');
+		when = require('when');
 
 		/**
 		 * Rejects the response promise based on the status code.
@@ -27,8 +32,6 @@
 	});
 
 }(
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	}
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
 	// Boilerplate for AMD and Node
 ));

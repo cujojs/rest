@@ -1,7 +1,12 @@
 (function (define) {
 
-	define(['../interceptor', '../client/jsonp'], function (interceptor, jsonpClient) {
+	define(function (require) {
 		"use strict";
+
+		var interceptor, jsonpClient;
+
+		interceptor = require('../interceptor');
+		jsonpClient = require('../client/jsonp');
 
 		/**
 		 * Allows common configuration of JSONP clients.
@@ -32,8 +37,6 @@
 	});
 
 }(
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	}
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
 	// Boilerplate for AMD and Node
 ));

@@ -1,7 +1,12 @@
-(function (global, document, define) {
+(function (define, global, document) {
 
-	define(['when', '../UrlBuilder'], function (when, UrlBuilder) {
+	define(function (require) {
 		"use strict";
+
+		var when, UrlBuilder;
+
+		when = require('when');
+		UrlBuilder = require('../UrlBuilder');
 
 		// consider abstracting this into a util module
 		function clearProperty(scope, propertyName) {
@@ -71,10 +76,8 @@
 	});
 
 }(
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); },
 	this,
-	this.document,
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	}
+	this.document
 	// Boilerplate for AMD and Node
 ));

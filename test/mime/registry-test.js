@@ -1,54 +1,58 @@
 (function (buster, define) {
 
-	var registry, when, assert, refute;
+	var assert, refute, undef;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
-	buster.testCase('rest/mime/registry', {
-		setUp: function (done) {
-			if (registry) { return done(); }
-			define('rest/mime/registry-test', ['rest/mime/registry', 'when'], function (r, w) {
-				registry = r;
-				when = w;
-				done();
-			});
-		},
+	define('rest/mime/registry-test', function (require) {
 
-		'should discover unregisted serializers': function (done) {
-			when(
-				registry.lookup('text/plain'),
-				function (serializer) {
-					assert.isFunction(serializer.read);
-					assert.isFunction(serializer.write);
-				}
-			).always(done);
-		},
-		'should return registed serializer': function (done) {
-			var serializer = {};
-			registry.register('application/vnd.com.foo', serializer);
-			when(
-				registry.lookup('application/vnd.com.foo'),
-				function (s) {
-					assert.same(serializer, s);
-				}
-			).always(done);
-		},
-		'should reject for non-existant serializer': function (done) {
-			when(
-				registry.lookup('application/bogus'),
-				undefined,
-				function () {
-					assert(true);
-				}
-			).always(done);
-		}
+		var registry, when;
+
+		registry = require('rest/mime/registry');
+		when = require('when');
+
+		buster.testCase('rest/mime/registry', {
+			'should discover unregisted serializers': function (done) {
+				when(
+					registry.lookup('text/plain'),
+					function (serializer) {
+						assert.isFunction(serializer.read);
+						assert.isFunction(serializer.write);
+					}
+				).always(done);
+			},
+			'should return registed serializer': function (done) {
+				var serializer = {};
+				registry.register('application/vnd.com.foo', serializer);
+				when(
+					registry.lookup('application/vnd.com.foo'),
+					function (s) {
+						assert.same(serializer, s);
+					}
+				).always(done);
+			},
+			'should reject for non-existant serializer': function (done) {
+				when(
+					registry.lookup('application/bogus'),
+					undefined,
+					function () {
+						assert(true);
+					}
+				).always(done);
+			}
+		});
+
 	});
 
 }(
 	this.buster || require('buster'),
-	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../mime/registry'), require('when'));
+	typeof define === 'function' && define.amd ? define : function (id, factory) {
+		var packageName = id.split(/[\/\-]/)[0], pathToRoot = id.replace(/[^\/]+/g, '..');
+		pathToRoot = pathToRoot.length > 2 ? pathToRoot.substr(3) : pathToRoot;
+		factory(function (moduleId) {
+			return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId);
+		});
 	}
 	// Boilerplate for AMD and Node
 ));

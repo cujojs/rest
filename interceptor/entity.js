@@ -1,7 +1,11 @@
 (function (define) {
 
-	define(['../interceptor'], function (interceptor) {
+	define(function (require) {
 		"use strict";
+
+		var interceptor;
+
+		interceptor = require('../interceptor');
 
 		/**
 		 * Returns the response entity as the response, discarding other response
@@ -23,8 +27,6 @@
 	});
 
 }(
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	}
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
 	// Boilerplate for AMD and Node
 ));

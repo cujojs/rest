@@ -1,6 +1,14 @@
 (function (define) {
 
-	define(['./RestStore', '../wire', '../util/mixin', 'when'], function (RestStore, clientPlugin, mixin, when) {
+	define(function (require) {
+		"use strict";
+
+		var RestStore, clientPlugin, mixin, when;
+
+		RestStore = require('./RestStore');
+		clientPlugin = require('../wire');
+		mixin = require('../util/mixin');
+		when = require('when');
 
 		/**
 		 * If wait === true, waits for dataPromise to complete and resolves
@@ -85,8 +93,6 @@
 	});
 
 }(
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	}
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
 	// Boilerplate for AMD and Node
 ));

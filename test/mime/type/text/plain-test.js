@@ -1,34 +1,36 @@
 (function (buster, define) {
 
-	var plain, assert, refute;
+	var assert, refute, undef;
 
 	assert = buster.assert;
 	refute = buster.refute;
 
-	buster.testCase('rest/mime/type/text/plain', {
-		setUp: function (done) {
-			if (plain) { return done(); }
-			define('rest/mime/type/text/plain-test', ['rest/mime/type/text/plain'], function (p) {
-				plain = p;
-				done();
-			});
-		},
+	define('rest/mime/type/text/plain-test', function (require) {
 
-		'should not change when writing string values': function () {
-			assert.equals('7', plain.write('7'));
-		},
-		'should use the string representation for reading non-string values': function () {
-			assert.equals('7', plain.write(7));
-		},
-		'should not change when reading string values': function () {
-			assert.equals('7', plain.read('7'));
-		}
+		var plain = require('rest/mime/type/text/plain');
+
+		buster.testCase('rest/mime/type/text/plain', {
+			'should not change when writing string values': function () {
+				assert.equals('7', plain.write('7'));
+			},
+			'should use the string representation for reading non-string values': function () {
+				assert.equals('7', plain.write(7));
+			},
+			'should not change when reading string values': function () {
+				assert.equals('7', plain.read('7'));
+			}
+		});
+
 	});
 
 }(
 	this.buster || require('buster'),
-	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../../../mime/type/text/plain'));
+	typeof define === 'function' && define.amd ? define : function (id, factory) {
+		var packageName = id.split(/[\/\-]/)[0], pathToRoot = id.replace(/[^\/]+/g, '..');
+		pathToRoot = pathToRoot.length > 2 ? pathToRoot.substr(3) : pathToRoot;
+		factory(function (moduleId) {
+			return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId);
+		});
 	}
 	// Boilerplate for AMD and Node
 ));

@@ -1,9 +1,11 @@
-(function (doc, define) {
+(function (define, document) {
 
-	define(['./util/beget'], function (beget) {
+	define(function (require) {
 		"use strict";
 
-		var absoluteUrlRE, urlEncodedBraceOpenRE, urlEncodedBraceCloseRE;
+		var beget, absoluteUrlRE, urlEncodedBraceOpenRE, urlEncodedBraceCloseRE;
+
+		beget = require('./util/beget');
 
 		absoluteUrlRE = /^https?:\/\//i;
 		urlEncodedBraceOpenRE = /%7b/i;
@@ -92,11 +94,11 @@
 			 * @return {UrlBuilder} the fully qualified URL template
 			 */
 			absolute: function () {
-				if (!doc || absoluteUrlRE.test(this._template)) { return this; }
+				if (!document || absoluteUrlRE.test(this._template)) { return this; }
 
 				var a, template;
 
-				a = doc.createElement('a');
+				a = document.createElement('a');
 				a.href = this._template;
 				template = a.href.replace(urlEncodedBraceOpenRE, '{').replace(urlEncodedBraceCloseRE, '}');
 
@@ -119,15 +121,14 @@
 			toString: function () {
 				return this.build();
 			}
+
 		};
 
 		return UrlBuilder;
 	});
 
 }(
-	this.document,
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	}
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); },
+	this.document
 	// Boilerplate for AMD and Node
 ));

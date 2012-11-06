@@ -11,6 +11,7 @@ config['rest:node'] = {
 
 config['rest:browser'] = {
 	environment: 'browser',
+	autoRun: false,
 	rootPath: '../',
 	resources: [
 		'**'
@@ -24,6 +25,7 @@ config['rest:browser'] = {
 	],
 	tests: [
 		'test/**/*-test.js',
-		'test/**/*-test-browser.js'
+		'test/**/*-test-browser.js',
+		'test/run.js'
 	]
 };

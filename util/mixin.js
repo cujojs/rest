@@ -1,9 +1,8 @@
 (function (define) {
 
-	define([], function () {
+	// derived from dojo.mixin
+	define(function (require) {
 		"use strict";
-
-		// derived from dojo.mixin
 
 		var empty = {};
 
@@ -46,8 +45,6 @@
 	});
 
 }(
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	}
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
 	// Boilerplate for AMD and Node
 ));

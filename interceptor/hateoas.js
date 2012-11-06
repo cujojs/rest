@@ -1,9 +1,13 @@
 (function (define) {
 
-	define(['../interceptor', './pathPrefix', '../../rest'], function (interceptor, pathPrefix, defaultClient) {
+	define(function (require) {
 		"use strict";
 
-		var hateoas, cycleFlag;
+		var interceptor, pathPrefix, defaultClient, hateoas, cycleFlag;
+
+		interceptor = require('../interceptor');
+		pathPrefix = require('./pathPrefix');
+		defaultClient = require('../../rest');
 
 		cycleFlag = '__rest_hateoas_seen__';
 
@@ -111,8 +115,6 @@
 	});
 
 }(
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	}
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
 	// Boilerplate for AMD and Node
 ));

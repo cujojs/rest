@@ -1,6 +1,13 @@
 (function (define) {
 
-	define(['../../rest', '../util/mixin', 'dojo/store/util/QueryResults'], function (defaultClient, mixin, queryResults) {
+	define(function (require) {
+		"use strict";
+
+		var defaultClient, mixin, queryResults;
+
+		defaultClient = require('../../rest');
+		mixin = require('../util/mixin');
+		queryResults = require('dojo/store/util/QueryResults');
 
 		/**
 		 * A REST based object store.
@@ -142,8 +149,6 @@
 	});
 
 }(
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	}
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
 	// Boilerplate for AMD and Node
 ));

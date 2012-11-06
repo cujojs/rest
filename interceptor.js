@@ -1,7 +1,12 @@
 (function (define) {
 
-	define(['../rest', 'when'], function (defaultClient, when) {
+	define(function (require) {
 		"use strict";
+
+		var defaultClient, when;
+
+		defaultClient = require('../rest');
+		when = require('when');
 
 		/**
 		 * Interceptors have the ability to intercept the request and/org response
@@ -88,8 +93,6 @@
 	});
 
 }(
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	}
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
 	// Boilerplate for AMD and Node
 ));

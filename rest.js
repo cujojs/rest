@@ -1,7 +1,9 @@
 (function (define, process) {
 
-	define(['./client/xhr'], function (client) {
+	define(function (require) {
 		"use strict";
+
+		var moduleId;
 
 		/**
 		 * Plain JS Object containing properties that represent an HTTP request
@@ -38,16 +40,16 @@
 		 */
 
 		if (process && process.versions && process.versions.node) {
-			return require('./client/node');
+			// avaid build tools
+			moduleId = './client/node';
+			return require(moduleId);
 		}
 
-		return client;
+		return require('./client/xhr');
 	});
 
 }(
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	},
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); },
 	typeof process === 'undefined' ? undefined : process
 	// Boilerplate for AMD and Node
 ));

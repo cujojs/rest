@@ -1,31 +1,33 @@
 (function (buster, define) {
 
-	var json, assert, refute;
+	var assert, refute, undef;
 
 	assert = buster.assert;
 	refute = buster.refute;
 
-	buster.testCase('rest/mime/type/application/json', {
-		setUp: function (done) {
-			if (json) { return done(); }
-			define('rest/mime/type/application/json-test', ['rest/mime/type/application/json'], function (j) {
-				json = j;
-				done();
-			});
-		},
+	define('rest/mime/type/application/json-test', function (require) {
 
-		'should read json': function () {
-			assert.equals({ foo: 'bar' }, json.read('{"foo":"bar"}'));
-		},
-		'should stringify json': function () {
-			assert.equals('{"foo":"bar"}', json.write({ foo: 'bar' }));
-		}
+		var json = require('rest/mime/type/application/json');
+
+		buster.testCase('rest/mime/type/application/json', {
+			'should read json': function () {
+				assert.equals({ foo: 'bar' }, json.read('{"foo":"bar"}'));
+			},
+			'should stringify json': function () {
+				assert.equals('{"foo":"bar"}', json.write({ foo: 'bar' }));
+			}
+		});
+
 	});
 
 }(
 	this.buster || require('buster'),
-	typeof define === 'function' ? define : function (id, deps, factory) {
-		factory(require('../../../../mime/type/application/json'));
+	typeof define === 'function' && define.amd ? define : function (id, factory) {
+		var packageName = id.split(/[\/\-]/)[0], pathToRoot = id.replace(/[^\/]+/g, '..');
+		pathToRoot = pathToRoot.length > 2 ? pathToRoot.substr(3) : pathToRoot;
+		factory(function (moduleId) {
+			return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId);
+		});
 	}
 	// Boilerplate for AMD and Node
 ));

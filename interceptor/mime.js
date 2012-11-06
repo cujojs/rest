@@ -1,7 +1,13 @@
 (function (define) {
 
-	define(['../interceptor', '../mime/registry', 'when'], function (interceptor, registry, when) {
+	define(function (require) {
 		"use strict";
+
+		var interceptor, registry, when;
+
+		interceptor = require('../interceptor');
+		registry = require('../mime/registry');
+		when = require('when');
 
 		/**
 		 * MIME type support for request and response entities.  Entities are
@@ -65,8 +71,6 @@
 	});
 
 }(
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	}
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
 	// Boilerplate for AMD and Node
 ));

@@ -1,9 +1,12 @@
 (function (define) {
 
-	define(['./mixin'], function (mixin) {
+	// derived from dojo.delegate
+	define(function (require) {
 		"use strict";
 
-		// derived from dojo.delegate
+		var mixin;
+
+		mixin = require('./mixin');
 
 		function Beget() {}
 
@@ -30,8 +33,6 @@
 	});
 
 }(
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	}
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
 	// Boilerplate for AMD and Node
 ));

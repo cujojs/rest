@@ -1,6 +1,6 @@
 (function (define) {
 
-	define([], function () {
+	define(function (require) {
 		"use strict";
 
 		// A poor man's pub-sub.  A single listener is supported per topic.  When
@@ -43,8 +43,6 @@
 	});
 
 }(
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	}
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
 	// Boilerplate for AMD and Node
 ));

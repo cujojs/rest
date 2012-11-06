@@ -1,8 +1,16 @@
 (function (define) {
 
-	define(['../rest', './interceptor/errorCode', './interceptor/mime', './interceptor/entity', './interceptor/pathPrefix', 'when'], function (client, errorCode, mime, entity, pathPrefix, when) {
+	define(function (require) {
 
-		var plugin;
+		var client, errorCode, mime, entity, pathPrefix, when, plugin;
+
+		client = require('../rest');
+		errorCode = require('./interceptor/errorCode');
+		mime = require('./interceptor/mime');
+		entity = require('./interceptor/entity');
+		pathPrefix = require('./interceptor/pathPrefix');
+		when = require('when');
+
 
 		function parseConfig(name, refObj) {
 			return {
@@ -71,8 +79,6 @@
 	});
 
 }(
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	}
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
 	// Boilerplate for AMD and Node
 ));

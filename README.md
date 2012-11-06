@@ -160,6 +160,7 @@ Change Log
 ----------
 
 .next
+- convert modules to UMD format; no functional impact
 
 0.8.1
 - fixed bug where http method may be overwritten

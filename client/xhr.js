@@ -1,9 +1,13 @@
-(function (XMLHttpRequest, define) {
+(function (define, XMLHttpRequest) {
 
-	define(["when", "../UrlBuilder", "../util/normalizeHeaderName"], function (when, UrlBuilder, normalizeHeaderName) {
+	define(function (require) {
 		"use strict";
 
-		var headerSplitRE;
+		var when, UrlBuilder, normalizeHeaderName, headerSplitRE;
+
+		when = require('when');
+		UrlBuilder = require('../UrlBuilder');
+		normalizeHeaderName = require('../util/normalizeHeaderName');
 
 		// according to the spec, the line break is '\r\n', but doesn't hold true in practice
 		headerSplitRE = /[\r|\n]+/;
@@ -89,9 +93,7 @@
 	});
 
 }(
-	this.XMLHttpRequest,
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	}
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); },
+	this.XMLHttpRequest
 	// Boilerplate for AMD and Node
 ));

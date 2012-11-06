@@ -1,7 +1,14 @@
-(function (global, define) {
+(function (define, global) {
 
-	define(['../../rest', 'when', '../UrlBuilder', '../util/pubsub'], function (defaultClient, when, UrlBuilder, pubsub) {
+	define(function (require) {
 		"use strict";
+
+		var defaultClient, when, UrlBuilder, pubsub;
+
+		defaultClient = require('../../rest');
+		when = require('when');
+		UrlBuilder = require('../UrlBuilder');
+		pubsub = require('../util/pubsub');
 
 		function defaultOAuthCallback(hash) {
 			var params, queryString, regex, m;
@@ -157,9 +164,7 @@
 	});
 
 }(
-	typeof global === 'undefined' ? this : global,
-	typeof define === 'function' ? define : function (deps, factory) {
-		module.exports = factory.apply(this, deps.map(require));
-	}
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); },
+	typeof global === 'undefined' ? this : global
 	// Boilerplate for AMD and Node
 ));
