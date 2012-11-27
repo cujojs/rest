@@ -38,6 +38,18 @@
 				server.close();
 			},
 
+			'should propogate request errors': function (done) {
+				var request = { path: 'http://localhost:1234' };
+				client(request).then(
+					function (response) {
+						refute(response);
+					},
+					function (error) {
+						assert(error);
+					}
+				).always(done);
+			},
+			
 			'should make a GET by default': function (done) {
 				var request = { path: 'http://localhost:8080/' };
 				client(request).then(

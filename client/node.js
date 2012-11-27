@@ -62,6 +62,10 @@
 						d.resolve(response);
 					});
 				});
+				
+				clientRequest.on('error', function (e) {
+					d.reject(e);
+				});
 
 				if (entity) {
 					clientRequest.write(entity);
