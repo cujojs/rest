@@ -1,9 +1,10 @@
 (function (buster, define) {
 
-	var assert, refute, undef;
+	var assert, refute, fail, undef;
 
 	assert = buster.assert;
 	refute = buster.refute;
+	fail = buster.assertions.fail;
 
 	define('rest/client/jsonp-test', function (require) {
 
@@ -36,18 +37,6 @@
 			},
 			tearDown: function () {
 				server.close();
-			},
-
-			'should propogate request errors': function (done) {
-				var request = { path: 'http://localhost:1234' };
-				client(request).then(
-					function (response) {
-						refute(response);
-					},
-					function (error) {
-						assert(error);
-					}
-				).always(done);
 			},
 			
 			'should make a GET by default': function (done) {
@@ -103,6 +92,15 @@
 						assert.equals(response.status.code, 200);
 						assert.equals('text/plain', response.headers['Content-Type']);
 						assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
+					}
+				).always(done);
+			},
+			'should propogate request errors': function (done) {
+				var request = { path: 'http://localhost:1234' };
+				client(request).then(
+					fail,
+					function (error) {
+						assert(error);
 					}
 				).always(done);
 			},
