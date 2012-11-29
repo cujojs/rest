@@ -21,7 +21,13 @@
 			}
 		}
 
-		function registerCallback(prefix, resolver) {
+		function cleanupScriptNode(response) {
+			if (response.raw && response.raw.parentNode) {
+				response.raw.parentNode.removeChild(response.raw);
+			}
+		}
+
+		function registerCallback(prefix, resolver, response) {
 			var name;
 
 			do {
@@ -30,8 +36,12 @@
 			while (name in global);
 
 			global[name] = function jsonpCallback(data) {
-				resolver.resolve({ entity: data });
+				response.entity = data;
 				clearProperty(global, name);
+				cleanupScriptNode(response);
+				if (!response.request.canceled) {
+					resolver.resolve(response);
+				}
 			};
 
 			return name;
@@ -48,20 +58,33 @@
 		 * @returns {Promise<Response>}
 		 */
 		function jsonp(request) {
-			var d, callbackParams, script, firstScript;
+			var d, callbackParams, script, firstScript, response;
 
 			d = when.defer();
 
 			try {
+				response = {
+					request: request
+				};
+
 				request.callback = request.callback || {};
 				callbackParams = {};
-				callbackParams[request.callback.param || 'callback'] = registerCallback(request.callback.prefix || 'jsonp', d.resolver);
+				callbackParams[request.callback.param || 'callback'] = registerCallback(request.callback.prefix || 'jsonp', d.resolver, response);
+
+				request.canceled = false;
+				request.cancel = function cancel() {
+					request.canceled = true;
+					cleanupScriptNode(response);
+					d.reject(response);
+				};
 
 				script = document.createElement('script');
 				script.type = 'text/javascript';
 				script.async = true;
 				script.src = new UrlBuilder(request.path, request.params).build(callbackParams);
 				firstScript = document.getElementsByTagName('script')[0];
+
+				response.raw = script;
 				firstScript.parentNode.insertBefore(script, firstScript);
 			}
 			catch (e) {

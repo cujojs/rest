@@ -1,9 +1,10 @@
 (function (buster, define) {
 
-	var assert, refute, undef;
+	var assert, refute, fail, undef;
 
 	assert = buster.assert;
 	refute = buster.refute;
+	fail = buster.assertions.fail;
 
 	define('rest/client/jsonp-test', function (require) {
 
@@ -19,6 +20,9 @@
 				jsonp(request).then(
 					function (response) {
 						assert(response.entity.responseData);
+						assert.same(request, response.request);
+						refute(request.canceled);
+						refute(response.raw.parentNode);
 					}
 				).always(done);
 			},
@@ -27,8 +31,24 @@
 				jsonpInterceptor()(request).then(
 					function (response) {
 						assert(response.entity.responseData);
+						assert.same(request, response.request);
+						refute(request.canceled);
+						refute(response.raw.parentNode);
 					}
 				).always(done);
+			},
+			'should abort the request if canceled': function (done) {
+				var request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'html5' } };
+				jsonp(request).then(
+					fail,
+					function (response) {
+						assert.same(request, response.request);
+						assert(request.canceled);
+						refute(response.raw.parentNode);
+					}
+				).always(done);
+				refute(request.canceled);
+				request.cancel();
 			},
 			'should not be the default client': function () {
 				refute.same(jsonp, rest);

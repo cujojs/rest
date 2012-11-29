@@ -30,6 +30,7 @@
 						response.write(responseBody);
 						response.end();
 					});
+					request.on('error', function () { console.log("server error"); });
 				});
 
 				// TODO handle port conflicts
@@ -50,6 +51,7 @@
 						assert.equals(response.status.code, 200);
 						assert.equals('text/plain', response.headers['Content-Type']);
 						assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
+						refute(request.canceled);
 					}
 				).always(done);
 			},
@@ -64,6 +66,7 @@
 						assert.equals(response.status.code, 200);
 						assert.equals('text/plain', response.headers['Content-Type']);
 						assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
+						refute(request.canceled);
 					}
 				).always(done);
 			},
@@ -78,6 +81,7 @@
 						assert.equals(response.status.code, 200);
 						assert.equals('text/plain', response.headers['Content-Type']);
 						assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
+						refute(request.canceled);
 					}
 				).always(done);
 			},
@@ -92,15 +96,27 @@
 						assert.equals(response.status.code, 200);
 						assert.equals('text/plain', response.headers['Content-Type']);
 						assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
+						refute(request.canceled);
 					}
 				).always(done);
+			},
+			'should abort the request if canceled': function (done) {
+				var request = { path: 'http://localhost:8080/' };
+				client(request).then(
+					fail,
+					function (response) {
+						assert(request.canceled);
+					}
+				).always(done);
+				refute(request.canceled);
+				request.cancel();
 			},
 			'should propogate request errors': function (done) {
 				var request = { path: 'http://localhost:1234' };
 				client(request).then(
 					fail,
-					function (error) {
-						assert(error);
+					function (response) {
+						assert(response.error);
 					}
 				).always(done);
 			},

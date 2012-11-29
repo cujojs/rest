@@ -1,9 +1,10 @@
 (function (buster, define) {
 
-	var assert, refute, undef;
+	var assert, refute, fail, undef;
 
 	assert = buster.assert;
 	refute = buster.refute;
+	fail = buster.assertions.fail;
 
 	define('rest/client/xhr-test', function (require) {
 
@@ -27,6 +28,7 @@
 						for (name in response.headers) {
 							assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 						}
+						refute(request.canceled);
 					}
 				).always(done);
 			},
@@ -44,6 +46,7 @@
 						for (name in response.headers) {
 							assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 						}
+						refute(request.canceled);
 					}
 				).always(done);
 			},
@@ -61,6 +64,7 @@
 						for (name in response.headers) {
 							assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 						}
+						refute(request.canceled);
 					}
 				).always(done);
 			},
@@ -78,8 +82,22 @@
 						for (name in response.headers) {
 							assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 						}
+						refute(request.canceled);
 					}
 				).always(done);
+			},
+			'should abort the request if canceled': function (done) {
+				var request = { path: '/' };
+				xhr(request).then(
+					fail,
+					function (response) {
+						assert(request.canceled);
+						assert.same(XMLHttpRequest.UNSENT || 0, response.raw.readyState);
+						assert.same(0, response.raw.status);
+					}
+				).always(done);
+				refute(request.canceled);
+				request.cancel();
 			},
 			'should be the default client': function () {
 				assert.same(xhr, rest);

@@ -6,13 +6,20 @@
 		var moduleId;
 
 		/**
-		 * Plain JS Object containing properties that represent an HTTP request
+		 * Plain JS Object containing properties that represent an HTTP request.
+		 *
+		 * Depending on the capabilities of the underlying client, a request
+		 * may be cancelable. If a request may be canceled, the client will add
+		 * a canceled flag and cancel function to the request object. Canceling
+		 * the request will put the response into an error state.
 		 *
 		 * @field {String} [method='GET'] HTTP method, commonly GET, POST, PUT, DELETE or HEAD
 		 * @field {String|UrlBuilder} [path=''] path template with optional path variables
 		 * @field {Object} [params] parameters for the path template and query string
 		 * @field {Object} [headers] custom HTTP headers to send, in addition to the clients default headers
 		 * @field {*} [entity] the HTTP entity, common for POST or PUT requests
+		 * @field {Boolean} [canceled] true if the request has been canceled, set by the client
+		 * @field {Function} [cancel] cancels the request if invoked, provided by the client
 		 *
 		 * @class Request
 		 */

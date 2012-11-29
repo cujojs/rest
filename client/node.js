@@ -16,7 +16,7 @@
 
 		function node(request) {
 
-			var d, options, clientRequest, client, url, headers, entity;
+			var d, options, clientRequest, client, url, headers, entity, response;
 
 			d = when.defer();
 
@@ -35,12 +35,17 @@
 				headers['Content-Length'] = entity ? Buffer.byteLength(entity, 'utf8') : 0;
 			}
 
+			response = {};
+			response.request = request;
+
+			request.canceled = false;
+			request.cancel = function cancel() {
+				request.canceled = true;
+				clientRequest.abort();
+			};
+
 			try {
 				clientRequest = client.request(options, function (clientResponse) {
-					var response;
-
-					response = {};
-					response.request = request;
 					response.raw = clientResponse;
 					response.status = {
 						code: clientResponse.statusCode
@@ -64,7 +69,8 @@
 				});
 				
 				clientRequest.on('error', function (e) {
-					d.reject(e);
+					response.error = e;
+					d.reject(response);
 				});
 
 				if (entity) {

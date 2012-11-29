@@ -43,7 +43,7 @@
 		}
 
 		function xhr(request) {
-			var d, client, method, url, headers, entity, headerName;
+			var d, client, method, url, headers, entity, headerName, response;
 
 			d = when.defer();
 
@@ -61,13 +61,19 @@
 					client.setRequestHeader(headerName, headers[headerName]);
 				}
 
-				client.onreadystatechange = function (e) {
-					var response;
+				response = {};
+				response.request = request;
+				response.raw = client;
 
+				request.canceled = false;
+				request.cancel = function cancel() {
+					request.canceled = true;
+					client.abort();
+					d.reject(response);
+				};
+
+				client.onreadystatechange = function (e) {
 					if (client.readyState === (XMLHttpRequest.DONE || 4)) {
-						response = {};
-						response.request = request;
-						response.raw = client;
 						response.status = {
 							code: client.status,
 							text: client.statusText
@@ -75,7 +81,9 @@
 						response.headers = parseHeaders(client.getAllResponseHeaders());
 						response.entity = client.responseText;
 
-						d.resolve(response);
+						if (!request.canceled) {
+							d.resolve(response);
+						}
 					}
 				};
 

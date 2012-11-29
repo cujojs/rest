@@ -160,6 +160,7 @@ Change Log
 ----------
 
 .next
+- requests may be canceled
 - convert modules to UMD format; no functional impact
 - replaced rest/util/base64 with an MIT licenced impl; no functional impact
 
