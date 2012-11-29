@@ -3,11 +3,10 @@
 	define(function (require) {
 		"use strict";
 
-		var interceptor, pathPrefix, defaultClient, hateoas, cycleFlag;
+		var interceptor, pathPrefix, cycleFlag;
 
 		interceptor = require('../interceptor');
 		pathPrefix = require('./pathPrefix');
-		defaultClient = require('../../rest');
 
 		cycleFlag = '__rest_hateoas_seen__';
 
@@ -36,15 +35,15 @@
 		 *
 		 * @param {Client} [client] client to wrap
 		 * @param {String} [config.target='_links'] property to create on the entity and parse links into. If present and falsey, the response entity is used directly.
-		 * @param {Client} [config.client] the default parent client to use when creating clients for a linked resources
+		 * @param {Client} [config.client] the parent client to use when creating clients for a linked resources. Defaults to the current interceptor's client
 		 *
 		 * @returns {Client}
 		 */
-		hateoas = interceptor({
-			response: function (response, config) {
+		return interceptor({
+			response: function (response, config, hateoas) {
 				var targetName, client;
 
-				client = config.client || defaultClient;
+				client = config.client || hateoas;
 				targetName = 'target' in config ? config.target || '' : '_links';
 
 				function apply(target, links) {
@@ -56,7 +55,7 @@
 						Object.defineProperty(target, link.rel, {
 							enumerable: false,
 							get: function () {
-								return hateoas(client, config)({ path: link.href });
+								return client({ path: link.href });
 							}
 						});
 					});
@@ -109,8 +108,6 @@
 				return response;
 			}
 		});
-
-		return hateoas;
 
 	});
 

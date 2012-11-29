@@ -161,6 +161,7 @@ Change Log
 
 .next
 - requests may be canceled
+- interceptor response handlers recieve the interceptor's client rather then the next client in the chain
 - convert modules to UMD format; no functional impact
 - replaced rest/util/base64 with an MIT licenced impl; no functional impact
 

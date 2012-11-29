@@ -26,7 +26,7 @@
 		return interceptor({
 			success: function (response, config, client) {
 				if (response.headers && response.headers.Location) {
-					return (config.client || client)({
+					return (config.client || client.skip())({
 						method: 'GET',
 						path: response.headers.Location
 					});
