@@ -35,6 +35,15 @@
 			return response;
 		}
 
+		function whenFirst(promisesOrValues) {
+			// TODO this concept is likely to be added to when in the near future
+			var d = when.defer();
+			promisesOrValues.forEach(function (promiseOrValue) {
+				when.chain(promiseOrValue, d.resolver);
+			});
+			return d.promise;
+		}
+
 		/**
 		 * Create a new interceptor for the provided handlers.
 		 *
@@ -70,16 +79,25 @@
 				interceptor = function (request) {
 					request = request || {};
 					return when(requestHandler(request, config)).then(function (request) {
-						return when(client(request)).then(
-							function (response) {
-								return successResponseHandler(response, config, interceptor);
-							},
-							function (response) {
-								// Propagate the rejection, but with the result of the
-								// registered error response handler
-								return when.reject(errorResponseHandler(response, config, interceptor));
-							}
-						);
+						var response, abort, d;
+						if (request instanceof Array) {
+							// unpack compound value
+							abort = request[1];
+							request = request[0];
+						}
+						response = when(request, function (request) {
+							return when(
+								client(request),
+								function (response) {
+									return successResponseHandler(response, config, interceptor);
+								},
+								function (response) {
+									// Propagate the rejection, but with the result of the registered error response handler
+									return when.reject(errorResponseHandler(response, config, interceptor));
+								}
+							);
+						});
+						return abort ? whenFirst([response, abort]) : response;
 					});
 				};
 				interceptor.skip = function () {

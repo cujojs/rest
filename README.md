@@ -161,8 +161,10 @@ Change Log
 
 .next
 - requests may be canceled
+- timeout incerceptor that cancels the request unless it finishes before the timeout
 - response objects, with an error property, are used for client errors instead of the thrown value
 - interceptor response handlers recieve the interceptor's client rather then the next client in the chain
+- interceptor request handlers may provide a response
 - convert modules to UMD format; no functional impact
 - replaced rest/util/base64 with an MIT licenced impl; no functional impact
 
