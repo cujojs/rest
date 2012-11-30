@@ -99,6 +99,15 @@
 				refute(request.canceled);
 				request.cancel();
 			},
+			'should propogate request errors': function (done) {
+				var request = { path: 'http://localhost:1234' };
+				xhr(request).then(
+					fail,
+					function (response) {
+						assert(response.error);
+					}
+				).always(done);
+			},
 			'should be the default client': function () {
 				assert.same(xhr, rest);
 			}

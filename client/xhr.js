@@ -47,51 +47,52 @@
 
 			d = when.defer();
 
-			try {
-				client = new XMLHttpRequest();
+			client = new XMLHttpRequest();
 
-				entity = request.entity;
-				request.method = request.method || (entity ? 'POST' : 'GET');
-				method = request.method;
-				url = new UrlBuilder(request.path || '', request.params).build();
-				client.open(method, url, true);
+			response = {};
+			response.request = request;
+			response.raw = client;
 
-				headers = request.headers;
-				for (headerName in headers) {
-					client.setRequestHeader(headerName, headers[headerName]);
-				}
+			entity = request.entity;
+			request.method = request.method || (entity ? 'POST' : 'GET');
+			method = request.method;
+			url = new UrlBuilder(request.path || '', request.params).build();
+			client.open(method, url, true);
 
-				response = {};
-				response.request = request;
-				response.raw = client;
+			headers = request.headers;
+			for (headerName in headers) {
+				client.setRequestHeader(headerName, headers[headerName]);
+			}
 
-				request.canceled = false;
-				request.cancel = function cancel() {
-					request.canceled = true;
-					client.abort();
-					d.reject(response);
-				};
+			request.canceled = false;
+			request.cancel = function cancel() {
+				request.canceled = true;
+				client.abort();
+				d.reject(response);
+			};
 
-				client.onreadystatechange = function (e) {
-					if (client.readyState === (XMLHttpRequest.DONE || 4)) {
-						response.status = {
-							code: client.status,
-							text: client.statusText
-						};
-						response.headers = parseHeaders(client.getAllResponseHeaders());
-						response.entity = client.responseText;
+			client.onreadystatechange = function (e) {
+				if (client.readyState === (XMLHttpRequest.DONE || 4)) {
+					response.status = {
+						code: client.status,
+						text: client.statusText
+					};
+					response.headers = parseHeaders(client.getAllResponseHeaders());
+					response.entity = client.responseText;
 
-						if (!request.canceled) {
-							d.resolve(response);
-						}
+					if (!request.canceled && response.status.code > 0) {
+						// check status code as readystatechange fires before error event
+						d.resolve(response);
 					}
-				};
+				}
+			};
 
-				client.send(entity);
-			}
-			catch (e) {
-				d.reject(e);
-			}
+			client.onerror = function (e) {
+				response.error = e;
+				d.reject(response);
+			};
+
+			client.send(entity);
 
 			return d.promise;
 		}

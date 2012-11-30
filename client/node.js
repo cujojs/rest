@@ -44,43 +44,38 @@
 				clientRequest.abort();
 			};
 
-			try {
-				clientRequest = client.request(options, function (clientResponse) {
-					response.raw = clientResponse;
-					response.status = {
-						code: clientResponse.statusCode
-						// node doesn't provide access to the status text
-					};
-					response.headers = {};
-					Object.keys(clientResponse.headers).forEach(function (name) {
-						response.headers[normalizeHeaderName(name)] = clientResponse.headers[name];
-					});
-
-					clientResponse.on('data', function (data) {
-						if (!('entity' in response)) {
-							response.entity = '';
-						}
-						// normalize Buffer to a String
-						response.entity += data.toString();
-					});
-					clientResponse.on('end', function () {
-						d.resolve(response);
-					});
+			clientRequest = client.request(options, function (clientResponse) {
+				response.raw = clientResponse;
+				response.status = {
+					code: clientResponse.statusCode
+					// node doesn't provide access to the status text
+				};
+				response.headers = {};
+				Object.keys(clientResponse.headers).forEach(function (name) {
+					response.headers[normalizeHeaderName(name)] = clientResponse.headers[name];
 				});
+
+				clientResponse.on('data', function (data) {
+					if (!('entity' in response)) {
+						response.entity = '';
+					}
+					// normalize Buffer to a String
+					response.entity += data.toString();
+				});
+				clientResponse.on('end', function () {
+					d.resolve(response);
+				});
+			});
 				
-				clientRequest.on('error', function (e) {
-					response.error = e;
-					d.reject(response);
-				});
+			clientRequest.on('error', function (e) {
+				response.error = e;
+				d.reject(response);
+			});
 
-				if (entity) {
-					clientRequest.write(entity);
-				}
-				clientRequest.end();
+			if (entity) {
+				clientRequest.write(entity);
 			}
-			catch (e) {
-				d.reject(e);
-			}
+			clientRequest.end();
 
 			return d.promise;
 		}

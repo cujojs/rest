@@ -62,34 +62,34 @@
 
 			d = when.defer();
 
-			try {
-				response = {
-					request: request
-				};
+			response = {
+				request: request
+			};
 
-				request.callback = request.callback || {};
-				callbackParams = {};
-				callbackParams[request.callback.param || 'callback'] = registerCallback(request.callback.prefix || 'jsonp', d.resolver, response);
+			request.callback = request.callback || {};
+			callbackParams = {};
+			callbackParams[request.callback.param || 'callback'] = registerCallback(request.callback.prefix || 'jsonp', d.resolver, response);
 
-				request.canceled = false;
-				request.cancel = function cancel() {
-					request.canceled = true;
-					cleanupScriptNode(response);
-					d.reject(response);
-				};
+			request.canceled = false;
+			request.cancel = function cancel() {
+				request.canceled = true;
+				cleanupScriptNode(response);
+				d.reject(response);
+			};
 
-				script = document.createElement('script');
-				script.type = 'text/javascript';
-				script.async = true;
-				script.src = new UrlBuilder(request.path, request.params).build(callbackParams);
-				firstScript = document.getElementsByTagName('script')[0];
+			script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.async = true;
+			script.src = new UrlBuilder(request.path, request.params).build(callbackParams);
 
-				response.raw = script;
-				firstScript.parentNode.insertBefore(script, firstScript);
-			}
-			catch (e) {
-				d.reject(e);
-			}
+			script.onerror = function (e) {
+				response.error = e;
+				d.reject(response);
+			};
+
+			response.raw = script;
+			firstScript = document.getElementsByTagName('script')[0];
+			firstScript.parentNode.insertBefore(script, firstScript);
 
 			return d.promise;
 		}
