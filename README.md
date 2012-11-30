@@ -161,6 +161,7 @@ Change Log
 
 .next
 - requests may be canceled
+- error interceptor handlers may recover from errors, a rejected promise must be returned in order to preserve the error state
 - response objects, with an error property, are used for client errors instead of the thrown value
 - interceptor response handlers recieve the interceptor's client rather then the next client in the chain
 - convert modules to UMD format; no functional impact

@@ -41,7 +41,7 @@
 		 * @param {Function} [handlers.request] request handler
 		 * @param {Function} [handlers.response] response handler regardless of error state
 		 * @param {Function} [handlers.success] response handler when the request is not in error
-		 * @param {Function} [handlers.error] response handler when the request is in error
+		 * @param {Function} [handlers.error] response handler when the request is in error, may be used to 'unreject' an error state
 		 * @param {Function} [handlers.client] the client to use if otherwise not specified, defaults to platform default client
 		 *
 		 * @returns {Interceptor}
@@ -54,7 +54,10 @@
 
 			requestHandler         = handlers.request || defaultRequestHandler;
 			successResponseHandler = handlers.success || handlers.response || defaultResponseHandler;
-			errorResponseHandler   = handlers.error   || handlers.response || defaultResponseHandler;
+			errorResponseHandler   = handlers.error   || function () {
+				// Propagate the rejection, with the result of the handler
+				return when.reject((handlers.response || defaultResponseHandler).apply(this, arguments));
+			};
 
 			return function (client, config) {
 				var interceptor;
@@ -75,9 +78,7 @@
 								return successResponseHandler(response, config, interceptor);
 							},
 							function (response) {
-								// Propagate the rejection, but with the result of the
-								// registered error response handler
-								return when.reject(errorResponseHandler(response, config, interceptor));
+								return errorResponseHandler(response, config, interceptor);
 							}
 						);
 					});
