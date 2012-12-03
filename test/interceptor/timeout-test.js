@@ -46,6 +46,9 @@
 			return d.promise;
 		}
 
+		// TODO setTimeout hack will not be nessesary once when resolves promises in nextTick.
+		// Expected in the when 2.0 time frame
+
 		buster.testCase('rest/interceptor/timeout', {
 			'should resolve if client responds immediately': function (done) {
 				var client, request;
@@ -55,9 +58,16 @@
 					function (response) {
 						assert.same(request, response.request);
 						refute(response.error);
+						setTimeout(function () {
+							refute(request.canceled);
+							done();
+						}, 0);
 					},
-					fail
-				).always(done);
+					function () {
+						fail();
+						done();
+					}
+				);
 			},
 			'should resolve if client responds before timeout': function (done) {
 				var client, request;
@@ -67,33 +77,54 @@
 					function (response) {
 						assert.same(request, response.request);
 						refute(response.error);
+						setTimeout(function () {
+							refute(request.canceled);
+							done();
+						}, 0);
 					},
-					fail
-				).always(done);
+					function () {
+						fail();
+						done();
+					}
+				);
 			},
 			'should reject even if client responds after timeout': function (done) {
 				var client, request;
 				client = timeout(delayedClient, { timeout: 10 });
 				request = {};
 				client(request).then(
-					fail,
+					function () {
+						fail();
+						done();
+					},
 					function (response) {
 						assert.same(request, response.request);
 						assert.equals('timeout', response.error);
+						setTimeout(function () {
+							assert(request.canceled);
+							done();
+						}, 0);
 					}
-				).always(done);
+				);
 			},
 			'should reject if client hanges': function (done) {
 				var client, request;
 				client = timeout(hangClient, { timeout: 50 });
 				request = {};
 				client(request).then(
-					fail,
+					function () {
+						fail();
+						done();
+					},
 					function (response) {
 						assert.same(request, response.request);
 						assert.equals('timeout', response.error);
+						setTimeout(function () {
+							assert(request.canceled);
+							done();
+						}, 0);
 					}
-				).always(done);
+				);
 			},
 			'should use request timeout value in perference to interceptor value': function (done) {
 				var client, request;
@@ -103,9 +134,16 @@
 					function (response) {
 						assert.same(request, response.request);
 						refute(response.error);
+						setTimeout(function () {
+							refute(request.canceled);
+							done();
+						}, 0);
 					},
-					fail
-				).always(done);
+					function () {
+						fail();
+						done();
+					}
+				);
 			},
 			'should not reject without a configured timeout value': function (done) {
 				var client, request;
@@ -115,9 +153,16 @@
 					function (response) {
 						assert.same(request, response.request);
 						refute(response.error);
+						setTimeout(function () {
+							refute(request.canceled);
+							done();
+						}, 0);
 					},
-					fail
-				).always(done);
+					function () {
+						fail();
+						done();
+					}
+				);
 			},
 			'should cancel request if client support cancelation': function (done) {
 				var client, request;
@@ -132,8 +177,6 @@
 						assert.same(request, response.request);
 						assert.equals('timeout', response.error);
 						setTimeout(function () {
-							// TODO setTimeout hack will not be nessesary once when resolves promises in nextTick.
-							// Expected in the when 2.0 time frame
 							assert(request.canceled);
 							done();
 						}, 0);

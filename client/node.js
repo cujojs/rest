@@ -18,6 +18,14 @@
 
 			var d, options, clientRequest, client, url, headers, entity, response;
 
+			response = {};
+			response.request = request;
+
+			if (request.canceled) {
+				response.error = 'precanceled';
+				return when.reject(response);
+			}
+
 			d = when.defer();
 
 			url = new UrlBuilder(request.path || '', request.params).build();
@@ -34,9 +42,6 @@
 			if (!headers['Content-Length']) {
 				headers['Content-Length'] = entity ? Buffer.byteLength(entity, 'utf8') : 0;
 			}
-
-			response = {};
-			response.request = request;
 
 			request.canceled = false;
 			request.cancel = function cancel() {

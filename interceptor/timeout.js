@@ -30,6 +30,9 @@
 					if (request.cancel) {
 						request.cancel();
 					}
+					else {
+						request.canceled = true;
+					}
 				});
 				return [request, abortTrigger.promise];
 			}

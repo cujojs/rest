@@ -75,6 +75,28 @@
 					}
 				).always(done);
 			},
+			'should not make propagate request if marked as canceled': function (done) {
+				var parent, client, request;
+
+				parent = this.spy(function (request) {
+					return when.reject({ request: request });
+				});
+				client = retry(parent, { initial: 10 });
+
+				request = {};
+				client(request).then(
+					function () {
+						fail('should not be called');
+					},
+					function (response) {
+						assert(request.canceled);
+						assert.equals('precanceled', response.error);
+						assert.same(1, parent.callCount);
+					}
+				).always(done);
+
+				request.canceled = true;
+			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, retry().skip());
 			}

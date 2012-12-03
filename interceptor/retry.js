@@ -34,7 +34,13 @@
 				max = config.max || Infinity;
 				sleep = Math.min(request.retry, request.retry *= multiplier, max);
 
-				return delay(request, sleep).then(client);
+				return delay(request, sleep).then(function (request) {
+					if (request.canceled) {
+						// cancel here in case client doesn't check canceled flag
+						return when.reject({ request: request, error: 'precanceled' });
+					}
+					return client(request);
+				});
 			}
 		});
 	});

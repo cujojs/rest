@@ -4,20 +4,23 @@
 
 	assert = buster.assert;
 	refute = buster.refute;
-	fail = buster.assertions.fail;
+
+	fail = function () {
+		buster.assertions.fail('should never be called');
+	};
 
 	define('rest/client/jsonp-test', function (require) {
 
-		var jsonp, jsonpInterceptor, rest;
+		var client, jsonpInterceptor, rest;
 
-		jsonp = require('rest/client/jsonp');
+		client = require('rest/client/jsonp');
 		jsonpInterceptor = require('rest/interceptor/jsonp');
 		rest = require('rest');
 
 		buster.testCase('rest/client/jsonp', {
 			'should make a GET by default': function (done) {
 				var request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'javascript' } };
-				jsonp(request).then(
+				client(request).then(
 					function (response) {
 						assert(response.entity.responseData);
 						assert.same(request, response.request);
@@ -39,7 +42,7 @@
 			},
 			'should abort the request if canceled': function (done) {
 				var request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'html5' } };
-				jsonp(request).then(
+				client(request).then(
 					fail,
 					function (response) {
 						assert.same(request, response.request);
@@ -52,15 +55,26 @@
 			},
 			'should propogate request errors': function (done) {
 				var request = { path: 'http://localhost:1234' };
-				jsonp(request).then(
+				client(request).then(
 					fail,
 					function (response) {
 						assert(response.error);
 					}
 				).always(done);
 			},
+			'should not make a request that has already been canceled': function (done) {
+				var request = { canceled: true, path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'javascript' } };
+				client(request).then(
+					fail,
+					function (response) {
+						assert.same(request, response.request);
+						assert(request.canceled);
+						assert.same('precanceled', response.error);
+					}
+				).always(done);
+			},
 			'should not be the default client': function () {
-				refute.same(jsonp, rest);
+				refute.same(client, rest);
 			}
 		});
 

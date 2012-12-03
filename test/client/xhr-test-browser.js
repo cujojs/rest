@@ -4,19 +4,22 @@
 
 	assert = buster.assert;
 	refute = buster.refute;
-	fail = buster.assertions.fail;
+
+	fail = function () {
+		buster.assertions.fail('should never be called');
+	};
 
 	define('rest/client/xhr-test', function (require) {
 
-		var xhr, rest;
+		var client, rest;
 
-		xhr = require('rest/client/xhr');
+		client = require('rest/client/xhr');
 		rest = require('rest');
 
 		buster.testCase('rest/client/xhr', {
 			'should make a GET by default': function (done) {
 				var request = { path: '/' };
-				xhr(request).then(
+				client(request).then(
 					function (response) {
 						var xhr, name;
 						xhr = response.raw;
@@ -34,7 +37,7 @@
 			},
 			'should make an explicit GET': function (done) {
 				var request = { path: '/', method: 'GET' };
-				xhr(request).then(
+				client(request).then(
 					function (response) {
 						var xhr, name;
 						xhr = response.raw;
@@ -52,7 +55,7 @@
 			},
 			'should make a POST with an entity': function (done) {
 				var request = { path: '/', entity: 'hello world' };
-				xhr(request).then(
+				client(request).then(
 					function (response) {
 						var xhr, name;
 						xhr = response.raw;
@@ -70,7 +73,7 @@
 			},
 			'should make an explicit POST with an entity': function (done) {
 				var request = { path: '/', entity: 'hello world', method: 'POST' };
-				xhr(request).then(
+				client(request).then(
 					function (response) {
 						var xhr, name;
 						xhr = response.raw;
@@ -88,7 +91,7 @@
 			},
 			'should abort the request if canceled': function (done) {
 				var request = { path: '/' };
-				xhr(request).then(
+				client(request).then(
 					fail,
 					function (response) {
 						assert(request.canceled);
@@ -101,15 +104,26 @@
 			},
 			'should propogate request errors': function (done) {
 				var request = { path: 'http://localhost:1234' };
-				xhr(request).then(
+				client(request).then(
 					fail,
 					function (response) {
 						assert(response.error);
 					}
 				).always(done);
 			},
+			'should not make a request that has already been canceled': function (done) {
+				var request = { canceled: true, path: '/' };
+				client(request).then(
+					fail,
+					function (response) {
+						assert.same(request, response.request);
+						assert(request.canceled);
+						assert.same('precanceled', response.error);
+					}
+				).always(done);
+			},
 			'should be the default client': function () {
-				assert.same(xhr, rest);
+				assert.same(client, rest);
 			}
 		});
 		// TODO spy XmlHttpRequest

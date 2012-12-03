@@ -60,12 +60,16 @@
 		function jsonp(request) {
 			var d, callbackParams, script, firstScript, response;
 
-			d = when.defer();
-
 			response = {
 				request: request
 			};
 
+			if (request.canceled) {
+				response.error = 'precanceled';
+				return when.reject(response);
+			}
+
+			d = when.defer();
 			request.callback = request.callback || {};
 			callbackParams = {};
 			callbackParams[request.callback.param || 'callback'] = registerCallback(request.callback.prefix || 'jsonp', d.resolver, response);

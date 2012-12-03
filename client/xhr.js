@@ -45,13 +45,17 @@
 		function xhr(request) {
 			var d, client, method, url, headers, entity, headerName, response;
 
-			d = when.defer();
-
-			client = new XMLHttpRequest();
-
 			response = {};
 			response.request = request;
-			response.raw = client;
+
+			if (request.canceled) {
+				response.error = 'precanceled';
+				return when.reject(response);
+			}
+
+			d = when.defer();
+
+			client = response.raw = new XMLHttpRequest();
 
 			entity = request.entity;
 			request.method = request.method || (entity ? 'POST' : 'GET');

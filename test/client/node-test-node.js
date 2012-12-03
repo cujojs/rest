@@ -4,7 +4,10 @@
 
 	assert = buster.assert;
 	refute = buster.refute;
-	fail = buster.assertions.fail;
+
+	fail = function () {
+		buster.assertions.fail('should never be called');
+	};
 
 	define('rest/client/jsonp-test', function (require) {
 
@@ -117,6 +120,17 @@
 					fail,
 					function (response) {
 						assert(response.error);
+					}
+				).always(done);
+			},
+			'should not make a request that has already been canceled': function (done) {
+				var request = { canceled: true, path: 'http://localhost:1234' };
+				client(request).then(
+					fail,
+					function (response) {
+						assert.same(request, response.request);
+						assert(request.canceled);
+						assert.same('precanceled', response.error);
 					}
 				).always(done);
 			},
