@@ -90,13 +90,17 @@
 				).always(done);
 			},
 			'should abort the request if canceled': function (done) {
-				var request = { path: '/' };
+				// TDOO find an endpoint that takes a bit to respond, cached files may return synchronously
+				var request = { path: '/wait/' + new Date().getTime() };
 				client(request).then(
 					fail,
 					function (response) {
 						assert(request.canceled);
-						assert.same(XMLHttpRequest.UNSENT || 0, response.raw.readyState);
 						assert.same(0, response.raw.status);
+
+						// this assertion is true in every browser except for IE 6
+						// assert.same(XMLHttpRequest.UNSENT || 0, response.raw.readyState);
+						assert(response.raw.readyState <= 3);
 					}
 				).always(done);
 				refute(request.canceled);
@@ -107,7 +111,7 @@
 				client(request).then(
 					fail,
 					function (response) {
-						assert(response.error);
+						assert.same('loaderror', response.error);
 					}
 				).always(done);
 			},

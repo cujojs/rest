@@ -61,42 +61,55 @@
 			request.method = request.method || (entity ? 'POST' : 'GET');
 			method = request.method;
 			url = new UrlBuilder(request.path || '', request.params).build();
-			client.open(method, url, true);
 
-			headers = request.headers;
-			for (headerName in headers) {
-				client.setRequestHeader(headerName, headers[headerName]);
-			}
+			try {
+				client.open(method, url, true);
 
-			request.canceled = false;
-			request.cancel = function cancel() {
-				request.canceled = true;
-				client.abort();
-				d.reject(response);
-			};
-
-			client.onreadystatechange = function (e) {
-				if (client.readyState === (XMLHttpRequest.DONE || 4)) {
-					response.status = {
-						code: client.status,
-						text: client.statusText
-					};
-					response.headers = parseHeaders(client.getAllResponseHeaders());
-					response.entity = client.responseText;
-
-					if (!request.canceled && response.status.code > 0) {
-						// check status code as readystatechange fires before error event
-						d.resolve(response);
-					}
+				headers = request.headers;
+				for (headerName in headers) {
+					client.setRequestHeader(headerName, headers[headerName]);
 				}
-			};
 
-			client.onerror = function (e) {
-				response.error = e;
-				d.reject(response);
-			};
+				request.canceled = false;
+				request.cancel = function cancel() {
+					request.canceled = true;
+					client.abort();
+					d.reject(response);
+				};
 
-			client.send(entity);
+				client.onreadystatechange = function (e) {
+					if (request.canceled) { return; }
+					if (client.readyState === (XMLHttpRequest.DONE || 4)) {
+						response.status = {
+							code: client.status,
+							text: client.statusText
+						};
+						response.headers = parseHeaders(client.getAllResponseHeaders());
+						response.entity = client.responseText;
+
+						if (response.status.code > 0) {
+							// check status code as readystatechange fires before error event
+							d.resolve(response);
+						}
+					}
+				};
+
+				try {
+					client.onerror = function (e) {
+						response.error = 'loaderror';
+						d.reject(response);
+					};
+				}
+				catch (e) {
+					// IE 6 will not support error handling
+				}
+
+				client.send(entity);
+			}
+			catch (e) {
+				response.error = 'loaderror';
+				d.resolver.reject(response);
+			}
 
 			return d.promise;
 		}

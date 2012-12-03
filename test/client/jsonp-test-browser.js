@@ -58,7 +58,7 @@
 				client(request).then(
 					fail,
 					function (response) {
-						assert(response.error);
+						assert.same('loaderror', response.error);
 					}
 				).always(done);
 			},

@@ -51,16 +51,16 @@
 				
 				client = interceptor({
 					request: function (request, config) {
-						start = new Date();
+						start = new Date().getTime();
 						return request;
 					},
 					response: function (response, config) {
-						var elapsed = new Date() - start;
+						var elapsed = new Date().getTime() - start;
 						assert.equals(count, 4);
 						assert.equals(response.request.retry, Math.pow(3, count - 1) * 10);
-						assert(elapsed < 70); // Total paused time should be 50 - this allows padding
-											  // for execution time that would be much larger without max
-											  // TODO - A more accurate test might be to use a spy on when.delay
+						assert(elapsed < 100); // Total paused time should be 50 - this allows padding
+						                       // for execution time that would be much larger without max
+						                       // TODO - A more accurate test might be to use a spy on when.delay
 						return response;
 					}
 				})(client);

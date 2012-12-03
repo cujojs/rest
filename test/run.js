@@ -6,7 +6,7 @@
 			return moduleId.indexOf('-test') > 0;
 		});
 
-		buster.testRunner.timeout = 1000;
+		buster.testRunner.timeout = 5000;
 		define('rest/test/run-faux', modules, function () {
 			buster.run();
 		});

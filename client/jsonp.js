@@ -58,7 +58,7 @@
 		 * @returns {Promise<Response>}
 		 */
 		function jsonp(request) {
-			var d, callbackParams, script, firstScript, response;
+			var d, callbackName, callbackParams, script, firstScript, response;
 
 			response = {
 				request: request
@@ -71,8 +71,9 @@
 
 			d = when.defer();
 			request.callback = request.callback || {};
+			callbackName = registerCallback(request.callback.prefix || 'jsonp', d.resolver, response);
 			callbackParams = {};
-			callbackParams[request.callback.param || 'callback'] = registerCallback(request.callback.prefix || 'jsonp', d.resolver, response);
+			callbackParams[request.callback.param || 'callback'] = callbackName;
 
 			request.canceled = false;
 			request.cancel = function cancel() {
@@ -86,9 +87,14 @@
 			script.async = true;
 			script.src = new UrlBuilder(request.path, request.params).build(callbackParams);
 
-			script.onerror = function (e) {
-				response.error = e;
-				d.reject(response);
+			script.onload = script.onerror = script.onreadystatechange = function (e) {
+				// script tag load callbacks are completely non-standard
+				if ((e && (e.type === 'load' || e.type === 'error')) || script.readyState === 'loaded') {
+					if (global[callbackName]) {
+						response.error = 'loaderror';
+						d.reject(response);
+					}
+				}
 			};
 
 			response.raw = script;
