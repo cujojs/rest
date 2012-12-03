@@ -162,6 +162,8 @@ Change Log
 .next
 - requests may be canceled
 - timeout incerceptor that cancels the request unless it finishes before the timeout
+- retry interceptor handles error respones by retrying the request after an elapsed period
+- error interceptor handlers may recover from errors, a rejected promise must be returned in order to preserve the error state
 - response objects, with an error property, are used for client errors instead of the thrown value
 - interceptor response handlers recieve the interceptor's client rather then the next client in the chain
 - interceptor request handlers may provide a response
