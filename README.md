@@ -159,7 +159,7 @@ Thanks
 Change Log
 ----------
 
-.next
+0.8.2
 - requests may be canceled
 - timeout incerceptor that cancels the request unless it finishes before the timeout
 - retry interceptor handles error respones by retrying the request after an elapsed period
