@@ -159,6 +159,9 @@ Thanks
 Change Log
 ----------
 
+.next
+- tbd
+
 0.8.2
 - requests may be canceled
 - timeout incerceptor that cancels the request unless it finishes before the timeout
