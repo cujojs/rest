@@ -6,26 +6,27 @@
 	"licenses": [
 		{
 			"type": "MIT",
-			"url": "http://www.opensource.org/licenses/mit-license.php"
+			"url": "http://opensource.org/licenses/MIT"
 		}
 	],
 	"repositories": [
 		{
 			"type": "git",
-			"url": "https://github.com/scothis/rest"
+			"url": "https://github.com/s2js/rest"
 		}
 	],
-	"bugs": "https://github.com/scothis/rest/issues",
+	"bugs": "https://github.com/s2js/rest/issues",
 	"maintainers": [
 		{
 			"name": "Scott Andrews",
+			"email": "andrewss@vmware.com",
 			"web": "http://twitter.com/scothis"
 		}
 	],
 	"contributors": [
 		{
 			"name": "Jeremy Grelle",
-			"web": "https://github.com/jeremyg484"
+			"email": "jgrelle@vmware.com"
 		}
 	],
 	"dependencies": {

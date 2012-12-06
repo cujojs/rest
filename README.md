@@ -1,5 +1,5 @@
-Rest Template
-=============
+Rest.js
+=======
 
 Just enough client, as you need it.  Make HTTP requests from a browser or Node.js applying the only the client features you need.  Configure a client once, and share it safely throughout your application.  Easily extend with interceptors that wrap the request and/or response, or MIME type converters for rich data formats.
 
@@ -8,8 +8,8 @@ Build Status
 ------------
 
 <table>
-  <tr><td>Master</td><td><a href="http://travis-ci.org/scothis/rest" target="_blank"><img src="https://secure.travis-ci.org/scothis/rest.png?branch=master" /></a></tr>
-  <tr><td>Development</td><td><a href="http://travis-ci.org/scothis/rest" target="_blank"><img src="https://secure.travis-ci.org/scothis/rest.png?branch=dev" /></a></tr>
+  <tr><td>Master</td><td><a href="http://travis-ci.org/s2js/rest" target="_blank"><img src="https://secure.travis-ci.org/s2js/rest.png?branch=master" /></a></tr>
+  <tr><td>Development</td><td><a href="http://travis-ci.org/s2js/rest" target="_blank"><img src="https://secure.travis-ci.org/s2js/rest.png?branch=dev" /></a></tr>
 </table>
 
 
@@ -26,7 +26,7 @@ From source:
 
     $ npm install
 
-Rest is designed to run in a browser environment, utilizing [AMD modules](https://github.com/amdjs/amdjs-api/wiki/AMD), or within [Node.js](http://nodejs.org/).  [curl](https://github.com/cujojs/curl) is highly recommended as an AMD loader, although any loader should work.
+Rest.js is designed to run in a browser environment, utilizing [AMD modules](https://github.com/amdjs/amdjs-api/wiki/AMD), or within [Node.js](http://nodejs.org/).  [curl](https://github.com/cujojs/curl) is highly recommended as an AMD loader, although any loader should work.
 
 An ECMAScript 5 compatible environment is assumed.  Older browsers, ::cough:: IE, that do not support ES5 natively can be shimmed.  Any shim should work, although we've tested against cujo's [poly](https://github.com/cujojs/poly)
 
@@ -34,7 +34,7 @@ An ECMAScript 5 compatible environment is assumed.  Older browsers, ::cough:: IE
 Usage
 -----
 
-Using Rest is easy.  The core clients provide limited functionality around the request and response lifecycle.  The input and response objects are normalized to support portability between browser and server environments.
+Using Rest.js is easy.  The core clients provide limited functionality around the request and response lifecycle.  The input and response objects are normalized to support portability between browser and server environments.
 
 The response from a client is a promise that is resolved when the remote request finishes.
 
@@ -123,7 +123,7 @@ Built in converters are available under `rest/mime/type/{type}`, as an example, 
 Reporting Issues
 ----------------
 
-Please report issues on [GitHub](https://github.com/scothis/rest/issues).  Include a brief description of the error, information about the runtime (including shims) and any error messages.
+Please report issues on [GitHub](https://github.com/s2js/rest/issues).  Include a brief description of the error, information about the runtime (including shims) and any error messages.
 
 Feature requests are also welcome.
 
@@ -147,20 +147,32 @@ To run the suite in a browser:
     browse to http://localhost:8282/ in the browser(s) you wish to test.  It can take a few seconds to start.
 
 
-Thanks
-------
+Contributors
+------------
 
-* Arjen Poutsma - Creator of Spring's RestTemplate
-* Brian Cavalier - cujo.js lead
-* John Hann - cujo.js lead
-* VMware - for allowing this project to be open sourced
+- Scott Andrews <andrewss@vmware.com>
+- Jeremy Grelle <jgrelle@vmware.com>
+
+Please see CONTRIBUTING.md for details on how to contribute to this project.
+
+
+Copyright
+---------
+
+Integration is made available under the MIT license.  See LICENSE.txt for details.
+
+Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+
+VMware, Inc.
+3401 Hillview Avenue
+Palo Alto, CA 94304
 
 
 Change Log
 ----------
 
 .next
-- tbd
+- moving from the 'scothis' to the 's2js' organization
 
 0.8.2
 - requests may be canceled
