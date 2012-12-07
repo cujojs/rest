@@ -171,6 +171,9 @@ Palo Alto, CA 94304
 Change Log
 ----------
 
+.next
+- nothing yet
+
 0.8.3
 - moving from the 'scothis' to the 's2js' organization, no functional changes
 
