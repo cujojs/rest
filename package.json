@@ -1,8 +1,8 @@
 {
 	"name": "rest",
-	"version": "0.8.2-next",
+	"version": "0.8.3",
 	"description": "HTTP client library inspired by the Spring Framework's RestTemplate",
-	"keywords": ["rest", "http", "client", "rest-template", "spring"],
+	"keywords": ["rest", "http", "client", "rest-template", "spring", "s2js"],
 	"licenses": [
 		{
 			"type": "MIT",
