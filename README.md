@@ -24,7 +24,7 @@ To install without source:
 
 or
 
-  .  $ bower install rest
+    $ bower install rest
 
 From source:
 
