@@ -37,7 +37,7 @@
 		 * value 400.
 		 *
 		 * @param {Client} [client] client to wrap
-		 * @param {Number} [config.code=400] code to indicate a rejection
+		 * @param {number} [config.code=400] code to indicate a rejection
 		 *
 		 * @returns {Client}
 		 */

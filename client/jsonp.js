@@ -72,10 +72,10 @@
 		/**
 		 * Executes the request as JSONP.
 		 *
-		 * @param {String} request.path the URL to load
+		 * @param {string} request.path the URL to load
 		 * @param {Object} [request.params] parameters to bind to the path
-		 * @param {String} [request.callback.param='callback'] the parameter name for which the callback function name is the value
-		 * @param {String} [request.callback.prefix='jsonp'] prefix for the callback function, as the callback is attached to the window object, a unique, unobtrusive prefix is desired
+		 * @param {string} [request.callback.param='callback'] the parameter name for which the callback function name is the value
+		 * @param {string} [request.callback.prefix='jsonp'] prefix for the callback function, as the callback is attached to the window object, a unique, unobtrusive prefix is desired
 		 *
 		 * @returns {Promise<Response>}
 		 */

@@ -37,9 +37,9 @@
 		 * Defaults to an initial interval of 100ms, a multiplier of 2, and no max interval.
 		 *
 		 * @param {Client} [client] client to wrap
-		 * @param {Number} [config.intial=100] initial interval in ms
-		 * @param {Number} [config.multiplier=2] interval multiplier
-		 * @param {Number} [config.max] max interval in ms
+		 * @param {number} [config.intial=100] initial interval in ms
+		 * @param {number} [config.multiplier=2] interval multiplier
+		 * @param {number} [config.max] max interval in ms
 		 *
 		 * @returns {Client}
 		 */

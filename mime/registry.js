@@ -38,8 +38,8 @@
 		/**
 		 * Lookup the converter for a MIME type
 		 *
-		 * @param {String} mime the MIME type
-		 * @return {*} the converter for the MIME type
+		 * @param {string} mime the MIME type
+		 * @return the converter for the MIME type
 		 */
 		function lookup(mime) {
 			// ignore charset if included
@@ -53,9 +53,9 @@
 		/**
 		 * Register a custom converter for a MIME type
 		 *
-		 * @param {String} mime the MIME type
-		 * @param {*} converter the converter for the MIME type
-		 * @return {*} the converter
+		 * @param {string} mime the MIME type
+		 * @param converter the converter for the MIME type
+		 * @return the converter
 		 */
 		function register(mime, converter) {
 			return registry[mime] = converter;
@@ -98,8 +98,8 @@
 		/**
 		 * Attempts to resolve a new converter
 		 *
-		 * @param {String} mime the MIME type
-		 * @return {*} the converter for the MIME type
+		 * @param {string} mime the MIME type
+		 * @return the converter for the MIME type
 		 */
 		load = typeof require === 'function' && require.amd ? load_amd : load_node;
 

@@ -40,8 +40,8 @@
 		 * Response entities are converted based on the Content-Type response header.
 		 *
 		 * @param {Client} [client] client to wrap
-		 * @param {String} [config.mime='text/plain'] MIME type to encode the request entity
-		 * @param {String} [config.accept] Accept header for the request
+		 * @param {string} [config.mime='text/plain'] MIME type to encode the request entity
+		 * @param {string} [config.accept] Accept header for the request
 		 *
 		 * @returns {Client}
 		 */

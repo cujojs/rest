@@ -34,8 +34,8 @@
 		 * Authenticates the request using HTTP Basic Authentication (rfc2617)
 		 *
 		 * @param {Client} [client] client to wrap
-		 * @param {String} config.username username
-		 * @param {String} [config.password=''] password for the user
+		 * @param {string} config.username username
+		 * @param {string} [config.password=''] password for the user
 		 *
 		 * @returns {Client}
 		 */

@@ -51,19 +51,19 @@
 			client: null,
 
 			/**
-			 * @field {String} [idProperty='id'] property to use as the identity property. The values of this property should be unique.
+			 * @field {string} [idProperty='id'] property to use as the identity property. The values of this property should be unique.
 			 */
 			idProperty: 'id',
 
 			/**
-			 * @field {Boolean} [ignoreId=false] if true, add() will always do a POST even if the data item already has an id
+			 * @field {boolean} [ignoreId=false] if true, add() will always do a POST even if the data item already has an id
 			 */
 			ignoreId: false,
 
 			/**
 			 * Retrieves an object by its identity. This will trigger a GET request to the server using the url `id`.
 			 *
-			 * @param {String|Number} id identity to use to lookup the object
+			 * @param {string|number} id identity to use to lookup the object
 			 * @param {Object} [options] reserved for future use
 			 *
 			 * @returns {Object} record in the store that matches the given id
@@ -79,7 +79,7 @@
 			 *
 			 * @param object to get the identity for
 			 *
-			 * @returns {String|Number} the identity
+			 * @returns {string|number} the identity
 			 */
 			getIdentity: function (object) {
 				return object[this.idProperty];
@@ -91,10 +91,10 @@
 			 * Will trigger a PUT request to the server if the object has an id, otherwise it will trigger a POST request.  Unless ignoreId is configured true, in which case POST will always be used.
 			 *
 			 * @param {Object} object record to store
-			 * @param {String|Number} [options.id] explicit ID for the record
-			 * @param {Boolean} [options.ignoreId] treat the record as if it does not have an ID property
-			 * @param {Boolean} [options.overwrite] adds If-Match or If-None-Match header to the request
-			 * @param {Boolean} [options.incremental=false] uses POST intead of PUT for a record with an ID
+			 * @param {string|number} [options.id] explicit ID for the record
+			 * @param {boolean} [options.ignoreId] treat the record as if it does not have an ID property
+			 * @param {boolean} [options.overwrite] adds If-Match or If-None-Match header to the request
+			 * @param {boolean} [options.incremental=false] uses POST intead of PUT for a record with an ID
 			 *
 			 * @returns {Promise<Response>} promissed response
 			 */
@@ -127,9 +127,9 @@
 			 * Will trigger a PUT request to the server if the object has an id, otherwise it will trigger a POST request.  Unless ignoreId is configured true, in which case POST will always be used.
 			 *
 			 * @param {Object} object record to add
-			 * @param {String|Number} [options.id] explicit ID for the record
-			 * @param {Boolean} [options.ignoreId] treat the record as if it does not have an ID property
-			 * @param {Boolean} [options.incremental=false] uses POST intead of PUT for a record with an ID
+			 * @param {string|number} [options.id] explicit ID for the record
+			 * @param {boolean} [options.ignoreId] treat the record as if it does not have an ID property
+			 * @param {boolean} [options.incremental=false] uses POST intead of PUT for a record with an ID
 			 *
 			 * @returns {Promise<Response>} promissed response
 			 */
@@ -142,7 +142,7 @@
 			/**
 			 * Deletes a record by its identity. This will trigger a DELETE request to the server.
 			 *
-			 * @param {String|Number} id identity of the record to delete
+			 * @param {string|number} id identity of the record to delete
 			 *
 			 * @returns {Promise<Response>} promissed response
 			 */

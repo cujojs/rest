@@ -41,7 +41,7 @@
 		 * Prefixes the request path with a common value.
 		 *
 		 * @param {Client} [client] client to wrap
-		 * @param {Number} [config.prefix] path prefix
+		 * @param {number} [config.prefix] path prefix
 		 *
 		 * @returns {Client}
 		 */

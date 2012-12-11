@@ -56,7 +56,7 @@
 		 * may be configed by the 'target' config property.
 		 *
 		 * @param {Client} [client] client to wrap
-		 * @param {String} [config.target='_links'] property to create on the entity and parse links into. If present and falsey, the response entity is used directly.
+		 * @param {string} [config.target='_links'] property to create on the entity and parse links into. If present and falsey, the response entity is used directly.
 		 * @param {Client} [config.client] the parent client to use when creating clients for a linked resources. Defaults to the current interceptor's client
 		 *
 		 * @returns {Client}

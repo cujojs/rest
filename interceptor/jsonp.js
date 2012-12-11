@@ -40,8 +40,8 @@
 		 * common default client for the platform.
 		 *
 		 * @param {Client} [client=rest/client/jsonp] custom client to wrap
-		 * @param {String} [config.callback.param] the parameter name for which the callback function name is the value
-		 * @param {String} [config.callback.prefix] prefix for the callback function, as the callback is attached to the window object, a unique, unobtrusive prefix is desired
+		 * @param {string} [config.callback.param] the parameter name for which the callback function name is the value
+		 * @param {string} [config.callback.prefix] prefix for the callback function, as the callback is attached to the window object, a unique, unobtrusive prefix is desired
 		 *
 		 * @returns {Client}
 		 */

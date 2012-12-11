@@ -37,8 +37,9 @@
 
 		/**
 		 * Base64-encodes a string of text.
-		 * @param {String} text The text to encode.
-		 * @return {String} The base64-encoded string.
+		 *
+		 * @param {string} text The text to encode.
+		 * @return {string} The base64-encoded string.
 		 */
 		function base64Encode(text) {
 
@@ -87,8 +88,9 @@
 
 		/**
 		 * Base64-decodes a string of text.
-		 * @param {String} text The text to decode.
-		 * @return {String} The base64-decoded string.
+		 *
+		 * @param {string} text The text to decode.
+		 * @return {string} The base64-decoded string.
 		 */
 		function base64Decode(text) {
 

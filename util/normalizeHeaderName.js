@@ -35,8 +35,8 @@
 		 *   accepts              -> Accepts
 		 *   x-custom-header-name -> X-Custom-Header-Name
 		 *
-		 * @param {String} name the raw header name
-		 * @return {String} the normalized header name
+		 * @param {string} name the raw header name
+		 * @return {string} the normalized header name
 		 */
 		function normalizeHeaderName(name) {
 			return name.toLowerCase()

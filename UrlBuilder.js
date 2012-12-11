@@ -39,9 +39,9 @@
 		 * Parameters that are not applied directly to the template, are appended
 		 * to the URL as query string parameters.
 		 *
-		 * @param {String} template the URI template
+		 * @param {string} template the URI template
 		 * @param {Object} params parameters to apply to the template
-		 * @return {String} the resulting URL
+		 * @return {string} the resulting URL
 		 */
 		function buildUrl(template, params) {
 			// internal builder to convert template with params.
@@ -75,7 +75,7 @@
 		/**
 		 * Create a new URL Builder
 		 *
-		 * @param {String|UrlBuilder} template the base template to build from, may be another UrlBuilder
+		 * @param {string|UrlBuilder} template the base template to build from, may be another UrlBuilder
 		 * @param {Object} [params] base parameters
 		 * @constructor
 		 */
@@ -96,7 +96,7 @@
 			 * Create a new UrlBuilder instance that extends the current builder.
 			 * The current builder is unmodified.
 			 *
-			 * @param {String} [template] URL template to append to the current template
+			 * @param {string} [template] URL template to append to the current template
 			 * @param {Object} [params] params to combine with current params.  New params override existing params
 			 * @return {UrlBuilder} the new builder
 			 */
@@ -131,7 +131,7 @@
 			 * Expand the template replacing path variables with parameters
 			 *
 			 * @param {Object} [params] params to combine with current params.  New params override existing params
-			 * @return {String} the expanded URL
+			 * @return {string} the expanded URL
 			 */
 			build: function (params) {
 				return buildUrl(this._template, beget(this._params, params));

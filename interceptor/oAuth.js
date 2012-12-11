@@ -76,13 +76,13 @@
 		 * 'parent' window.
 		 *
 		 * @param {Client} [client] client to wrap
-		 * @param {String} [config.token] pre-configured authentication token
-		 * @param {String} config.clientId OAuth clientId
-		 * @param {String} config.scope OAuth scope
-		 * @param {String} config.authorizationUrlBase URL of the authorization server
-		 * @param {String} [config.redirectUrl] callback URL from the authorization server.  Will be converted to a fully qualified, absolute URL, if needed.  Default's to the window's location or base href.
+		 * @param {string} [config.token] pre-configured authentication token
+		 * @param {string} config.clientId OAuth clientId
+		 * @param {string} config.scope OAuth scope
+		 * @param {string} config.authorizationUrlBase URL of the authorization server
+		 * @param {string} [config.redirectUrl] callback URL from the authorization server.  Will be converted to a fully qualified, absolute URL, if needed.  Default's to the window's location or base href.
 		 * @param {Function} [config.windowStrategy] strategy for opening the authorization window, defaults to window.open
-		 * @param {String} [config.oAuthCallbackName='oAuthCallback'] name to register the callback as in global scope
+		 * @param {string} [config.oAuthCallbackName='oAuthCallback'] name to register the callback as in global scope
 		 * @param {Function} [config.oAuthCallback] callback function to receive OAuth URL fragment
 		 *
 		 * @returns {Client}

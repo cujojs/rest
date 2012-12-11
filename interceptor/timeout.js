@@ -35,7 +35,7 @@
 		 * Cancels a request if it takes longer then the timeout value.
 		 *
 		 * @param {Client} [client] client to wrap
-		 * @param {Number} [config.timeout=0] duration in milliseconds before canceling the request. Non-positive values disable the timeout
+		 * @param {number} [config.timeout=0] duration in milliseconds before canceling the request. Non-positive values disable the timeout
 		 *
 		 * @returns {Client}
 		 */

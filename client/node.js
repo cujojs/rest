@@ -86,7 +86,7 @@
 					if (!('entity' in response)) {
 						response.entity = '';
 					}
-					// normalize Buffer to a String
+					// normalize Buffer to a string
 					response.entity += data.toString();
 				});
 				clientResponse.on('end', function () {

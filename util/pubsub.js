@@ -35,7 +35,7 @@
 		 *
 		 * The listener is unsubscribed from the topic after receiving a message.
 		 *
-		 * @param {String} topic the topic to publish to
+		 * @param {string} topic the topic to publish to
 		 * @param {Object} message message to publish
 		 */
 		function publish(topic, message) {
@@ -50,7 +50,7 @@
 		 *
 		 * Any existing callback for the topic will be unsubscribed.
 		 *
-		 * @param {String} topic the topic to listen on
+		 * @param {string} topic the topic to listen on
 		 * @param {Function} callback the callback to receive the message published to the topic
 		 */
 		function subscribe(topic, callback) {
