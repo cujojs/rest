@@ -38,20 +38,16 @@ config['rest:browser'] = {
 	resources: [
 		//'**', ** is busted in buster
 		'*.js',
-		'client/*.js',
-		'dojo/*.js',
-		'interceptor/*.js',
-		'mime/*.js',
+		'client/**/*.js',
+		'dojo/**/*.js',
+		'interceptor/**/*.js',
 		'mime/**/*.js',
-		'util/*.js',
-		'node_modules/curl/src/*.js',
-		'node_modules/curl/src/**/*.js',
-		'node_modules/dojo/*.js',
+		'util/**/*.js',
+		'node_modules/curl/**/*.js',
 		'node_modules/dojo/**/*.js',
-		'node_modules/poly/*.js',
 		'node_modules/poly/**/*.js',
-		'node_modules/when/*.js',
-		'node_modules/wire/*.js'
+		'node_modules/when/**/*.js',
+		'node_modules/wire/**/*.js'
 	],
 	libs: [
 		'test/curl-config.js',
