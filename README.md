@@ -177,6 +177,7 @@ Change Log
 
 .next
 - Bower installable, with dependencies
+- node client's response.raw includes ClientResquest and ClientResponse objects
 
 0.8.3
 - moving from the 'scothis' to the 's2js' organization, no functional changes

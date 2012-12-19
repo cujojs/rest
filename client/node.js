@@ -72,7 +72,10 @@
 			};
 
 			clientRequest = client.request(options, function (clientResponse) {
-				response.raw = clientResponse;
+				response.raw = {
+					request: clientRequest,
+					response: clientResponse
+				};
 				response.status = {
 					code: clientResponse.statusCode
 					// node doesn't provide access to the status text

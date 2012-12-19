@@ -33,11 +33,12 @@
 
 	define('rest/client/jsonp-test', function (require) {
 
-		var rest, client, server;
+		var rest, client, http, server;
 
 		rest = require('rest');
 		client = require('rest/client/node');
-		server = require('http').createServer();
+		http = require('http');
+		server = http.createServer();
 
 		buster.testCase('rest/client/node', {
 			setUp: function () {
@@ -69,7 +70,9 @@
 				var request = { path: 'http://localhost:8080/' };
 				client(request).then(
 					function (response) {
-						assert(response.raw);
+						assert(response.raw.request instanceof http.ClientRequest);
+						// assert(response.raw.response instanceof http.ClientResponse);
+						assert(response.raw.response);
 						assert.same(request, response.request);
 						assert.equals(response.request.method, 'GET');
 						assert.equals(response.entity, 'hello world');
@@ -84,13 +87,10 @@
 				var request = { path: 'http://localhost:8080/', method: 'GET' };
 				client(request).then(
 					function (response) {
-						assert(response.raw);
 						assert.same(request, response.request);
 						assert.equals(response.request.method, 'GET');
 						assert.equals(response.entity, 'hello world');
 						assert.equals(response.status.code, 200);
-						assert.equals('text/plain', response.headers['Content-Type']);
-						assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
 						refute(request.canceled);
 					}
 				).always(done);
@@ -99,7 +99,6 @@
 				var request = { path: 'http://localhost:8080/', entity: 'echo' };
 				client(request).then(
 					function (response) {
-						assert(response.raw);
 						assert.same(request, response.request);
 						assert.equals(response.request.method, 'POST');
 						assert.equals(response.entity, 'echo');
@@ -114,13 +113,9 @@
 				var request = { path: 'http://localhost:8080/', entity: 'echo', method: 'POST' };
 				client(request).then(
 					function (response) {
-						assert(response.raw);
 						assert.same(request, response.request);
 						assert.equals(response.request.method, 'POST');
 						assert.equals(response.entity, 'echo');
-						assert.equals(response.status.code, 200);
-						assert.equals('text/plain', response.headers['Content-Type']);
-						assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
 						refute(request.canceled);
 					}
 				).always(done);
