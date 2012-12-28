@@ -21,10 +21,10 @@
  */
 
 (function (define) {
+	'use strict';
 
 	// derived from dojo.delegate
 	define(function (require) {
-		"use strict";
 
 		var mixin;
 

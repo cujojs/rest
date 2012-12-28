@@ -21,9 +21,9 @@
  */
 
 (function (define) {
+	'use strict';
 
-	define(function (require) {
-		"use strict";
+	define(function (/* require */) {
 
 		// A poor man's pub-sub.  A single listener is supported per topic.  When
 		// the topic is published, the listener is unsubscribed.
@@ -38,7 +38,7 @@
 		 * @param {string} topic the topic to publish to
 		 * @param {Object} message message to publish
 		 */
-		function publish(topic, message) {
+		function publish(topic /* , message... */) {
 			if (!topics[topic]) { return; }
 			topics[topic].apply({}, Array.prototype.slice.call(arguments, 1));
 			// auto cleanup

@@ -21,9 +21,9 @@
  */
 
 (function (define) {
+	'use strict';
 
 	define(function (require) {
-		"use strict";
 
 		var interceptor, registry, when;
 
@@ -51,7 +51,7 @@
 
 				headers = request.headers || (request.headers = {});
 				mime = headers['Content-Type'] || config.mime || 'text/plain';
-				headers.Accept = headers.Accept || config.accept || mime + ", application/json;q=0.8, text/plain;q=0.5, */*;q=0.2";
+				headers.Accept = headers.Accept || config.accept || mime + ', application/json;q=0.8, text/plain;q=0.5, */*;q=0.2';
 
 				if (!('entity' in request)) {
 					return request;

@@ -28,10 +28,10 @@
  */
 
 (function (define) {
+	'use strict';
 
 	/*jshint bitwise: false */
-	define(function (require) {
-		"use strict";
+	define(function (/* require */) {
 
 		var digits = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
@@ -44,7 +44,7 @@
 		function base64Encode(text) {
 
 			if (/([^\u0000-\u00ff])/.test(text)) {
-				throw new Error("Can't base64 encode non-ASCII characters.");
+				throw new Error('Can\'t base64 encode non-ASCII characters.');
 			}
 
 			var i = 0,
@@ -99,7 +99,7 @@
 
 			//first check for any unexpected input
 			if (!(/^[a-z0-9\+\/\s]+\={0,2}$/i.test(text)) || text.length % 4 > 0) {
-				throw new Error("Not a base64-encoded string.");
+				throw new Error('Not a base64-encoded string.');
 			}
 
 			//local variables

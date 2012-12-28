@@ -21,8 +21,9 @@
  */
 
 (function (buster, define) {
+	'use strict';
 
-	var assert, refute, undef;
+	var assert, refute;
 
 	assert = buster.assert;
 	refute = buster.refute;
@@ -37,6 +38,7 @@
 				result = beget();
 				assert(result);
 				for (prop in result) {
+					/*jshint forin:false */
 					refute(result.hasOwnProperty(prop));
 				}
 			},

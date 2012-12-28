@@ -21,6 +21,7 @@
  */
 
 (function (buster, define) {
+	'use strict';
 
 	var assert, fail;
 
@@ -29,7 +30,7 @@
 
 	define('rest/interceptor/retry-test', function (require) {
 
-		var interceptor, retry, rest, when, delay, sinon;
+		var interceptor, retry, rest, when;
 
 		interceptor = require('rest/interceptor');
 		retry = require('rest/interceptor/retry');
@@ -44,7 +45,7 @@
 						if (count === 2) {
 							return { request: request, status: { code: 200 } };
 						} else {
-							return when.reject({ request: request, error: "Thrown by fake client" });
+							return when.reject({ request: request, error: 'Thrown by fake client' });
 						}
 					}
 				);
@@ -52,8 +53,8 @@
 					function (response) {
 					    assert.equals(200, response.status.code);
 					},
-					function (response) {
-						fail("Error should not propagate to client.");
+					function (/* response */) {
+						fail('Error should not propagate to client.');
 					}
 				).always(done);
 			},
@@ -66,17 +67,17 @@
 						if (count === 4) {
 							return { request: request, status: { code: 200 } };
 						} else {
-							return when.reject({ request: request, error: "Thrown by fake client" });
+							return when.reject({ request: request, error: 'Thrown by fake client' });
 						}
 					}, { initial: 10, multiplier: 3, max: 20 }
 				);
 				
 				client = interceptor({
-					request: function (request, config) {
+					request: function (request /*, config */) {
 						start = new Date().getTime();
 						return request;
 					},
-					response: function (response, config) {
+					response: function (response /*, config */) {
 						var elapsed = new Date().getTime() - start;
 						assert.equals(count, 4);
 						assert.equals(response.request.retry, Math.pow(3, count - 1) * 10);
@@ -93,7 +94,7 @@
 					},
 					function (response) {
 						console.log(response);
-						fail("Error should not propagate to client.");
+						fail('Error should not propagate to client.');
 					}
 				).always(done);
 			},

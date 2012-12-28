@@ -21,8 +21,9 @@
  */
 
 (function (buster, define) {
+	'use strict';
 
-	var assert, refute, fail, undef;
+	var assert, refute, fail;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
@@ -40,7 +41,7 @@
 		when = require('when');
 		delay = require('when/delay');
 
-		function hangClient(request) {
+		function hangClient(/* request */) {
 			return when.defer().promise;
 		}
 

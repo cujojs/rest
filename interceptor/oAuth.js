@@ -21,9 +21,9 @@
  */
 
 (function (define, global) {
+	'use strict';
 
 	define(function (require) {
-		"use strict";
 
 		var defaultClient, when, UrlBuilder, pubsub;
 
@@ -45,6 +45,7 @@
 				m = regex.exec(queryString);
 			} while (m);
 
+			/*jshint camelcase:false */
 			pubsub.publish(params.state, params.token_type + ' ' + params.access_token);
 		}
 

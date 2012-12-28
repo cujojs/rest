@@ -21,8 +21,9 @@
  */
 
 (function (buster, define) {
+	'use strict';
 
-	var assert, refute, fail, undef;
+	var assert, refute, fail;
 
 	assert = buster.assert;
 	refute = buster.refute;
@@ -56,7 +57,7 @@
 						response.write(responseBody);
 						response.end();
 					});
-					request.on('error', function () { console.log("server error"); });
+					request.on('error', function () { console.log('server error'); });
 				});
 
 				// TODO handle port conflicts
@@ -124,7 +125,7 @@
 				var request = { path: 'http://localhost:8080/' };
 				client(request).then(
 					fail,
-					function (response) {
+					function (/* response */) {
 						assert(request.canceled);
 					}
 				).always(done);

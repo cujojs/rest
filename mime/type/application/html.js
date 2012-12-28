@@ -21,9 +21,9 @@
  */
 
 (function (define) {
+	'use strict';
 
 	define(function (require) {
-		"use strict";
 
 		//TODO: handle as HTML instead of text/plain
 		return require('../text/plain');

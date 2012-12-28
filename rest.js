@@ -21,9 +21,9 @@
  */
 
 (function (define, process) {
+	'use strict';
 
 	define(function (require) {
-		"use strict";
 
 		var moduleId;
 

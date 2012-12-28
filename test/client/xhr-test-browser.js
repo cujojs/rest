@@ -21,8 +21,9 @@
  */
 
 (function (buster, define) {
+	'use strict';
 
-	var assert, refute, fail, undef;
+	var assert, refute, fail;
 
 	assert = buster.assert;
 	refute = buster.refute;
@@ -51,6 +52,7 @@
 						assert.equals(xhr.status, response.status.code);
 						assert.equals(xhr.statusText, response.status.text);
 						for (name in response.headers) {
+							/*jshint forin:false */
 							assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 						}
 						refute(request.canceled);
@@ -69,6 +71,7 @@
 						assert.equals(xhr.status, response.status.code);
 						assert.equals(xhr.statusText, response.status.text);
 						for (name in response.headers) {
+							/*jshint forin:false */
 							assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 						}
 						refute(request.canceled);
@@ -87,6 +90,7 @@
 						assert.equals(xhr.status, response.status.code);
 						assert.equals(xhr.statusText, response.status.text);
 						for (name in response.headers) {
+							/*jshint forin:false */
 							assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 						}
 						refute(request.canceled);
@@ -105,6 +109,7 @@
 						assert.equals(xhr.status, response.status.code);
 						assert.equals(xhr.statusText, response.status.text);
 						for (name in response.headers) {
+							/*jshint forin:false */
 							assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 						}
 						refute(request.canceled);

@@ -21,8 +21,9 @@
  */
 
 (function (buster, define) {
+	'use strict';
 
-	var assert, refute, undef;
+	var assert, refute;
 
 	assert = buster.assert;
 	refute = buster.refute;
@@ -37,6 +38,7 @@
 				mixed = mixin();
 				assert(mixed);
 				for (prop in mixed) {
+					/*jshint forin:false */
 					refute(mixed.hasOwnProperty(prop));
 				}
 			},

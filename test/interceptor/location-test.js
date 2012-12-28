@@ -21,8 +21,9 @@
  */
 
 (function (buster, define) {
+	'use strict';
 
-	var assert, refute, undef;
+	var assert, refute;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
@@ -37,7 +38,7 @@
 		buster.testCase('rest/interceptor/location', {
 			'should follow the location header, once': function (done) {
 				var client, spy;
-				spy = this.spy(function (request) { return { headers: { Location: '/foo/' + spy.callCount } }; });
+				spy = this.spy(function (/* request */) { return { headers: { Location: '/foo/' + spy.callCount } }; });
 				client = location(spy);
 				client({}).then(
 					function (response) {

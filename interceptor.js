@@ -21,9 +21,9 @@
  */
 
 (function (define) {
+	'use strict';
 
 	define(function (require) {
-		"use strict";
 
 		var defaultClient, when;
 
@@ -49,11 +49,11 @@
 		 * @class Interceptor
 		 */
 
-		function defaultRequestHandler(request, config) {
+		function defaultRequestHandler(request /*, config */) {
 			return request;
 		}
 
-		function defaultResponseHandler(response, config, interceptor) {
+		function defaultResponseHandler(response /*, config, interceptor */) {
 			return response;
 		}
 
@@ -104,7 +104,7 @@
 				interceptor = function (request) {
 					request = request || {};
 					return when(requestHandler(request, config)).then(function (request) {
-						var response, abort, d;
+						var response, abort;
 						if (request instanceof Array) {
 							// unpack compound value
 							abort = request[1];

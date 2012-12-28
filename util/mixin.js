@@ -21,23 +21,23 @@
  */
 
 (function (define) {
+	'use strict';
 
 	// derived from dojo.mixin
-	define(function (require) {
-		"use strict";
+	define(function (/* require */) {
 
 		var empty = {};
 
 		function _mixin(dest, source, copyFunc) {
-			var name, s;
+			var name;
 
 			for (name in source) {
-				// the (!(name in empty) || empty[name] !== s) condition avoids copying properties in "source"
-				// inherited from Object.prototype. For example, if dest has a custom toString() method,
-				// don't overwrite it with the toString() method that source inherited from Object.prototype
-				s = source[name];
-				if (!(name in dest) || (dest[name] !== s && (!(name in empty) || empty[name] !== s))) {
-					dest[name] = copyFunc ? copyFunc(s) : s;
+				// the (!(name in empty) || empty[name] !== source[name]) condition avoids
+				// copying properties in "source" inherited from Object.prototype. For
+				// example, if dest has a custom toString() method, don't overwrite it with
+				// the toString() method that source inherited from Object.prototype
+				if (!(name in dest) || (dest[name] !== source[name] && (!(name in empty) || empty[name] !== source[name]))) {
+					dest[name] = copyFunc ? copyFunc(source[name]) : source[name];
 				}
 			}
 
@@ -51,7 +51,7 @@
 		 * @param {Object} sources the objects to copy properties from.  May be 1 to N arguments, but not an Array.
 		 * @return {Object} the destination object
 		 */
-		function mixin(dest, sources) {
+		function mixin(dest /*, sources... */) {
 			var i, l;
 
 			if (!dest) { dest = {}; }

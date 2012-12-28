@@ -21,11 +21,9 @@
  */
 
 (function (define) {
+	'use strict';
 
-	define(function (require) {
-		"use strict";
-
-		var re = /^[a-z]|-[a-z]/g;
+	define(function (/* require */) {
 
 		/**
 		 * Normalize HTTP header names using the pseudo camel case.

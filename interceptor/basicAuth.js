@@ -21,9 +21,9 @@
  */
 
 (function (define) {
+	'use strict';
 
 	define(function (require) {
-		"use strict";
 
 		var interceptor, base64;
 
@@ -48,7 +48,7 @@
 				password = request.password || config.password || '';
 
 				if (username) {
-					headers.Authorization = base64.encode(username + ":" + password);
+					headers.Authorization = base64.encode(username + ':' + password);
 				}
 
 				return request;

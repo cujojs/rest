@@ -21,9 +21,9 @@
  */
 
 (function (define) {
+	'use strict';
 
 	define(function (require) {
-		"use strict";
 
 		var defaultClient, mixin, queryResults;
 
@@ -68,7 +68,7 @@
 			 *
 			 * @returns {Object} record in the store that matches the given id
 			 */
-			get: function (id, options) {
+			get: function (id /*, options */) {
 				return this.client({
 					path: id
 				});
@@ -161,7 +161,7 @@
 			 *
 			 * @returns {QueryResult} query results
 			 */
-			query: function (query, options) {
+			query: function (query /*, options */) {
 				return queryResults(this.client({ params: query }));
 			}
 		};

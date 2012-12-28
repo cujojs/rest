@@ -21,6 +21,7 @@
  */
 
 (function (buster, define) {
+	'use strict';
 
 	define('rest/test/run', ['curl/_privileged', 'domReady!'], function (curl) {
 

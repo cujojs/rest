@@ -21,9 +21,9 @@
  */
 
 (function (define, XMLHttpRequest) {
+	'use strict';
 
 	define(function (require) {
-		"use strict";
 
 		var when, UrlBuilder, normalizeHeaderName, headerSplitRE;
 
@@ -89,6 +89,7 @@
 
 				headers = request.headers;
 				for (headerName in headers) {
+					/*jshint forin:false */
 					client.setRequestHeader(headerName, headers[headerName]);
 				}
 
@@ -99,7 +100,7 @@
 					d.reject(response);
 				};
 
-				client.onreadystatechange = function (e) {
+				client.onreadystatechange = function (/* e */) {
 					if (request.canceled) { return; }
 					if (client.readyState === (XMLHttpRequest.DONE || 4)) {
 						response.status = {
@@ -117,7 +118,7 @@
 				};
 
 				try {
-					client.onerror = function (e) {
+					client.onerror = function (/* e */) {
 						response.error = 'loaderror';
 						d.reject(response);
 					};

@@ -21,9 +21,9 @@
  */
 
 (function (define, global, document) {
+	'use strict';
 
 	define(function (require) {
-		"use strict";
 
 		var when, UrlBuilder;
 

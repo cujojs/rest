@@ -21,9 +21,9 @@
  */
 
 (function (define) {
+	'use strict';
 
-	define(function (require) {
-		"use strict";
+	define(function (/* require */) {
 
 		var encodedSpaceRE, urlEncodedSpaceRE;
 

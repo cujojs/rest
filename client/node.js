@@ -21,9 +21,9 @@
  */
 
 (function (define) {
+	'use strict';
 
 	define(function (require) {
-		"use strict";
 
 		var parser, http, https, when, UrlBuilder, normalizeHeaderName, httpsExp;
 

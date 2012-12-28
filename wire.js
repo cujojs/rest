@@ -21,6 +21,7 @@
  */
 
 (function (define) {
+	'use strict';
 
 	define(function (require) {
 
@@ -74,7 +75,7 @@
 		 * @param refObj
 		 * @param wire
 		 */
-		function resolveClient(resolver, name, refObj, wire) {
+		function resolveClient(resolver, name, refObj /*, wire */) {
 			var config, client;
 
 			config = parseConfig(name, refObj);

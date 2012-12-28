@@ -20,10 +20,10 @@
  * IN THE SOFTWARE.
  */
 
-(function (define, global, process) {
+(function (define) {
+	'use strict';
 
 	define(function (require) {
-		"use strict";
 
 		var when, load, registry;
 
@@ -61,7 +61,7 @@
 			return registry[mime] = converter;
 		}
 
-		function load_amd(mime) {
+		function loadAMD(mime) {
 			var d, timeout;
 
 			d = when.defer();
@@ -82,7 +82,7 @@
 			return d.promise;
 		}
 
-		function load_node(mime) {
+		function loadNode(mime) {
 			var d = when.defer();
 
 			try {
@@ -101,7 +101,7 @@
 		 * @param {string} mime the MIME type
 		 * @return the converter for the MIME type
 		 */
-		load = typeof require === 'function' && require.amd ? load_amd : load_node;
+		load = typeof require === 'function' && require.amd ? loadAMD : loadNode;
 
 		return {
 			lookup: lookup,
@@ -111,8 +111,6 @@
 	});
 
 }(
-	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); },
-	typeof global === 'undefined' ? this : global,
-	typeof process === 'undefined' ? undefined : process
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
 	// Boilerplate for AMD and Node
 ));

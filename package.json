@@ -42,7 +42,7 @@
 	},
 	"main": "./rest",
 	"scripts": {
-		"test": "jshint client dojo interceptor mime test util *.js && buster test -e node --color none --reporter specification",
+		"test": "jshint . && buster test -e node --color none --reporter specification",
 		"start": "buster static -e browser"
 	}
 }
