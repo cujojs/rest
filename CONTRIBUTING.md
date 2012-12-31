@@ -6,6 +6,7 @@ to expect from the Spring team when evaluating your submission._
 _Please refer back to this document as a checklist before issuing any pull
 request; this will save time for everyone!_
 
+
 ## Understand the basics
 
 Not sure what a pull request is, or how to submit one?  Take a look at GitHub's
@@ -19,6 +20,7 @@ in our [issue tracker][] to see if you can find something similar. If not,
 please create a new issue before submitting a pull request unless the change is
 truly trivial, e.g. typo fixes, removing compiler warnings, etc.
 
+
 ## Discuss non-trivial contribution ideas with committers
 
 If you're considering anything more than correcting a typo or fixing a minor
@@ -26,24 +28,25 @@ bug, please discuss it on the [s2js-contrib][] mailing list before submitting a
 pull request. We're happy to provide guidance but please research the subject
 on your own including searching the mailing list for prior discussions.
 
+
 ## Sign the Contributor License Agreement
 
-If you have not previously done so, please fill out and submit the s2js CLA
-form. The Contributor Agreement provides that any code you contribute to the
-project, will be jointly owned by yourself and VMware. It helps protect you, us
-and more importantly our users from IP infringement claims.
+If you have not previously done so, please fill out and submit the
+[s2js CLA form][]. You'll receive a token when this process is complete. Keep
+track of this; you may be asked for it later!
 
-We hope to automate this process in the near future, but for now post to the
-[s2js-contrib][] group, and we'll get you set up.
+Note that emailing/postal mailing a signed copy is _not_ necessary. Submission
+of the web form is all that is required.
 
-When you've completed the CLA (signed by you and VMware), simply add the
-following in a comment on your pull request:
+Once you've completed the web form, simply add the following in a comment on
+your pull request:
 
-    I have signed and agree to the terms of the s2js Individual Contributor
-    License Agreement.
+    I have signed and agree to the terms of the s2js Contributor License
+    Agreement.
 
-Please add the statement above to all future pull requests as well, simply so
-the team knows immediately that this process is complete.
+You do not need to include your token/id. Please add the statement above to all
+future pull requests as well, simply so that the team knows immediately that
+this process is complete.
 
 
 ## Create your branch from `dev`
@@ -110,6 +113,7 @@ present in the framework.
  */
 ```
 
+
 ## Update license header to modified files as necessary
 
 Always check the date range in the license header. For example, if you've
@@ -125,6 +129,7 @@ then be sure to update it to 2013 appropriately
  * Copyright (c) 2012-2013 VMware, Inc.
 ```
 
+
 ## Use @since tags for newly-added public API types and methods
 
 e.g.
@@ -138,6 +143,7 @@ e.g.
  * @see ...
  */
 ```
+
 
 ## Submit unit test cases for all behavior changes
 
@@ -225,6 +231,7 @@ https://github.com/SpringSource/spring-framework/commit/1d9d3e6ff79ce9f0eca03b02
 https://github.com/SpringSource/spring-framework/commit/8e0b1c3a5f957af3049cfa0438317177e16d6de6
 https://github.com/SpringSource/spring-framework/commit/b787a68f2050df179f7036b209aa741230a02477
 
+
 ## Run all tests prior to submission
 
 See the building from source section of the README for instructions. Make sure
@@ -274,8 +281,10 @@ Note that you can always force push (`git push -f`) reworked / rebased commits
 against the branch used to submit your pull request. i.e. you do not need to
 issue a new pull request when asked to make changes.
 
+
 [help documentation]: http://help.github.com/send-pull-requests
 [issue tracker]: https://github.com/s2js/rest/issues
 [s2js-contrib]: https://groups.google.com/forum/#!forum/s2js-contrib
+[s2js CLA form]: http://support.springsource.com/spring_s2js_signup
 [fork-and-edit]: https://github.com/blog/844-forking-with-the-edit-button
 [commit guidelines section of Pro Git]: http://progit.org/book/ch5-2.html#commit_guidelines
