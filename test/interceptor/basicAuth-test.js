@@ -42,7 +42,7 @@
 					{ username: 'user', password: 'pass'}
 				);
 				client({}).then(function (response) {
-					assert.equals('dXNlcjpwYXNz', response.request.headers.Authorization);
+					assert.equals('Basic dXNlcjpwYXNz', response.request.headers.Authorization);
 				}).always(done);
 			},
 			'should authenticate the requst from the request': function (done) {
@@ -50,7 +50,7 @@
 					function (request) { return { request: request }; }
 				);
 				client({ username: 'user', password: 'pass'}).then(function (response) {
-					assert.equals('dXNlcjpwYXNz', response.request.headers.Authorization);
+					assert.equals('Basic dXNlcjpwYXNz', response.request.headers.Authorization);
 				}).always(done);
 			},
 			'should not authenticate without a username': function (done) {

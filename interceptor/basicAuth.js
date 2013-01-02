@@ -48,7 +48,7 @@
 				password = request.password || config.password || '';
 
 				if (username) {
-					headers.Authorization = base64.encode(username + ':' + password);
+					headers.Authorization = 'Basic ' + base64.encode(username + ':' + password);
 				}
 
 				return request;
