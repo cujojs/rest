@@ -175,7 +175,7 @@ Palo Alto, CA 94304
 Change Log
 ----------
 
-.next
+0.8.4
 - Bower installable, with dependencies
 - node client's response.raw includes ClientResquest and ClientResponse objects
 - basicAuth interceptor correctly indicates auth method
