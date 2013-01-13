@@ -114,6 +114,9 @@
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, hateoas().skip());
+			},
+			'should support interceptor chaining': function () {
+				assert(typeof hateoas().chain === 'function');
 			}
 		});
 

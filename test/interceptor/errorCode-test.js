@@ -71,6 +71,9 @@
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, errorCode().skip());
+			},
+			'should support interceptor chaining': function () {
+				assert(typeof errorCode().chain === 'function');
 			}
 		});
 

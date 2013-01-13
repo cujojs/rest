@@ -65,6 +65,9 @@
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, pathPrefix().skip());
+			},
+			'should support interceptor chaining': function () {
+				assert(typeof pathPrefix().chain === 'function');
 			}
 		});
 

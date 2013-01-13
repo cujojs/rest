@@ -137,6 +137,10 @@
 			return d.promise;
 		}
 
+		xhr.chain = function (interceptor, config) {
+			return interceptor(xhr, config);
+		};
+
 		return xhr;
 
 	});

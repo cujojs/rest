@@ -62,6 +62,8 @@
 		/**
 		 * HTTP client particularly suited for RESTful operations.
 		 *
+		 * @field {function} chain wraps this client with a new interceptor returning the wrapped client
+		 *
 		 * @param {Request} the HTTP request
 		 * @returns {Promise<Response>} a promise the resolves to the HTTP response
 		 *

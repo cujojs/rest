@@ -154,6 +154,9 @@
 			},
 			'should be the default client': function () {
 				assert.same(client, rest);
+			},
+			'should support interceptor chaining': function () {
+				assert(typeof client.chain === 'function');
 			}
 		});
 

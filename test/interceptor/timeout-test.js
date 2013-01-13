@@ -209,6 +209,9 @@
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, timeout().skip());
+			},
+			'should support interceptor chaining': function () {
+				assert(typeof timeout().chain === 'function');
 			}
 		});
 

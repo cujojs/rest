@@ -42,7 +42,7 @@
 		 * shared; specialization can be created by further wrapping that client
 		 * with custom interceptors.
 		 *
-		 * @param {Client} [client] client to wrap
+		 * @param {Client} [target] client to wrap
 		 * @param {Object} [config] configuration for the interceptor, properties will be specific to the interceptor implementation
 		 * @returns {Client} A client wrapped with the interceptor
 		 *
@@ -90,18 +90,18 @@
 				return when.reject((handlers.response || defaultResponseHandler).apply(this, arguments));
 			};
 
-			return function (client, config) {
-				var interceptor;
+			return function (target, config) {
+				var client;
 
-				if (typeof client === 'object') {
-					config = client;
+				if (typeof target === 'object') {
+					config = target;
 				}
-				if (typeof client !== 'function') {
-					client = handlers.client || defaultClient;
+				if (typeof target !== 'function') {
+					target = handlers.client || defaultClient;
 				}
 				config = config || {};
 
-				interceptor = function (request) {
+				client = function (request) {
 					request = request || {};
 					return when(requestHandler(request, config)).then(function (request) {
 						var response, abort;
@@ -112,23 +112,36 @@
 						}
 						response = when(request, function (request) {
 							return when(
-								client(request),
+								target(request),
 								function (response) {
-									return successResponseHandler(response, config, interceptor);
+									return successResponseHandler(response, config, client);
 								},
 								function (response) {
-									return errorResponseHandler(response, config, interceptor);
+									return errorResponseHandler(response, config, client);
 								}
 							);
 						});
 						return abort ? whenFirst([response, abort]) : response;
 					});
 				};
-				interceptor.skip = function () {
-					return client;
+
+				/**
+				 * @returns {Client} the target client
+				 */
+				client.skip = function () {
+					return target;
 				};
 
-				return interceptor;
+				/**
+				 * @param {Interceptor} interceptor the interceptor to wrap this client with
+				 * @param [config] configuration for the interceptor
+				 * @returns {Client} the newly wrapped client
+				 */
+				client.chain = function (interceptor, config) {
+					return interceptor(client, config);
+				};
+
+				return client;
 			};
 		};
 

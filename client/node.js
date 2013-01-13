@@ -110,6 +110,10 @@
 			return d.promise;
 		}
 
+		node.chain = function (interceptor, config) {
+			return interceptor(node, config);
+		};
+
 		return node;
 
 	});

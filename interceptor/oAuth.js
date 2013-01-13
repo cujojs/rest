@@ -76,7 +76,7 @@
 		 * URL fragment and pass it to the callback function on the 'opener', or
 		 * 'parent' window.
 		 *
-		 * @param {Client} [client] client to wrap
+		 * @param {Client} [target] client to wrap
 		 * @param {string} [config.token] pre-configured authentication token
 		 * @param {string} config.clientId OAuth clientId
 		 * @param {string} config.scope OAuth scope
@@ -88,15 +88,16 @@
 		 *
 		 * @returns {Client}
 		 */
-		return function (client, config) {
-			if (typeof client === 'object') {
-				config = client;
+		return function (target, config) {
+			if (typeof target === 'object') {
+				config = target;
 			}
-			if (typeof client !== 'function') {
-				client = defaultClient;
+			if (typeof target !== 'function') {
+				target = defaultClient;
 			}
+			config = config || {};
 
-			var interceptor, authorization, clientId, authorizationUrlBase, redirectUrl, scope, windowStrategy;
+			var client, authorization, clientId, authorizationUrlBase, redirectUrl, scope, windowStrategy;
 
 			authorization = config.token;
 			clientId = config.clientId;
@@ -131,7 +132,7 @@
 				return d.promise;
 			}
 
-			interceptor = function (request) {
+			client = function (request) {
 				var response;
 
 				response = when.defer();
@@ -143,7 +144,7 @@
 					headers.Authorization = authorization;
 
 					when(
-						client(request),
+						target(request),
 						function (success) {
 							if (success.status.code === 401) {
 								when(reauthorize(), function () {
@@ -177,11 +178,15 @@
 
 				return response.promise;
 			};
-			interceptor.skip = function () {
-				return client;
+
+			client.skip = function () {
+				return target;
+			};
+			client.chain = function (interceptor, config) {
+				return interceptor(client, config);
 			};
 
-			return interceptor;
+			return client;
 		};
 
 	});

@@ -65,6 +65,9 @@
 			'should have the jsonp client as the parent by default': function () {
 				refute.same(rest, jsonp().skip());
 				assert.same(jsonpClient, jsonp().skip());
+			},
+			'should support interceptor chaining': function () {
+				assert(typeof jsonp().chain === 'function');
 			}
 		});
 

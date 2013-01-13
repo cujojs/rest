@@ -126,6 +126,10 @@
 			return d.promise;
 		}
 
+		jsonp.chain = function (interceptor, config) {
+			return interceptor(jsonp, config);
+		};
+
 		return jsonp;
 
 	});
