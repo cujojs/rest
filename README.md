@@ -50,10 +50,10 @@ Interceptors are applied to a client by chaining.  To chain a client with an int
 ### Making a basic request: ###
 
 ```javascript
-define(['rest'], function(rest) {
-    rest({ path: '/' }).then(function(response) {
-        console.log('response: ', response);
-    });
+var rest = require('rest');
+
+rest({ path: '/' }).then(function(response) {
+    console.log('response: ', response);
 });
 ```
 
@@ -67,11 +67,14 @@ The response should look familiar as well, it contains all the fields you would 
 If you paid attention when executing the previous example, you may have noticed that the response.entity is a string.  Often we work with more complex data types.  For this, Rest.js supports a rich set of MIME type conversions with the `mime` interceptor.  The correct converter will automatically be chosen based on the `Content-Type` response header.  Custom converts can be registered for a MIME type, more on that later...
 
 ```javascript
-define(['rest', 'rest/interceptor/mime'], function(rest, mime) {
-    var client = rest.chain(mime);
-    client({ path: '/data.json' }).then(function(response) {
-        console.log('response: ', response);
-    });
+var rest, mime, client;
+
+rest = require('rest'),
+mime = require('rest/interceptor/mime');
+
+client = rest.chain(mime);
+client({ path: '/data.json' }).then(function(response) {
+    console.log('response: ', response);
 });
 ```
 
@@ -81,17 +84,22 @@ Before an interceptor can be used, it needs to be configured.  In this case, we 
 ### Composing Interceptors: ###
 
 ```javascript
-define(['rest', 'rest/interceptor/mime', 'rest/interceptor/errorCode'], function(rest, mime, errorCode) {
-    var client = rest.chain(mime).chain(errorCode, { code: 500 });
-    client({ path: '/data.json' }).then(
-        function(response) {
-            console.log('response: ', response);
-        },
-        function(response) {
-            console.error('response error: ', response);
-        }
-    );
-});
+var rest, mime, errorCode, client;
+
+rest = require('rest'),
+mime = require('rest/interceptor/mime');
+errorCode = require('rest/interceptor/errorCode');
+
+client = rest.chain(mime)
+             .chain(errorCode, { code: 500 });
+client({ path: '/data.json' }).then(
+    function(response) {
+        console.log('response: ', response);
+    },
+    function(response) {
+        console.error('response error: ', response);
+    }
+);
 ```
 
 In this example, we take the client create by the `mime` interceptor, and wrap it with the `errorCode` interceptor.  The errorCode interceptor accepts a configuration object that indicates what status codes should be considered an error.  In this case we override the default value of <=400, to only reject with 500 or greater status code.
@@ -104,19 +112,19 @@ Clients can continue to be composed with interceptors as needed.  At any point t
 ### Custom MIME Converters: ###
 
 ```javascript
-define(['rest/mime/registry'], function(registry) {
-   registry.register('application/vnd.com.example', {
-       read: function(str) {
-           var obj;
-           // do string to object conversions
-           return obj;
-       },
-       write: function(obj) {
-           var str;
-           // do object to string conversions
-           return str;
-       }
-   });
+var registry = require('rest/mime/registry');
+
+registry.register('application/vnd.com.example', {
+    read: function(str) {
+        var obj;
+        // do string to object conversions
+        return obj;
+    },
+    write: function(obj) {
+        var str;
+        // do object to string conversions
+        return str;
+    }
 });
 ```
 
