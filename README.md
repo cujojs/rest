@@ -172,7 +172,7 @@ Please see CONTRIBUTING.md for details on how to contribute to this project.
 Copyright
 ---------
 
-Integration is made available under the MIT license.  See LICENSE.txt for details.
+Rest.js is made available under the MIT license.  See LICENSE.txt for details.
 
 Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
 
