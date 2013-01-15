@@ -185,7 +185,8 @@ Change Log
 ----------
 
 .next
-- Interceptor configuraiton chaining
+- Interceptor configuration chaining
+- defaultRequest interceptor, provide default values for any portion of a request
 
 0.8.4
 - Bower installable, with dependencies
