@@ -205,6 +205,7 @@ Change Log
 .next
 - Interceptor configuration chaining
 - defaultRequest interceptor, provide default values for any portion of a request
+- shared 'this' between request/response phases of a single interceptor per request
 - mutli-browser testing with Sauce Labs
 
 0.8.4

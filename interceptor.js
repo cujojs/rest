@@ -102,8 +102,9 @@
 				config = config || {};
 
 				client = function (request) {
+					var context = {};
 					request = request || {};
-					return when(requestHandler(request, config)).then(function (request) {
+					return when(requestHandler.call(context, request, config)).then(function (request) {
 						var response, abort;
 						if (request instanceof Array) {
 							// unpack compound value
@@ -114,10 +115,10 @@
 							return when(
 								target(request),
 								function (response) {
-									return successResponseHandler(response, config, client);
+									return successResponseHandler.call(context, response, config, client);
 								},
 								function (response) {
-									return errorResponseHandler(response, config, client);
+									return errorResponseHandler.call(context, response, config, client);
 								}
 							);
 						});

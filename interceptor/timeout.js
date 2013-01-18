@@ -46,8 +46,7 @@
 					return request;
 				}
 				abortTrigger = when.defer();
-				// TODO yucky place to stick this, needs a better home
-				request._timeout = setTimeout(function () {
+				this.timeout = setTimeout(function () {
 					abortTrigger.resolver.reject({ request: request, error: 'timeout' });
 					if (request.cancel) {
 						request.cancel();
@@ -59,9 +58,9 @@
 				return [request, abortTrigger.promise];
 			},
 			response: function (response) {
-				if (response.request && response.request._timeout) {
-					clearTimeout(response.request._timeout);
-					delete response.request._timeout;
+				if (this.timeout) {
+					clearTimeout(this.timeout);
+					delete this.timeout;
 				}
 				return response;
 			}
