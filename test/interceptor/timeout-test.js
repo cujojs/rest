@@ -84,7 +84,7 @@
 						setTimeout(function () {
 							refute(request.canceled);
 							done();
-						}, 0);
+						}, 20);
 					},
 					function () {
 						fail();
@@ -189,7 +189,7 @@
 			},
 			'should cancel request if client support cancelation': function (done) {
 				var client, request;
-				client = timeout(cancelableClient, { timeout: 10 });
+				client = timeout(cancelableClient, { timeout: 11 });
 				request = {};
 				client(request).then(
 					function () {

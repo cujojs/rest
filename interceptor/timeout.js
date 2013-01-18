@@ -25,11 +25,10 @@
 
 	define(function (require) {
 
-		var interceptor, when, delay;
+		var interceptor, when;
 
 		interceptor = require('../interceptor');
 		when = require('when');
-		delay = require('when/delay');
 
 		/**
 		 * Cancels a request if it takes longer then the timeout value.
@@ -47,7 +46,8 @@
 					return request;
 				}
 				abortTrigger = when.defer();
-				delay(timeout).then(function () {
+				// TODO yucky place to stick this, needs a better home
+				request._timeout = setTimeout(function () {
 					abortTrigger.resolver.reject({ request: request, error: 'timeout' });
 					if (request.cancel) {
 						request.cancel();
@@ -55,8 +55,15 @@
 					else {
 						request.canceled = true;
 					}
-				});
+				}, timeout);
 				return [request, abortTrigger.promise];
+			},
+			response: function (response) {
+				if (response.request && response.request._timeout) {
+					clearTimeout(response.request._timeout);
+					delete response.request._timeout;
+				}
+				return response;
 			}
 		});
 

@@ -109,13 +109,18 @@
 			script.async = true;
 			script.src = new UrlBuilder(request.path, request.params).build(callbackParams);
 
-			script.onload = script.onerror = script.onreadystatechange = function (e) {
+			script.onerror = function () {
+				if (global[callbackName]) {
+					response.error = 'loaderror';
+					clearProperty(global, callbackName);
+					cleanupScriptNode(response);
+					d.reject(response);
+				}
+			};
+			script.onload = script.onreadystatechange = function (e) {
 				// script tag load callbacks are completely non-standard
 				if ((e && (e.type === 'load' || e.type === 'error')) || script.readyState === 'loaded') {
-					if (global[callbackName]) {
-						response.error = 'loaderror';
-						d.reject(response);
-					}
+					script.onerror(e);
 				}
 			};
 

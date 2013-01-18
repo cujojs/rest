@@ -38,11 +38,15 @@
 		"poly": "https://github.com/cujojs/poly/tarball/0.5.1",
 		"wire": "https://github.com/cujojs/wire/tarball/0.8.0",
 		"buster": "",
-		"jshint": ""
+		"buster-static": "https://github.com/scothis/buster-static/tarball/html5",
+		"jshint": "",
+		"sauce-connect-launcher": "",
+		"wd": ""
 	},
 	"main": "./rest",
 	"scripts": {
 		"test": "jshint . && buster test -e node --color none --reporter specification",
+		"ci": "npm test && node test/sauce-driver.js",
 		"start": "buster static -e browser"
 	}
 }

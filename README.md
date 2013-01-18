@@ -13,28 +13,6 @@ Build Status
 </table>
 
 
-Getting Started
----------------
-
-Rest can be installed via [npm](https://npmjs.org/), [Bower](http://twitter.github.com/bower/), or from source.
-
-To install without source:
-
-    $ npm install rest
-
-or
-
-    $ bower install rest
-
-From source:
-
-    $ npm install
-
-Rest.js is designed to run in a browser environment, utilizing [AMD modules](https://github.com/amdjs/amdjs-api/wiki/AMD), or within [Node.js](http://nodejs.org/).  [curl](https://github.com/cujojs/curl) is highly recommended as an AMD loader, although any loader should work.
-
-An ECMAScript 5 compatible environment is assumed.  Older browsers, ::cough:: IE, that do not support ES5 natively can be shimmed.  Any shim should work, although we've tested against cujo's [poly](https://github.com/cujojs/poly)
-
-
 Usage
 -----
 
@@ -133,6 +111,46 @@ Registering a custom converter is a simple as calling the register function on t
 Built in converters are available under `rest/mime/type/{type}`, as an example, JSON support is located at `rest/mime/type/application/json`.  You never need to know this as a consumer, but it's a good place to find examples.
 
 
+Supported Environments
+----------------------
+
+Our goal is to work in every major JavaScript environment; Node.js and major browsers are actively tested and supported.
+
+If your preferred environment is not supported, please let us know. Some features may not be available in all environments.
+
+Tested environments:
+- Node.js (0.8, should wok in earlier versions)
+- Chrome (stable)
+- Firefox (stable, ESR, should work in earlier versions)
+- IE (6-10)
+- Safari (5, 6, iOS 4-6, should work in earlier versions)
+- Opera (11, 12, should work in earlier versions)
+
+Specific browser test are provided by [Travis CI](https://travis-ci.org/s2js/rest) and [Sauce Labs' Open Sauce Plan](https://saucelabs.com/opensource). You can see [specific browser test results](https://saucelabs.com/u/s2js-rest), although odds are they do not reference this specific release/branch/commit.
+
+
+Getting Started
+---------------
+
+Rest can be installed via [npm](https://npmjs.org/), [Bower](http://twitter.github.com/bower/), or from source.
+
+To install without source:
+
+    $ npm install rest
+
+or
+
+    $ bower install rest
+
+From source:
+
+    $ npm install
+
+Rest.js is designed to run in a browser environment, utilizing [AMD modules](https://github.com/amdjs/amdjs-api/wiki/AMD), or within [Node.js](http://nodejs.org/).  [curl](https://github.com/cujojs/curl) is highly recommended as an AMD loader, although any loader should work.
+
+An ECMAScript 5 compatible environment is assumed.  Older browsers, ::cough:: IE, that do not support ES5 natively can be shimmed.  Any shim should work, although we've tested against cujo's [poly](https://github.com/cujojs/poly)
+
+
 Reporting Issues
 ----------------
 
@@ -187,6 +205,7 @@ Change Log
 .next
 - Interceptor configuration chaining
 - defaultRequest interceptor, provide default values for any portion of a request
+- mutli-browser testing with Sauce Labs
 
 0.8.4
 - Bower installable, with dependencies
