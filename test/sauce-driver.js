@@ -46,8 +46,8 @@
 		{ browserName: 'internet explorer', version: '10',  platform: 'Windows 2012' },
 		{ browserName: 'internet explorer', version: '9',   platform: 'Windows 2008' },
 		{ browserName: 'internet explorer', version: '8',   platform: 'Windows 2003' },
-		{ browserName: 'internet explorer', version: '7',   platform: 'Windows 2003' },
-		{ browserName: 'internet explorer', version: '6',   platform: 'Windows 2003' },
+//		{ browserName: 'internet explorer', version: '7',   platform: 'Windows 2003' },
+//		{ browserName: 'internet explorer', version: '6',   platform: 'Windows 2003' },
 		{ browserName: 'safari',            version: '6',   platform: 'Mac 10.8'     },
 		{ browserName: 'safari',            version: '5',   platform: 'Mac 10.6'     },
 		{ browserName: 'opera',             version: '12',  platform: 'Windows 2008' },
@@ -164,7 +164,7 @@
 	}
 
 	// must use a port that sauce connect will tunnel
-	buster = launchBuster(8080);
+	buster = launchBuster('8080');
 
 	console.log('Opening tunnel to Sauce Labs');
 	sauceConnect({ username: username, accessKey: accessKey, 'no_progress': true }, function (err, tunnel) {
