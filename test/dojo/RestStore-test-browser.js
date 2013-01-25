@@ -30,9 +30,10 @@
 
 	define('rest/dojo/RestStore-test', function (require) {
 
-		var RestStore, when;
+		var RestStore, SimpleRestStore, when;
 
 		RestStore = require('rest/dojo/RestStore');
+		SimpleRestStore = require('rest/dojo/SimpleRestStore');
 		when = require('when');
 
 		function client(request) {
@@ -155,6 +156,10 @@
 						refute(response.request.headers['If-Match']);
 					}
 				).always(done);
+			},
+			'should have a proper prototype chain': function () {
+				assert(new RestStore() instanceof RestStore);
+				assert(new RestStore() instanceof SimpleRestStore);
 			}
 		});
 
