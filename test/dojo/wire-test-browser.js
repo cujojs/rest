@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -23,10 +23,11 @@
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute;
+	var assert, refute, fail, undef;
 
-	assert = buster.assert;
-	refute = buster.refute;
+	assert = buster.assertions.assert;
+	refute = buster.assertions.refute;
+	fail = buster.assertions.fail;
 
 	define('rest/dojo/wire-test', function (require) {
 
@@ -57,22 +58,25 @@
 				};
 				wire(spec).then(function (spec) {
 					assert(spec.store instanceof RestStore);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
-			'should get with resource! returning a promise': function (done) {
+			'//should get with resource! returning a promise': function (done) {
+				// TODO find out if 'wait: false' is still possible with the latest when/wire
 				var spec;
 				spec = {
 					resource: { $ref: 'resource!test/dojo', get: 'hello.json', entity: false, client: client },
 					plugins: [{ module: 'rest/dojo/wire' }]
 				};
 				wire(spec).then(function (spec) {
-					spec.resource.then(function (resource) {
-						assert.equals('bar', resource.entity.foo);
-						assert.equals('test/dojo/hello.json', resource.request.path);
-					});
-				}).always(done);
+					return spec.resource.then(
+						function (response) {
+							assert.equals('bar', response.entity.foo);
+							assert.equals('test/dojo/hello.json', response.request.path);
+						}
+					);
+				}).then(undef, fail).always(done);
 			},
-			'should get with resource! returning data': function (done) {
+			'should get with resource! waiting for data': function (done) {
 				var spec;
 				spec = {
 					resource: { $ref: 'resource!test/dojo', get: 'hello.json', entity: false, wait: true, client: client },
@@ -81,7 +85,7 @@
 				wire(spec).then(function (spec) {
 					assert.equals('bar', spec.resource.entity.foo);
 					assert.equals('test/dojo/hello.json', spec.resource.request.path);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should support client!': function (done) {
 				var spec;
@@ -90,12 +94,10 @@
 					plugins: [{ module: 'rest/dojo/wire' }]
 				};
 				wire(spec).then(function (spec) {
-					spec.client({}).then(
-						function (response) {
-							assert.equals('bar', response.foo);
-						}
-					);
-				}).always(done);
+					return spec.client({}).then(function (response) {
+						assert.equals('bar', response.foo);
+					});
+				}).then(undef, fail).always(done);
 			}
 		});
 

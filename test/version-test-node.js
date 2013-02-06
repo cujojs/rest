@@ -25,8 +25,8 @@
 
 	var assert, refute;
 
-	assert = buster.assert;
-	refute = buster.refute;
+	assert = buster.assertions.assert;
+	refute = buster.assertions.refute;
 
 	define('rest/version-test', function (require) {
 

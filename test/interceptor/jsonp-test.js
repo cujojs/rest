@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -23,10 +23,11 @@
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute;
+	var assert, refute, fail, undef;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
+	fail = buster.assertions.fail;
 
 	define('rest/interceptor/jsonp-test', function (require) {
 
@@ -43,24 +44,20 @@
 					function (request) { return when({ request: request }); },
 					{ callback: { param: 'callback', prefix: 'jsonp' } }
 				);
-				client({}).then(
-					function (response) {
-						assert.equals('callback', response.request.callback.param);
-						assert.equals('jsonp', response.request.callback.prefix);
-					}
-				).always(done);
+				client({}).then(function (response) {
+					assert.equals('callback', response.request.callback.param);
+					assert.equals('jsonp', response.request.callback.prefix);
+				}).then(undef, fail).always(done);
 			},
 			'should include callback info from request overridding config values': function (done) {
 				var client = jsonp(
 					function (request) { return when({ request: request }); },
 					{ callback: { param: 'callback', prefix: 'jsonp' } }
 				);
-				client({ callback: { param: 'customCallback', prefix: 'customPrefix' } }).then(
-					function (response) {
-						assert.equals('customCallback', response.request.callback.param);
-						assert.equals('customPrefix', response.request.callback.prefix);
-					}
-				).always(done);
+				client({ callback: { param: 'customCallback', prefix: 'customPrefix' } }).then(function (response) {
+					assert.equals('customCallback', response.request.callback.param);
+					assert.equals('customPrefix', response.request.callback.prefix);
+				}).then(undef, fail).always(done);
 			},
 			'should have the jsonp client as the parent by default': function () {
 				refute.same(rest, jsonp().skip());

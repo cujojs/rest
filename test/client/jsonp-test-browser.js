@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -23,14 +23,12 @@
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute, fail;
+	var assert, refute, fail, failOnThrow, undef;
 
-	assert = buster.assert;
-	refute = buster.refute;
-
-	fail = function () {
-		buster.assertions.fail('should never be called');
-	};
+	assert = buster.assertions.assert;
+	refute = buster.assertions.refute;
+	fail = buster.assertions.fail;
+	failOnThrow = buster.assertions.failOnThrow;
 
 	define('rest/client/jsonp-test', function (require) {
 
@@ -43,35 +41,31 @@
 		buster.testCase('rest/client/jsonp', {
 			'should make a GET by default': function (done) {
 				var request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'javascript' } };
-				client(request).then(
-					function (response) {
-						assert(response.entity.responseData);
-						assert.same(request, response.request);
-						refute(request.canceled);
-						refute(response.raw.parentNode);
-					}
-				).always(done);
+				client(request).then(function (response) {
+					assert(response.entity.responseData);
+					assert.same(request, response.request);
+					refute(request.canceled);
+					refute(response.raw.parentNode);
+				}).then(undef, fail).always(done);
 			},
 			'should use the jsonp client from the jsonp interceptor by default': function (done) {
 				var request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'html5' } };
-				jsonpInterceptor()(request).then(
-					function (response) {
-						assert(response.entity.responseData);
-						assert.same(request, response.request);
-						refute(request.canceled);
-						refute(response.raw.parentNode);
-					}
-				).always(done);
+				jsonpInterceptor()(request).then(function (response) {
+					assert(response.entity.responseData);
+					assert.same(request, response.request);
+					refute(request.canceled);
+					refute(response.raw.parentNode);
+				}).then(undef, fail).always(done);
 			},
 			'should abort the request if canceled': function (done) {
 				var request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'html5' } };
 				client(request).then(
 					fail,
-					function (response) {
+					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert(request.canceled);
 						refute(response.raw.parentNode);
-					}
+					})
 				).always(done);
 				refute(request.canceled);
 				request.cancel();
@@ -80,20 +74,20 @@
 				var request = { path: 'http://localhost:1234' };
 				client(request).then(
 					fail,
-					function (response) {
+					failOnThrow(function (response) {
 						assert.same('loaderror', response.error);
-					}
+					})
 				).always(done);
 			},
 			'should not make a request that has already been canceled': function (done) {
 				var request = { canceled: true, path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'javascript' } };
 				client(request).then(
 					fail,
-					function (response) {
+					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert(request.canceled);
 						assert.same('precanceled', response.error);
-					}
+					})
 				).always(done);
 			},
 			'should not be the default client': function () {

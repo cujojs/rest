@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -23,10 +23,11 @@
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute;
+	var assert, refute, fail, undef;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
+	fail = buster.assertions.fail;
 
 	define('rest/interceptor/location-test', function (require) {
 
@@ -40,23 +41,19 @@
 				var client, spy;
 				spy = this.spy(function (/* request */) { return { headers: { Location: '/foo/' + spy.callCount } }; });
 				client = location(spy);
-				client({}).then(
-					function (response) {
-						assert.equals('/foo/2', response.headers.Location);
-						assert.same(2, spy.callCount);
-					}
-				).always(done);
+				client({}).then(function (response) {
+					assert.equals('/foo/2', response.headers.Location);
+					assert.same(2, spy.callCount);
+				}).then(undef, fail).always(done);
 			},
 			'should return the response if there is no location header': function (done) {
 				var client, spy;
 				spy = this.spy(function () { return { status: { code: 200 } }; });
 				client = location(spy);
-				client({}).then(
-					function (response) {
-						assert.equals(200, response.status.code);
-						assert.same(1, spy.callCount);
-					}
-				).always(done);
+				client({}).then(function (response) {
+					assert.equals(200, response.status.code);
+					assert.same(1, spy.callCount);
+				}).then(undef, fail).always(done);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, location().skip());

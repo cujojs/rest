@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -23,10 +23,11 @@
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute;
+	var assert, refute, fail, undef;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
+	fail = buster.assertions.fail;
 
 	define('rest/mime/registry-test', function (require) {
 
@@ -43,7 +44,7 @@
 						assert.isFunction(serializer.read);
 						assert.isFunction(serializer.write);
 					}
-				).always(done);
+				).then(undef, fail).always(done);
 			},
 			'should return registed serializer': function (done) {
 				var serializer = {};
@@ -53,12 +54,12 @@
 					function (s) {
 						assert.same(serializer, s);
 					}
-				).always(done);
+				).then(undef, fail).always(done);
 			},
 			'should reject for non-existant serializer': function (done) {
 				when(
 					registry.lookup('application/bogus'),
-					undefined,
+					fail,
 					function () {
 						assert(true);
 					}

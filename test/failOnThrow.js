@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -20,47 +20,24 @@
  * IN THE SOFTWARE.
  */
 
-var config = exports;
+(function (buster) {
+	'use strict';
 
-config['rest:node'] = {
-	environment: 'node',
-	rootPath: '../',
-	tests: [
-		'test/**/*-test.js',
-		'test/**/*-test-node.js'
-	],
-	testHelpers: ['test/failOnThrow.js']
-};
+	var fail;
 
-config['rest:browser'] = {
-	environment: 'browser',
-	autoRun: false,
-	rootPath: '../',
-	resources: [
-		//'**', ** is busted in buster
-		'*.js',
-		'client/**/*.js',
-		'dojo/**/*.js',
-		'interceptor/**/*.js',
-		'mime/**/*.js',
-		'util/**/*.js',
-		'node_modules/curl/**/*.js',
-		'node_modules/dojo/**/*.js',
-		'node_modules/poly/**/*.js',
-		'node_modules/when/**/*.js',
-		'node_modules/wire/**/*.js'
-	],
-	libs: [
-		'test/curl-config.js',
-		'node_modules/curl/src/curl.js'
-	],
-	sources: [
-		// loaded as resources
-	],
-	tests: [
-		'test/**/*-test.js',
-		'test/**/*-test-browser.js',
-		'test/run.js'
-	],
-	testHelpers: ['test/failOnThrow.js']
-};
+	fail = buster.assertions.fail;
+
+	buster.assertions.failOnThrow = function failOnThrow(func) {
+		return function () {
+			try {
+				return func.apply(this, arguments);
+			}
+			catch (e) {
+				fail(e);
+			}
+		};
+	};
+
+}(
+	this.buster || require('buster')
+));

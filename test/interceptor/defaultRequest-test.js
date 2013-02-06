@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2013-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -23,10 +23,11 @@
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute;
+	var assert, refute, fail, undef;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
+	fail = buster.assertions.fail;
 
 	define('rest/interceptor/defaultRequest-test', function (require) {
 
@@ -44,38 +45,38 @@
 				var client = defaultRequest(defaultClient);
 				client({}).then(function (response) {
 					assert.equals({}, response.request);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should default the method': function (done) {
 				var client = defaultRequest(defaultClient, { method: 'PUT' });
 				client({}).then(function (response) {
 					assert.equals('PUT', response.request.method);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should not overwrite the method': function (done) {
 				var client = defaultRequest(defaultClient, { method: 'PUT' });
 				client({ method: 'GET' }).then(function (response) {
 					assert.equals('GET', response.request.method);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should default the path': function (done) {
 				var client = defaultRequest(defaultClient, { path: '/foo' });
 				client({}).then(function (response) {
 					assert.equals('/foo', response.request.path);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should not overwrite the path': function (done) {
 				var client = defaultRequest(defaultClient, { path: '/foo' });
 				client({ path: '/bar' }).then(function (response) {
 					assert.equals('/bar', response.request.path);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should default params': function (done) {
 				var client = defaultRequest(defaultClient, { params: { foo: 'bar', bool: 'false' } });
 				client({}).then(function (response) {
 					assert.equals('bar', response.request.params.foo);
 					assert.equals('false', response.request.params.bool);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should merge params': function (done) {
 				var client = defaultRequest(defaultClient, { params: { foo: 'bar', bool: 'false' } });
@@ -83,34 +84,34 @@
 					assert.equals('bar', response.request.params.foo);
 					assert.equals('true', response.request.params.bool);
 					assert.equals('bloop', response.request.params.bleep);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should default headers': function (done) {
 				var client = defaultRequest(defaultClient, { headers: { foo: 'bar', bool: 'false' } });
 				client({}).then(function (response) {
 					assert.equals('bar', response.request.headers.foo);
 					assert.equals('false', response.request.headers.bool);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should merge headers': function (done) {
 				var client = defaultRequest(defaultClient, { headers: { foo: 'bar', bool: 'false' } });
 				client({ headers: { bool: 'true', bleep: 'bloop' } }).then(function (response) {
 					assert.equals('bar', response.request.headers.foo);
 					assert.equals('true', response.request.headers.bool);
-					assert.equals('bloop', response.request.params.bleep);
-				}).always(done);
+					assert.equals('bloop', response.request.headers.bleep);
+				}).then(undef, fail).always(done);
 			},
 			'should default the entity': function (done) {
 				var client = defaultRequest(defaultClient, { entity: Math });
 				client({}).then(function (response) {
 					assert.same(Math, response.request.entity);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should not overwrite the entity': function (done) {
 				var client = defaultRequest(defaultClient, { entity: Math });
 				client({ entity: Date }).then(function (response) {
 					assert.same(Date, response.request.entity);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, defaultRequest().skip());

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -23,10 +23,11 @@
 (function (buster, define) {
 	'use strict';
 
-	var assert, fail;
+	var assert, fail, failOnThrow, undef;
 
 	assert = buster.assertions.assert;
 	fail = buster.assertions.fail;
+	failOnThrow = buster.assertions.failOnThrow;
 
 	define('rest/interceptor/retry-test', function (require) {
 
@@ -49,14 +50,9 @@
 						}
 					}
 				);
-				client({}).then(
-					function (response) {
-					    assert.equals(200, response.status.code);
-					},
-					function (/* response */) {
-						fail('Error should not propagate to client.');
-					}
-				).always(done);
+				client({}).then(function (response) {
+				    assert.equals(200, response.status.code);
+				}).then(undef, fail).always(done);
 			},
 			'should accept custom config': function (done) {
 				var count = 0, client, start;
@@ -88,15 +84,9 @@
 					}
 				})(client);
 				
-				client({}).then(
-					function (response) {
-					    assert.equals(200, response.status.code);
-					},
-					function (response) {
-						console.log(response);
-						fail('Error should not propagate to client.');
-					}
-				).always(done);
+				client({}).then(function (response) {
+				    assert.equals(200, response.status.code);
+				}).then(undef, fail).always(done);
 			},
 			'should not make propagate request if marked as canceled': function (done) {
 				var parent, client, request;
@@ -108,14 +98,12 @@
 
 				request = {};
 				client(request).then(
-					function () {
-						fail('should not be called');
-					},
-					function (response) {
+					fail,
+					failOnThrow(function (response) {
 						assert(request.canceled);
 						assert.equals('precanceled', response.error);
 						assert.same(1, parent.callCount);
-					}
+					})
 				).always(done);
 
 				request.canceled = true;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -23,10 +23,12 @@
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute;
+	var assert, refute, fail, failOnThrow, undef;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
+	fail = buster.assertions.fail;
+	failOnThrow = buster.assertions.failOnThrow;
 
 	define('rest/interceptor/errorCode-test', function (require) {
 
@@ -40,21 +42,19 @@
 				var client = errorCode(
 					function () { return { status: { code: 399 } }; }
 				);
-				client({}).then(
-					function (response) {
-						assert.equals(399, response.status.code);
-					}
-				).always(done);
+				client({}).then(function (response) {
+					assert.equals(399, response.status.code);
+				}).then(undef, fail).always(done);
 			},
 			'should reject for 400 or greater by default': function (done) {
 				var client = errorCode(
 					function () { return { status: { code: 400 } }; }
 				);
 				client({}).then(
-					undefined,
-					function (response) {
+					fail,
+					failOnThrow(function (response) {
 						assert.equals(400, response.status.code);
-					}
+					})
 				).always(done);
 			},
 			'should reject lower then 400 with a custom code': function (done) {
@@ -63,10 +63,10 @@
 					{ code: 300 }
 				);
 				client({}).then(
-					undefined,
-					function (response) {
+					fail,
+					failOnThrow(function (response) {
 						assert.equals(300, response.status.code);
-					}
+					})
 				).always(done);
 			},
 			'should have the default client as the parent by default': function () {

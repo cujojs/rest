@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -23,10 +23,12 @@
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute;
+	var assert, refute, fail, failOnThrow, undef;
 
-	assert = buster.assert;
-	refute = buster.refute;
+	assert = buster.assertions.assert;
+	refute = buster.assertions.refute;
+	fail = buster.assertions.fail;
+	failOnThrow = buster.assertions.failOnThrow;
 
 	define('rest/wire-test', function (require) {
 
@@ -47,10 +49,10 @@
 					plugins: [{ module: 'rest/wire' }]
 				};
 				wire(spec).then(function (spec) {
-					spec.client({}).then(function (response) {
+					return spec.client({}).then(function (response) {
 						assert.equals('bar', response.foo);
 					});
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should use client! config with entity interceptor disabled': function (done) {
 				var spec, client;
@@ -62,12 +64,12 @@
 					plugins: [{ module: 'rest/wire' }]
 				};
 				wire(spec).then(function (spec) {
-					spec.client({ path: 'to/somewhere' }).then(function (response) {
+					return spec.client({ path: 'to/somewhere' }).then(function (response) {
 						assert.equals('path/to/somewhere', response.request.path);
 						assert.equals('text/plain', response.request.headers.Accept);
 						assert.equals('bar', response.entity.foo);
 					});
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should be rejected for a server error status code': function (done) {
 				var spec, client;
@@ -78,14 +80,17 @@
 					client: { $ref: 'client!', client: client },
 					plugins: [{ module: 'rest/wire' }]
 				};
-				wire(spec).then(function (spec) {
-					spec.client({}).then(
-						undefined,
-						function (response) {
-							assert.equals('bar', response.foo);
-						}
-					);
-				}).always(done);
+				wire(spec).then(
+					function (spec) {
+						return spec.client({}).then(
+							fail,
+							failOnThrow(function (response) {
+								assert.equals('bar', response.foo);
+							})
+						);
+					},
+					fail
+				).always(done);
 			},
 			'should ignore status code when errorCode interceptor is disabled': function (done) {
 				var spec, client;
@@ -97,10 +102,10 @@
 					plugins: [{ module: 'rest/wire' }]
 				};
 				wire(spec).then(function (spec) {
-					spec.client({}).then(function (response) {
+					return spec.client({}).then(function (response) {
 						assert.equals('bar', response.foo);
 					});
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should ignore Content-Type and entity when mime interceptor is disabled': function (done) {
 				var spec, client;
@@ -112,10 +117,10 @@
 					plugins: [{ module: 'rest/wire' }]
 				};
 				wire(spec).then(function (spec) {
-					spec.client({}).then(function (response) {
+					return spec.client({}).then(function (response) {
 						assert.isString(response);
 					});
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should use x-www-form-urlencoded as the default Content-Type for POSTs': function (done) {
 				var spec, client;
@@ -127,12 +132,12 @@
 					plugins: [{ module: 'rest/wire' }]
 				};
 				wire(spec).then(function (spec) {
-					spec.client({ method: 'post', entity: { bleep: 'bloop' } }).then(function (response) {
+					return spec.client({ method: 'post', entity: { bleep: 'bloop' } }).then(function (response) {
 						assert.equals('bleep=bloop', response.request.entity);
 						assert.equals(0, response.request.headers.Accept.indexOf('application/x-www-form-urlencoded'));
 						assert.equals('application/x-www-form-urlencoded', response.request.headers['Content-Type']);
 					});
-				}).always(done);
+				}).then(undef, fail).always(done);
 			}
 		});
 

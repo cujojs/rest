@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -23,10 +23,11 @@
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute;
+	var assert, refute, fail, undef;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
+	fail = buster.assertions.fail;
 
 	define('rest/interceptor/entity-test', function (require) {
 
@@ -44,7 +45,7 @@
 
 				client().then(function (response) {
 					assert.same(body, response);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should return the whole response if there is no entity': function (done) {
 				var client, response;
@@ -54,7 +55,7 @@
 
 				client().then(function (r) {
 					assert.same(response, r);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, entity().skip());

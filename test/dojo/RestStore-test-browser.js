@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -23,10 +23,11 @@
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute;
+	var assert, refute, fail, undef;
 
-	assert = buster.assert;
-	refute = buster.refute;
+	assert = buster.assertions.assert;
+	refute = buster.assertions.refute;
+	fail = buster.assertions.fail;
 
 	define('rest/dojo/RestStore-test', function (require) {
 
@@ -55,107 +56,87 @@
 			},
 			'should apply query params to the query string': function (done) {
 				var store = new RestStore({ client: client });
-				store.query({ q: 'what is the meaning of life?' }).then(
-					function (response) {
-						assert.equals('what is the meaning of life?', response.request.params.q);
-					}
-				).always(done);
+				store.query({ q: 'what is the meaning of life?' }).then(function (response) {
+					assert.equals('what is the meaning of life?', response.request.params.q);
+				}).then(undef, fail).always(done);
 			},
 			'should get based on the id': function (done) {
 				var store = new RestStore({ client: client });
-				store.get(42).then(
-					function (response) {
-						assert.equals('42', response.request.path);
-						refute(response.request.method);
-					}
-				).always(done);
+				store.get(42).then(function (response) {
+					assert.equals('42', response.request.path);
+					refute(response.request.method);
+				}).then(undef, fail).always(done);
 			},
 			'should remove based on the id': function (done) {
 				var store = new RestStore({ client: client });
-				store.remove(42).then(
-					function (response) {
-						assert.equals('42', response.request.path);
-						assert.equals('delete', response.request.method);
-					}
-				).always(done);
+				store.remove(42).then(function (response) {
+					assert.equals('42', response.request.path);
+					assert.equals('delete', response.request.method);
+				}).then(undef, fail).always(done);
 			},
 			'should add a record without an ID': function (done) {
 				var store = new RestStore({ client: client });
-				store.add({ foo: 'bar' }).then(
-					function (response) {
-						assert.equals('', response.request.path);
-						assert.equals('post', response.request.method);
-						assert.equals('*', response.request.headers['If-None-Match']);
-						assert.equals('bar', response.request.entity.foo);
-					}
-				).always(done);
+				store.add({ foo: 'bar' }).then(function (response) {
+					assert.equals('', response.request.path);
+					assert.equals('post', response.request.method);
+					assert.equals('*', response.request.headers['If-None-Match']);
+					assert.equals('bar', response.request.entity.foo);
+				}).then(undef, fail).always(done);
 			},
 			'should add a record with an explicit ID': function (done) {
 				var store = new RestStore({ client: client });
-				store.add({ foo: 'bar' }, { id: 42 }).then(
-					function (response) {
-						assert.equals('42', response.request.path);
-						assert.equals('put', response.request.method);
-						assert.equals('*', response.request.headers['If-None-Match']);
-						assert.equals('bar', response.request.entity.foo);
-						refute.equals('42', response.request.entity.id);
-					}
-				).always(done);
+				store.add({ foo: 'bar' }, { id: 42 }).then(function (response) {
+					assert.equals('42', response.request.path);
+					assert.equals('put', response.request.method);
+					assert.equals('*', response.request.headers['If-None-Match']);
+					assert.equals('bar', response.request.entity.foo);
+					refute.equals('42', response.request.entity.id);
+				}).then(undef, fail).always(done);
 			},
 			'should add a record with an implicit ID': function (done) {
 				var store = new RestStore({ client: client });
-				store.add({ foo: 'bar', id: 42 }).then(
-					function (response) {
-						assert.equals('42', response.request.path);
-						assert.equals('put', response.request.method);
-						assert.equals('*', response.request.headers['If-None-Match']);
-						assert.equals('bar', response.request.entity.foo);
-						assert.equals('42', response.request.entity.id);
-					}
-				).always(done);
+				store.add({ foo: 'bar', id: 42 }).then(function (response) {
+					assert.equals('42', response.request.path);
+					assert.equals('put', response.request.method);
+					assert.equals('*', response.request.headers['If-None-Match']);
+					assert.equals('bar', response.request.entity.foo);
+					assert.equals('42', response.request.entity.id);
+				}).then(undef, fail).always(done);
 			},
 			'should add a record ignoring the ID': function (done) {
 				var store = new RestStore({ client: client, ignoreId: true });
-				store.add({ foo: 'bar', id: 42 }).then(
-					function (response) {
-						assert.equals('', response.request.path);
-						assert.equals('post', response.request.method);
-						assert.equals('*', response.request.headers['If-None-Match']);
-						assert.equals('bar', response.request.entity.foo);
-						assert.equals('42', response.request.entity.id);
-					}
-				).always(done);
+				store.add({ foo: 'bar', id: 42 }).then(function (response) {
+					assert.equals('', response.request.path);
+					assert.equals('post', response.request.method);
+					assert.equals('*', response.request.headers['If-None-Match']);
+					assert.equals('bar', response.request.entity.foo);
+					assert.equals('42', response.request.entity.id);
+				}).then(undef, fail).always(done);
 			},
 			'should put overwriting target': function (done) {
 				var store = new RestStore({ client: client });
-				store.put({ foo: 'bar', id: 42 }, { overwrite: true }).then(
-					function (response) {
-						assert.equals('42', response.request.path);
-						assert.equals('put', response.request.method);
-						assert.equals('*', response.request.headers['If-Match']);
-					}
-				).always(done);
+				store.put({ foo: 'bar', id: 42 }, { overwrite: true }).then(function (response) {
+					assert.equals('42', response.request.path);
+					assert.equals('put', response.request.method);
+					assert.equals('*', response.request.headers['If-Match']);
+				}).then(undef, fail).always(done);
 			},
 			'should put without overwriting target': function (done) {
 				var store = new RestStore({ client: client });
-				store.put({ foo: 'bar', id: 42 }, { overwrite: false }).then(
-					function (response) {
-						assert.equals('42', response.request.path);
-						assert.equals('put', response.request.method);
-						assert.equals('*', response.request.headers['If-None-Match']);
-					}
-				).always(done);
+				store.put({ foo: 'bar', id: 42 }, { overwrite: false }).then(function (response) {
+					assert.equals('42', response.request.path);
+					assert.equals('put', response.request.method);
+					assert.equals('*', response.request.headers['If-None-Match']);
+				}).then(undef, fail).always(done);
 			},
 			'should put with default config': function (done) {
 				var store = new RestStore({ client: client });
-				store.put({ foo: 'bar', id: 42 }).then(
-					function (response) {
-						assert.equals('42', response.request.path);
-						assert.equals('put', response.request.method);
-						refute(response.request.headers['If-None-Match']);
-						refute(response.request.headers['If-Match']);
-					}
-				).always(done);
+				store.put({ foo: 'bar', id: 42 }).then(function (response) {
+					assert.equals('42', response.request.path);
+					assert.equals('put', response.request.method);
+					refute(response.request.headers['If-None-Match']);
+					refute(response.request.headers['If-Match']);
+				}).then(undef, fail).always(done);
 			},
 			'should have a proper prototype chain': function () {
 				assert(new RestStore() instanceof RestStore);

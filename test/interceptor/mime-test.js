@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -23,10 +23,11 @@
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute;
+	var assert, refute, fail, undef;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
+	fail = buster.assertions.fail;
 
 	define('rest/interceptor/mime-test', function (require) {
 
@@ -45,7 +46,7 @@
 
 				client({}).then(function (response) {
 					assert.equals({}, response.entity);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should encode the request entity': function (done) {
 				var client;
@@ -59,7 +60,7 @@
 
 				client({ entity: {} }).then(function (response) {
 					assert.equals('{}', response.request.entity);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should encode the request entity from the Content-Type of the request, ignoring the filter config': function (done) {
 				var client;
@@ -75,7 +76,7 @@
 					assert.equals('{}', response.request.entity);
 					assert.equals('application/json', response.request.headers['Content-Type']);
 					assert.equals(0, response.request.headers.Accept.indexOf('application/json'));
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should not overwrite the requests Accept header': function (done) {
 				var client;
@@ -91,7 +92,7 @@
 					assert.equals('{}', response.request.entity);
 					assert.equals('application/json', response.request.headers['Content-Type']);
 					assert.equals('foo', response.request.headers.Accept);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, mime().skip());

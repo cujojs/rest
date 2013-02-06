@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -25,8 +25,8 @@
 
 	var assert, refute;
 
-	assert = buster.assert;
-	refute = buster.refute;
+	assert = buster.assertions.assert;
+	refute = buster.assertions.refute;
 
 	define('rest/mime/type/application/json-test', function (require) {
 

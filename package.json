@@ -36,7 +36,7 @@
 		"curl": "https://github.com/cujojs/curl/tarball/0.7.2",
 		"dojo": "https://github.com/dojo/dojo/tarball/1.7.2",
 		"poly": "https://github.com/cujojs/poly/tarball/0.5.1",
-		"wire": "https://github.com/cujojs/wire/tarball/0.8.0",
+		"wire": "~0.8",
 		"buster": "",
 		"buster-static": "https://github.com/scothis/buster-static/tarball/html5",
 		"jshint": "",

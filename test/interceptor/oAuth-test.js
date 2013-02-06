@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -23,10 +23,11 @@
 (function (buster, define, global) {
 	'use strict';
 
-	var assert, refute;
+	var assert, refute, fail, undef;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
+	fail = buster.assertions.fail;
 
 	define('rest/interceptor/oAuth-test', function (require) {
 
@@ -47,7 +48,7 @@
 
 				client({}).then(function (response) {
 					assert.equals('bearer abcxyz', response.request.headers.Authorization);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should use implicit flow to authenticate the request': function (done) {
 				var client, windowStrategy, windowStrategyClose, oAuthCallbackName;
@@ -81,7 +82,7 @@
 				client({}).then(function (response) {
 					assert.equals('bearer abcxyz', response.request.headers.Authorization);
 					assert.called(windowStrategyClose);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, oAuth({ token: 'bearer abcxyz' }).skip());

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -23,10 +23,11 @@
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute;
+	var assert, refute, fail, undef;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
+	fail = buster.assertions.fail;
 
 	define('rest/interceptor/hateoas-test', function (require) {
 
@@ -62,7 +63,7 @@
 				client().then(function (response) {
 					assert.same(parent, response.entity._links.parentLink);
 					assert.same(self, response.entity._links.selfLink);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should parse links in the entity into the entity': function (done) {
 				var client, body, parent, self;
@@ -76,7 +77,7 @@
 				client().then(function (response) {
 					assert.same(parent, response.entity.parentLink);
 					assert.same(self, response.entity.selfLink);
-				}).always(done);
+				}).then(undef, fail).always(done);
 			},
 			'should create a client for the related resource': function (done) {
 				var client, body, parent, self;
@@ -89,28 +90,30 @@
 
 				client().then(function (response) {
 					var parentClient = response.entity._links.clientFor('parent', function (request) { return { request: request }; });
-					parentClient().then(function (response) {
+					return parentClient().then(function (response) {
 						assert.same(parent.href, response.request.path);
-					}).always(done);
-				});
+					});
+				}).then(undef, fail).always(done);
 			},
 			'should fetch a related resource': function (done) {
 				// NOTE this functionality requires a native implementation of Object.defineProperty
-				var client, parentClient, body, parent, self;
+				var client, parentClient;
 
-				parent = { rel: 'parent', href: '/' };
-				self = { rel: 'self', href: '/resource' };
+				parentClient = function (request) {
+					return request.path === '/' ?
+						{ request: request, entity: { links: [ { rel: 'self', href: '/' }, { rel: 'child', href: '/resource' } ] } } :
+						{ request: request, entity: { links: [ { rel: 'self', href: '/resource' }, { rel: 'parent', href: '/' } ] } };
+				};
+				client = hateoas(parentClient);
 
-				body = { links: [ parent, self ]};
-				parentClient = function (request) { return { request: request, entity: { links: [ parent, self ] } }; };
-				client = hateoas(function () { return { entity: body }; }, { client: parentClient });
-
-				client().then(function (response) {
-					when(response.entity._links.parent, function (response) {
-						assert.same(parent.href, response.request.path);
-						assert.same(self, response.entity._links.selfLink);
-					}).always(done);
-				});
+				client({ path: '/' }).then(function (response) {
+					assert.same('/', response.request.path);
+					assert.same('/', response.entity._links.selfLink.href);
+					return response.entity._links.child.then(function (response) {
+						assert.same('/resource', response.request.path);
+						assert.same('/resource', response.entity._links.selfLink.href);
+					});
+				}).then(undef, fail).always(done);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, hateoas().skip());

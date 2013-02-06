@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -23,14 +23,12 @@
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute, fail;
+	var assert, refute, fail, failOnThrow, undef;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
-
-	fail = function () {
-		buster.assertions.fail('should never be called');
-	};
+	fail = buster.assertions.fail;
+	failOnThrow = buster.assertions.failOnThrow;
 
 	define('rest/interceptor/timeout-test', function (require) {
 
@@ -77,134 +75,94 @@
 				var client, request;
 				client = timeout(immediateClient, { timeout: 10 });
 				request = {};
-				client(request).then(
-					function (response) {
-						assert.same(request, response.request);
-						refute(response.error);
-						setTimeout(function () {
-							refute(request.canceled);
-							done();
-						}, 20);
-					},
-					function () {
-						fail();
-						done();
-					}
-				);
+				client(request).then(function (response) {
+					assert.same(request, response.request);
+					refute(response.error);
+					return delay(20).then(function () {
+						refute(request.canceled);
+					});
+				}).then(undef, fail).always(done);
 			},
 			'should resolve if client responds before timeout': function (done) {
 				var client, request;
 				client = timeout(delayedClient, { timeout: 100 });
 				request = {};
-				client(request).then(
-					function (response) {
-						assert.same(request, response.request);
-						refute(response.error);
-						setTimeout(function () {
-							refute(request.canceled);
-							done();
-						}, 0);
-					},
-					function () {
-						fail();
-						done();
-					}
-				);
+				client(request).then(function (response) {
+					assert.same(request, response.request);
+					refute(response.error);
+					return delay(0).then(function () {
+						refute(request.canceled);
+					});
+				}).then(undef, fail).always(done);
 			},
 			'should reject even if client responds after timeout': function (done) {
 				var client, request;
 				client = timeout(delayedClient, { timeout: 10 });
 				request = {};
 				client(request).then(
-					function () {
-						fail();
-						done();
-					},
-					function (response) {
+					fail,
+					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert.equals('timeout', response.error);
-						setTimeout(function () {
+						return delay(0).then(function () {
 							assert(request.canceled);
-							done();
-						}, 0);
-					}
-				);
+						});
+					})
+				).always(done);
 			},
 			'should reject if client hanges': function (done) {
 				var client, request;
 				client = timeout(hangClient, { timeout: 50 });
 				request = {};
 				client(request).then(
-					function () {
-						fail();
-						done();
-					},
-					function (response) {
+					fail,
+					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert.equals('timeout', response.error);
-						setTimeout(function () {
+						return delay(0).then(function () {
 							assert(request.canceled);
-							done();
-						}, 0);
-					}
-				);
+						});
+					})
+				).always(done);
 			},
 			'should use request timeout value in perference to interceptor value': function (done) {
 				var client, request;
 				client = timeout(delayedClient, { timeout: 10 });
 				request = { timeout: 0 };
-				client(request).then(
-					function (response) {
-						assert.same(request, response.request);
-						refute(response.error);
-						setTimeout(function () {
-							refute(request.canceled);
-							done();
-						}, 0);
-					},
-					function () {
-						fail();
-						done();
-					}
-				);
+				client(request).then(function (response) {
+					assert.same(request, response.request);
+					refute(response.error);
+					return delay(0).then(function () {
+						refute(request.canceled);
+					});
+				}).then(undef, fail).always(done);
 			},
 			'should not reject without a configured timeout value': function (done) {
 				var client, request;
 				client = timeout(delayedClient);
 				request = {};
-				client(request).then(
-					function (response) {
-						assert.same(request, response.request);
-						refute(response.error);
-						setTimeout(function () {
-							refute(request.canceled);
-							done();
-						}, 0);
-					},
-					function () {
-						fail();
-						done();
-					}
-				);
+				client(request).then(function (response) {
+					assert.same(request, response.request);
+					refute(response.error);
+					return delay(0).then(function () {
+						refute(request.canceled);
+					});
+				}).then(undef, fail).always(done);
 			},
 			'should cancel request if client support cancelation': function (done) {
 				var client, request;
 				client = timeout(cancelableClient, { timeout: 11 });
 				request = {};
 				client(request).then(
-					function () {
-						fail();
-						done();
-					},
-					function (response) {
+					fail,
+					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert.equals('timeout', response.error);
-						setTimeout(function () {
+						return delay(0).then(function () {
 							assert(request.canceled);
-							done();
-						}, 0);
-					}
-				);
+						});
+					})
+				).always(done);
 				refute(request.canceled);
 			},
 			'should have the default client as the parent by default': function () {
