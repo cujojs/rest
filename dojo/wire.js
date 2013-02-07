@@ -62,9 +62,12 @@
 
 				var plugin;
 
-				plugin = {
-					resolvers: mixin({}, clientPlugin.wire$plugin.apply(clientPlugin, arguments).resolvers)
-				};
+				plugin = clientPlugin.wire$plugin.apply(clientPlugin, arguments);
+				Object.keys(plugin).forEach(function (key) {
+					if (typeof plugin[key] === 'object') {
+						plugin[key] = mixin({}, plugin[key]);
+					}
+				});
 
 				/**
 				 * Resolves a RestStore client for the specified path and scopes, e.g. resource!url/to/resource

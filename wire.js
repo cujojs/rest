@@ -25,7 +25,7 @@
 
 	define(function (require) {
 
-		var client, errorCode, mime, entity, pathPrefix, when, plugin;
+		var client, errorCode, mime, entity, pathPrefix, when, pipeline, plugin;
 
 		client = require('../rest');
 		errorCode = require('./interceptor/errorCode');
@@ -33,6 +33,7 @@
 		entity = require('./interceptor/entity');
 		pathPrefix = require('./interceptor/pathPrefix');
 		when = require('when');
+		pipeline = require('when/pipeline');
 
 
 		function parseConfig(name, refObj) {
@@ -84,12 +85,49 @@
 			when(client, resolver.resolve, resolver.reject);
 		}
 
+		function normalizeRestFactoryConfig(spec, wire) {
+			var config = {};
+
+			config.parent = wire(spec.parent || client);
+			config.interceptors = when.all((Array.isArray(spec) ? spec : spec.interceptors || []).map(function (interceptorDef) {
+				var interceptorConfig = interceptorDef.config;
+				delete interceptorDef.config;
+				return wire(typeof interceptorDef === 'string' ? { module: interceptorDef } : interceptorDef).then(function (interceptor) {
+					return { interceptor: interceptor, config: interceptorConfig };
+				});
+			}));
+
+			return config;
+		}
+
+		/**
+		 * Creates a rest client for the "rest" factory.
+		 * @param resolver
+		 * @param spec
+		 * @param wire
+		 */
+		function restFactory(resolver, spec, wire) {
+			var config = normalizeRestFactoryConfig(spec.rest, wire);
+			return config.parent.then(function (parent) {
+				return config.interceptors.then(function (interceptorDefs) {
+					pipeline(interceptorDefs.map(function (interceptorDef) {
+						return function (parent) {
+							return interceptorDef.interceptor(parent, interceptorDef.config);
+						};
+					}), parent).then(resolver.resolve, resolver.reject);
+				});
+			});
+		}
+
 		/**
 		 * The plugin instance.  Can be the same for all wiring runs
 		 */
 		plugin = {
 			resolvers: {
 				client: resolveClient
+			},
+			factories: {
+				rest: restFactory
 			}
 		};
 

@@ -87,6 +87,29 @@ Since the errorCode interceptor can reject the response promise, we also add a s
 Clients can continue to be composed with interceptors as needed.  At any point the client as configured can be shared.  It is safe to share clients and allow other parts of your application to continue to compose other clients around the shared core.  Your client is protected from additional interceptors that other parts of the application may add.
 
 
+### Declarative Interceptor Composition: ###
+
+First class support is provided for declaratively composing interceptors using [wire.js](https://github.com/cujojs/wire).  Wire is an dependency injection container; you specify how the parts of your application interrelate and wire takes care of the dirty work to make it so.
+
+Let's take the previous example and configure the client using a wire specification instead of imperative code.
+
+```javascript
+{
+	...,
+	client: {
+		rest: [
+			{ module: 'rest/interceptor/mime' },
+			{ module: 'rest/interceptor/errorCode', config: { code: 500 } }
+		]
+	},
+	plugins: [{ module: 'rest/wire' }]
+}
+
+```
+
+There are a couple things to notice.  First is the 'plugins' section, by declaring the `rest/wire` module, the `rest` factory becomes available within the specification.  The second thing to notice is that we no longer need to individually `require()` interceptor modules; wire is smart enough to automatically fetch the modules.  The interceptors are then chained together in the order they are defined and provided with the corresponding config object, if it's defined.  The resulting client can then be injected into any other object using standard wire facilities.
+
+
 ### Custom MIME Converters: ###
 
 ```javascript
@@ -204,6 +227,7 @@ Change Log
 
 .next
 - Interceptor configuration chaining
+- wire.js factory
 - defaultRequest interceptor, provide default values for any portion of a request
 - shared 'this' between request/response phases of a single interceptor per request
 - SimpleRestStore that provides the functionality of RestStore without Dojo's QueryResults
