@@ -46,8 +46,8 @@
 		{ browserName: 'internet explorer', version: '10',  platform: 'Windows 2012' },
 		{ browserName: 'internet explorer', version: '9',   platform: 'Windows 2008' },
 		{ browserName: 'internet explorer', version: '8',   platform: 'Windows 2003' },
-//		{ browserName: 'internet explorer', version: '7',   platform: 'Windows 2003' },
-//		{ browserName: 'internet explorer', version: '6',   platform: 'Windows 2003' },
+		{ browserName: 'internet explorer', version: '7',   platform: 'Windows 2003' },
+		{ browserName: 'internet explorer', version: '6',   platform: 'Windows 2003' },
 		{ browserName: 'safari',            version: '6',   platform: 'Mac 10.8'     },
 		{ browserName: 'safari',            version: '5',   platform: 'Mac 10.6'     },
 		{ browserName: 'opera',             version: '12',  platform: 'Windows 2008' },
@@ -133,8 +133,8 @@
 					if (err) {
 						throw err;
 					}
-					browser.waitForElementByCssSelector('.stats h2', 3e5, function (/* err */) {
-						browser.elementByCssSelector('.stats h2', function (err, stats) {
+					browser.waitForElementByCssSelector('.stats > h2', 3e5, function (/* err */) {
+						browser.elementByCssSelector('.stats > h2', function (err, stats) {
 							browser.text(stats, function (err, text) {
 								browser.quit(function () {
 									var passed = text === 'Tests OK';

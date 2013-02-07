@@ -31,25 +31,37 @@
 
 	define('rest/interceptor/hateoas-test', function (require) {
 
-		var hateoas, rest, when;
+		var hateoas, rest, when, supports;
 
 		hateoas = require('rest/interceptor/hateoas');
 		rest = require('rest');
 		when = require('when');
 
-		buster.testCase('rest/interceptor/hateoas', {
-			requiresSupportFor: {
-				'Object.defineProperty': function () {
-					try {
-						var obj = {};
-						Object.defineProperty(obj, 'test', { enumerable: false, configurable: true, value: true });
-						return obj.test;
-					}
-					catch (e) {
-						return false;
-					}
+		supports = {
+			'Object.defineProperty': (function () {
+				try {
+					var obj = {};
+					Object.defineProperty(obj, 'test', { enumerable: false, configurable: true, value: true });
+					return obj.test;
 				}
-			},
+				catch (e) {
+					return false;
+				}
+			}()),
+			'ES5 getters': (function () {
+				try {
+					var obj = {};
+					Object.defineProperty(obj, 'test', { get: function () { return true; } });
+					return obj.test;
+				}
+				catch (e) {
+					return false;
+				}
+			}())
+		};
+
+		buster.testCase('rest/interceptor/hateoas', {
+			requiresSupportFor: { 'Object.defineProperty': supports['Object.defineProperty'] },
 
 			'should parse links in the entity': function (done) {
 				var client, body, parent, self;
@@ -95,25 +107,27 @@
 					});
 				}).then(undef, fail).always(done);
 			},
-			'should fetch a related resource': function (done) {
-				// NOTE this functionality requires a native implementation of Object.defineProperty
-				var client, parentClient;
+			'should fetch a related resource': {
+				requiresSupportFor: { 'ES5 getters': supports['ES5 getters'] },
+				'': function (done) {
+					var client, parentClient;
 
-				parentClient = function (request) {
-					return request.path === '/' ?
-						{ request: request, entity: { links: [ { rel: 'self', href: '/' }, { rel: 'child', href: '/resource' } ] } } :
-						{ request: request, entity: { links: [ { rel: 'self', href: '/resource' }, { rel: 'parent', href: '/' } ] } };
-				};
-				client = hateoas(parentClient);
+					parentClient = function (request) {
+						return request.path === '/' ?
+							{ request: request, entity: { links: [ { rel: 'self', href: '/' }, { rel: 'child', href: '/resource' } ] } } :
+							{ request: request, entity: { links: [ { rel: 'self', href: '/resource' }, { rel: 'parent', href: '/' } ] } };
+					};
+					client = hateoas(parentClient);
 
-				client({ path: '/' }).then(function (response) {
-					assert.same('/', response.request.path);
-					assert.same('/', response.entity._links.selfLink.href);
-					return response.entity._links.child.then(function (response) {
-						assert.same('/resource', response.request.path);
-						assert.same('/resource', response.entity._links.selfLink.href);
-					});
-				}).then(undef, fail).always(done);
+					client({ path: '/' }).then(function (response) {
+						assert.same('/', response.request.path);
+						assert.same('/', response.entity._links.selfLink.href);
+						return response.entity._links.child.then(function (response) {
+							assert.same('/resource', response.request.path);
+							assert.same('/resource', response.entity._links.selfLink.href);
+						});
+					}).then(undef, fail).always(done);
+				}
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, hateoas().skip());
