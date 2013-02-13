@@ -31,12 +31,16 @@
 
 	define('rest/interceptor/retry-test', function (require) {
 
-		var interceptor, retry, rest, when;
+		var interceptor, retry, rest, when, delay, clock, timeout;
 
 		interceptor = require('rest/interceptor');
 		retry = require('rest/interceptor/retry');
 		rest = require('rest');
 		when = require('when');
+		delay = require('when/delay');
+
+		// retain access to the native setTimeout function
+		timeout = setTimeout;
 
 		buster.testCase('rest/interceptor/retry', {
 			'should retry until successful': function (done) {
@@ -54,39 +58,41 @@
 				    assert.equals(200, response.status.code);
 				}).then(undef, fail).always(done);
 			},
-			'should accept custom config': function (done) {
-				var count = 0, client, start;
-				
-				client = retry(
-					function (request) {
-						count += 1;
-						if (count === 4) {
-							return { request: request, status: { code: 200 } };
-						} else {
-							return when.reject({ request: request, error: 'Thrown by fake client' });
-						}
-					}, { initial: 10, multiplier: 3, max: 20 }
-				);
-				
-				client = interceptor({
-					request: function (request /*, config */) {
-						start = new Date().getTime();
-						return request;
-					},
-					response: function (response /*, config */) {
-						var elapsed = new Date().getTime() - start;
-						assert.equals(count, 4);
-						assert.equals(response.request.retry, Math.pow(3, count - 1) * 10);
-						assert(elapsed < 100); // Total paused time should be 50 - this allows padding
-						                       // for execution time that would be much larger without max
-						                       // TODO - A more accurate test might be to use a spy on when.delay
-						return response;
-					}
-				})(client);
-				
-				client({}).then(function (response) {
-				    assert.equals(200, response.status.code);
-				}).then(undef, fail).always(done);
+			'should accept custom config': {
+				setUp: function () {
+					clock = this.useFakeTimers();
+				},
+				tearDown: function () {
+					clock.restore();
+				},
+				'': function (done) {
+					var count = 0, client, start, config;
+
+					start = new Date().getTime();
+					config = { initial: 10, multiplier: 3, max: 20 };
+					client = retry(
+						function (request) {
+							var tick = Math.min(Math.pow(config.multiplier, count) * config.initial, config.max);
+							count += 1;
+							if (count === 4) {
+								return { request: request, status: { code: 200 } };
+							} else {
+								timeout(function () {
+									clock.tick(tick);
+									console.log('now: ', new Date().getTime() - start);
+								}, 0);
+								return when.reject({ request: request, error: 'Thrown by fake client' });
+							}
+						},
+						config
+					);
+
+					client({}).then(function (response) {
+						assert.equals(200, response.status.code);
+					    assert.equals(count, 4);
+						assert.equals(50, new Date().getTime() - start);
+					}).then(undef, fail).always(done);
+				}
 			},
 			'should not make propagate request if marked as canceled': function (done) {
 				var parent, client, request;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -44,23 +44,20 @@
 		 * @returns {Client}
 		 */
 		return interceptor({
-			request: function (request, config) {
-				request.retry = request.retry || config.initial || 100;
-				return request;
-			},
 			error: function (response, config, client) {
-				var request, multiplier, max, sleep;
+				var request, multiplier, max;
 
 				request = response.request;
+				request.retry = request.retry || config.initial || 100;
 				multiplier = config.multiplier || 2;
 				max = config.max || Infinity;
-				sleep = Math.min(request.retry, request.retry *= multiplier, max);
 
-				return delay(request, sleep).then(function (request) {
+				return delay(request, request.retry).then(function (request) {
 					if (request.canceled) {
 						// cancel here in case client doesn't check canceled flag
 						return when.reject({ request: request, error: 'precanceled' });
 					}
+					request.retry = Math.min(request.retry * multiplier, max);
 					return client(request);
 				});
 			}
