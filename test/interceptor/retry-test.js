@@ -79,7 +79,6 @@
 							} else {
 								timeout(function () {
 									clock.tick(tick);
-									console.log('now: ', new Date().getTime() - start);
 								}, 0);
 								return when.reject({ request: request, error: 'Thrown by fake client' });
 							}
