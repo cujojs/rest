@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-(function (define, XMLHttpRequest) {
+(function (define, global) {
 	'use strict';
 
 	define(function (require) {
@@ -65,7 +65,7 @@
 		}
 
 		function xhr(request) {
-			var d, client, method, url, headers, entity, headerName, response;
+			var d, client, method, url, headers, entity, headerName, response, XMLHttpRequest;
 
 			response = {};
 			response.request = request;
@@ -77,7 +77,11 @@
 
 			d = when.defer();
 
-			client = response.raw = new XMLHttpRequest();
+			XMLHttpRequest = request.engine || global.XMLHttpRequest;
+			if (!XMLHttpRequest) {
+				d.reject({ request: request, error: 'xhr-not-available' });
+				return d.promise;
+			}
 
 			entity = request.entity;
 			request.method = request.method || (entity ? 'POST' : 'GET');
@@ -85,6 +89,7 @@
 			url = new UrlBuilder(request.path || '', request.params).build();
 
 			try {
+				client = response.raw = new XMLHttpRequest();
 				client.open(method, url, true);
 
 				headers = request.headers;
@@ -147,6 +152,6 @@
 
 }(
 	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); },
-	this.XMLHttpRequest
+	this
 	// Boilerplate for AMD and Node
 ));

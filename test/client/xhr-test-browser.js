@@ -32,10 +32,14 @@
 
 	define('rest/client/xhr-test', function (require) {
 
-		var client, rest;
+		var xhr, rest, xhrFallback, client;
 
-		client = require('rest/client/xhr');
+		xhr = require('rest/client/xhr');
 		rest = require('rest');
+		xhrFallback = require('rest/interceptor/ie/xhr');
+
+		// use xhrFallback when XHR is not native
+		client = !XMLHttpRequest ? xhr.chain(xhrFallback) : xhr;
 
 		buster.testCase('rest/client/xhr', {
 			'should make a GET by default': function (done) {
@@ -151,11 +155,24 @@
 					})
 				).always(done);
 			},
+			'should reject if an XHR impl is not available': {
+				requiresSupportFor: { 'no-xhr': !window.XMLHttpRequest },
+				'': function (done) {
+					var request = { path: '/' };
+					xhr(request).then(
+						fail,
+						failOnThrow(function (response) {
+							assert.same(request, response.request);
+							assert.same('xhr-not-available', response.error);
+						})
+					).always(done);
+				}
+			},
 			'should be the default client': function () {
-				assert.same(client, rest);
+				assert.same(xhr, rest);
 			},
 			'should support interceptor chaining': function () {
-				assert(typeof client.chain === 'function');
+				assert(typeof xhr.chain === 'function');
 			}
 		});
 		// TODO spy XmlHttpRequest
