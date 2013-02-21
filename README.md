@@ -230,6 +230,7 @@ Change Log
 - wire.js factory
 - defaultRequest interceptor, provide default values for any portion of a request
 - shared 'this' between request/response phases of a single interceptor per request
+- cleaned up interceptor's request handler for complex requests
 - SimpleRestStore that provides the functionality of RestStore without Dojo's QueryResults
 - mutli-browser testing with Sauce Labs
 

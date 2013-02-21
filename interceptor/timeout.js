@@ -55,7 +55,7 @@
 						request.canceled = true;
 					}
 				}, timeout);
-				return [request, abortTrigger.promise];
+				return new interceptor.ComplexRequest({ request: request, abort: abortTrigger.promise });
 			},
 			response: function (response) {
 				if (this.timeout) {

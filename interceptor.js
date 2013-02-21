@@ -25,9 +25,10 @@
 
 	define(function (require) {
 
-		var defaultClient, when;
+		var defaultClient, mixin, when;
 
-		defaultClient = require('../rest');
+		defaultClient = require('./rest');
+		mixin = require('./util/mixin');
 		when = require('when');
 
 		/**
@@ -67,6 +68,21 @@
 		}
 
 		/**
+		 * Alternate return type for the request handler that allows for more complex interactions.
+		 *
+		 * @param properties.request the traditional request return object
+		 * @param {Promise} [properties.abort] promise that resolves if/when the request is aborted
+		 * @param {Client} [properties.client] override the defined client chain with an alternate client
+		 */
+		function ComplexRequest(properties) {
+			if (!(this instanceof ComplexRequest)) {
+				// in case users forget the 'new' don't mix into the interceptor
+				return new ComplexRequest(properties);
+			}
+			mixin(this, properties);
+		}
+
+		/**
 		 * Create a new interceptor for the provided handlers.
 		 *
 		 * @param {Function} [handlers.request] request handler
@@ -77,7 +93,7 @@
 		 *
 		 * @returns {Interceptor}
 		 */
-		return function (handlers) {
+		function interceptor(handlers) {
 
 			var requestHandler, successResponseHandler, errorResponseHandler;
 
@@ -105,15 +121,17 @@
 					var context = {};
 					request = request || {};
 					return when(requestHandler.call(context, request, config)).then(function (request) {
-						var response, abort;
-						if (request instanceof Array) {
-							// unpack compound value
-							abort = request[1];
-							request = request[0];
+						var response, abort, next;
+						next = target;
+						if (request instanceof ComplexRequest) {
+							// unpack request
+							abort = request.abort;
+							next = request.client || next;
+							request = request.request;
 						}
 						response = when(request, function (request) {
 							return when(
-								target(request),
+								next(request),
 								function (response) {
 									return successResponseHandler.call(context, response, config, client);
 								},
@@ -144,7 +162,11 @@
 
 				return client;
 			};
-		};
+		}
+
+		interceptor.ComplexRequest = ComplexRequest;
+
+		return interceptor;
 
 	});
 
