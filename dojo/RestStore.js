@@ -45,7 +45,7 @@
 		function RestStore(/* options */) {
 			SimpleRestStore.apply(this, arguments);
 		}
-		
+
 		RestStore.prototype = Object.create(SimpleRestStore.prototype);
 
 		/**
