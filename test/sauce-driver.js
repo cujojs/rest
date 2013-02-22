@@ -69,6 +69,12 @@
 	travisJobNumber = process.env.TRAVIS_JOB_NUMBER || '';
 	travisCommit = process.env.TRAVIS_COMMIT || '';
 
+	if (travisCommit && !accessKey) {
+		// probably running as a pull request build
+		// without an access key we can't run sauce tests, give up
+		return;
+	}
+
 	passFailInterceptor = (function (username, password) {
 		var interceptor, basicAuth, mime;
 
