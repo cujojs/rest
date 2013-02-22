@@ -95,7 +95,7 @@
 
 				clientResponse.on('end', function () {
 					// Create the final response entity
-					response.entity = buffers.length > 0 ? Buffer.concat(buffers) : '';
+					response.entity = buffers.length > 0 ? Buffer.concat(buffers).toString() : '';
 					buffers = null;
 
 					d.resolve(response);
