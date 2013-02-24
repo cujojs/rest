@@ -45,7 +45,7 @@
 	},
 	"main": "./rest",
 	"scripts": {
-		"test": "jshint . && buster test -e node --color none --reporter specification",
+		"test": "jshint . && buster test --node",
 		"ci": "npm test && node test/sauce-driver.js",
 		"start": "buster static -e browser"
 	}

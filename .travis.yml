@@ -5,6 +5,7 @@ node_js:
 script: npm run-script ci
 env:
   global:
+  - BUSTER_TEST_OPT="--color none --reporter specification"
   - SELENIUM_HOST=ondemand.saucelabs.com
   - SELENIUM_PORT=80
   - SELENIUM_USERNAME=s2js-rest
