@@ -39,11 +39,24 @@
 		buster.testCase('rest/interceptor/location', {
 			'should follow the location header': function (done) {
 				var client, spy;
-				spy = this.spy(function (request) { return { request: request, headers: { Location: '/foo/' + spy.callCount } }; });
+				spy = this.spy(function (request) {
+					var response = { request: request, headers: {  } };
+					if (spy.callCount < 3) {
+						response.headers.Location = '/foo/' + spy.callCount;
+					}
+					return response;
+				});
 				client = location(spy);
 				client({}).then(function (response) {
-					assert.equals('/foo/2', response.headers.Location);
-					assert.same(2, spy.callCount);
+					refute(response.headers.Location);
+					assert.same(3, spy.callCount);
+					assert.same(spy.returnValues[0].headers.Location, '/foo/1');
+					assert.same(spy.args[1][0].path, '/foo/1');
+					assert.same(spy.args[1][0].method, 'GET');
+					assert.same(spy.returnValues[1].headers.Location, '/foo/2');
+					assert.same(spy.args[2][0].path, '/foo/2');
+					assert.same(spy.args[2][0].method, 'GET');
+					refute(spy.returnValues[2].headers.Location);
 				}).then(undef, fail).always(done);
 			},
 			'should return the response if there is no location header': function (done) {
