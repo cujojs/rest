@@ -36,19 +36,15 @@
 		 * Most browsers will automatically follow HTTP 3xx redirects, however,
 		 * they will not automatically follow 2xx locations.
 		 *
-		 * Note: this interceptor will only follow the Location header for the
-		 * originating request. If nested redirects should be followed, install
-		 * this interceptor twice. There is no infinite redirect detection
-		 *
 		 * @param {Client} [client] client to wrap
-		 * @param {Client} [config.client] client to use for subsequent request
+		 * @param {Client} [config.client=request.originator] client to use for subsequent request
 		 *
 		 * @returns {Client}
 		 */
 		return interceptor({
 			success: function (response, config, client) {
 				if (response.headers && response.headers.Location) {
-					return (config.client || client.skip())({
+					return (config.client || (response.request && response.request.originator) || client.skip())({
 						method: 'GET',
 						path: response.headers.Location
 					});

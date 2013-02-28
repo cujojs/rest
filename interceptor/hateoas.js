@@ -57,7 +57,7 @@
 		 *
 		 * @param {Client} [client] client to wrap
 		 * @param {string} [config.target='_links'] property to create on the entity and parse links into. If present and falsey, the response entity is used directly.
-		 * @param {Client} [config.client] the parent client to use when creating clients for a linked resources. Defaults to the current interceptor's client
+		 * @param {Client} [config.client=request.originator] the parent client to use when creating clients for a linked resources. Defaults to the request's originator if available, otherwise the current interceptor's client
 		 *
 		 * @returns {Client}
 		 */
@@ -65,7 +65,7 @@
 			response: function (response, config, hateoas) {
 				var targetName, client;
 
-				client = config.client || hateoas;
+				client = config.client || (response.request && response.request.originator) || hateoas;
 				targetName = 'target' in config ? config.target || '' : '_links';
 
 				function apply(target, links) {

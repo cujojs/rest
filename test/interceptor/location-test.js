@@ -37,9 +37,9 @@
 		rest = require('rest');
 
 		buster.testCase('rest/interceptor/location', {
-			'should follow the location header, once': function (done) {
+			'should follow the location header': function (done) {
 				var client, spy;
-				spy = this.spy(function (/* request */) { return { headers: { Location: '/foo/' + spy.callCount } }; });
+				spy = this.spy(function (request) { return { request: request, headers: { Location: '/foo/' + spy.callCount } }; });
 				client = location(spy);
 				client({}).then(function (response) {
 					assert.equals('/foo/2', response.headers.Location);
