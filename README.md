@@ -228,6 +228,7 @@ Change Log
 .next
 - Interceptor configuration chaining
 - wire.js factory
+- access to the originating client as request.originator
 - defaultRequest interceptor, provide default values for any portion of a request
 - XDomainRequest support for IE 8 and 9
 - shared 'this' between request/response phases of a single interceptor per request

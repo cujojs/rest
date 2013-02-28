@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -120,28 +120,35 @@
 				client = function (request) {
 					var context = {};
 					request = request || {};
-					return when(requestHandler.call(context, request, config)).then(function (request) {
-						var response, abort, next;
-						next = target;
-						if (request instanceof ComplexRequest) {
-							// unpack request
-							abort = request.abort;
-							next = request.client || next;
-							request = request.request;
+					request.originator = request.originator || client;
+					return when(
+						requestHandler.call(context, request, config),
+						function (request) {
+							var response, abort, next;
+							next = target;
+							if (request instanceof ComplexRequest) {
+								// unpack request
+								abort = request.abort;
+								next = request.client || next;
+								request = request.request;
+							}
+							response = when(request, function (request) {
+								return when(
+									next(request),
+									function (response) {
+										return successResponseHandler.call(context, response, config, client);
+									},
+									function (response) {
+										return errorResponseHandler.call(context, response, config, client);
+									}
+								);
+							});
+							return abort ? whenFirst([response, abort]) : response;
+						},
+						function (request) {
+							return when.reject({ request: request });
 						}
-						response = when(request, function (request) {
-							return when(
-								next(request),
-								function (response) {
-									return successResponseHandler.call(context, response, config, client);
-								},
-								function (response) {
-									return errorResponseHandler.call(context, response, config, client);
-								}
-							);
-						});
-						return abort ? whenFirst([response, abort]) : response;
-					});
+					);
 				};
 
 				/**

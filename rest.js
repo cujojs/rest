@@ -42,6 +42,7 @@
 		 * @field [entity] the HTTP entity, common for POST or PUT requests
 		 * @field {boolean} [canceled] true if the request has been canceled, set by the client
 		 * @field {Function} [cancel] cancels the request if invoked, provided by the client
+		 * @field {Client} [originator] the client that first handled this request, provided by the interceptor
 		 *
 		 * @class Request
 		 */

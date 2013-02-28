@@ -44,6 +44,8 @@
 			'should do nothing by default': function (done) {
 				var client = defaultRequest(defaultClient);
 				client({}).then(function (response) {
+					assert.same(client, response.request.originator);
+					delete response.request.originator;
 					assert.equals({}, response.request);
 				}).then(undef, fail).always(done);
 			},
