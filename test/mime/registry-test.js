@@ -31,39 +31,66 @@
 
 	define('rest/mime/registry-test', function (require) {
 
-		var registry, when;
+		var mimeRegistry, when, registry;
 
-		registry = require('rest/mime/registry');
+		mimeRegistry = require('rest/mime/registry');
 		when = require('when');
 
 		buster.testCase('rest/mime/registry', {
-			'should discover unregisted serializers': function (done) {
-				when(
-					registry.lookup('text/plain'),
-					function (serializer) {
-						assert.isFunction(serializer.read);
-						assert.isFunction(serializer.write);
-					}
-				).then(undef, fail).always(done);
+			setUp: function () {
+				registry = mimeRegistry.child();
 			},
-			'should return registed serializer': function (done) {
-				var serializer = {};
-				registry.register('application/vnd.com.foo', serializer);
-				when(
-					registry.lookup('application/vnd.com.foo'),
-					function (s) {
-						assert.same(serializer, s);
-					}
-				).then(undef, fail).always(done);
+			'should discover unregisted converter': function (done) {
+				registry.lookup('text/plain').then(function (converter) {
+					assert.isFunction(converter.read);
+					assert.isFunction(converter.write);
+				}).then(undef, fail).always(done);
 			},
-			'should reject for non-existant serializer': function (done) {
-				when(
-					registry.lookup('application/bogus'),
+			'should return registed converter': function (done) {
+				var converter = {};
+				registry.register('application/vnd.com.example', converter);
+				registry.lookup('application/vnd.com.example').then(function (c) {
+					assert.same(converter, c);
+				}).then(undef, fail).always(done);
+			},
+			'should reject for non-existant converter': function (done) {
+				registry.lookup('application/bogus').then(
 					fail,
 					function () {
 						assert(true);
 					}
 				).always(done);
+			},
+			'should resolve converters from parent registries': function (done) {
+				var child, converter;
+				child = registry.child();
+				converter = {};
+				registry.register('application/vnd.com.example', converter);
+				child.lookup('application/vnd.com.example').then(function (c) {
+					assert.same(converter, c);
+				}).then(undef, fail).always(done);
+			},
+			'should override parent registries when registering in a child': function (done) {
+				var child, converterParent, converterChild;
+				child = registry.child();
+				converterParent = {};
+				converterChild = {};
+				registry.register('application/vnd.com.example', converterParent);
+				child.register('application/vnd.com.example', converterChild);
+				child.lookup('application/vnd.com.example').then(function (c) {
+					assert.same(converterChild, c);
+				}).then(undef, fail).always(done);
+			},
+			'should not have any side effects in a parent registry from a child': function (done) {
+				var child, converterParent, converterChild;
+				child = registry.child();
+				converterParent = {};
+				converterChild = {};
+				registry.register('application/vnd.com.example', converterParent);
+				child.register('application/vnd.com.example', converterChild);
+				registry.lookup('application/vnd.com.example').then(function (c) {
+					assert.same(converterParent, c);
+				}).then(undef, fail).always(done);
 			}
 		});
 

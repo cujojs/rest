@@ -145,8 +145,8 @@
 							});
 							return abort ? whenFirst([response, abort]) : response;
 						},
-						function (request) {
-							return when.reject({ request: request });
+						function (error) {
+							return when.reject({ request: request, error: error });
 						}
 					);
 				};

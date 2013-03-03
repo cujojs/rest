@@ -23,17 +23,19 @@
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute, fail, undef;
+	var assert, refute, fail, failOnThrow, undef;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
+	failOnThrow = buster.assertions.failOnThrow;
 
 	define('rest/interceptor/mime-test', function (require) {
 
-		var mime, rest;
+		var mime, registry, rest;
 
 		mime = require('rest/interceptor/mime');
+		registry = require('rest/mime/registry');
 		rest = require('rest');
 
 		buster.testCase('rest/interceptor/mime', {
@@ -92,6 +94,58 @@
 					assert.equals('{}', response.request.entity);
 					assert.equals('application/json', response.request.headers['Content-Type']);
 					assert.equals('foo', response.request.headers.Accept);
+				}).then(undef, fail).always(done);
+			},
+			'should error the request if unable to find a converter for the desired mime': function (done) {
+				var client, request;
+
+				client = mime();
+
+				request = { headers: { 'Content-Type': 'application/vnd.com.example' }, entity: {} };
+				client(request).then(
+					fail,
+					failOnThrow(function (response) {
+						assert.same('unknown-mime', response.error);
+						assert.same(request, response.request);
+					})
+				).always(done);
+			},
+			'should use text/plain converter for a response if unable to find a converter for the desired mime': function (done) {
+				var client;
+
+				client = mime(function () {
+					return { entity: '{}', headers: { 'Content-Type': 'application/vnd.com.example' } };
+				});
+
+				client({}).then(function (response) {
+					assert.same('{}', response.entity);
+				}).then(undef, fail).always(done);
+			},
+			'should use the configured mime registry': function (done) {
+				var client, customRegistry;
+
+				customRegistry = registry.child();
+				customRegistry.register('application/vnd.com.example', {
+					read: function (str) {
+						return 'read: ' + str;
+					},
+					write: function (obj) {
+						return 'write: ' + obj.toString();
+					}
+				});
+
+				client = mime(
+					function (request) {
+						return { request: request, headers: { 'Content-Type': 'application/vnd.com.example' }, entity: 'response entity' };
+					},
+					{ mime: 'application/vnd.com.example', registry: customRegistry }
+				);
+
+				client({ entity: 'request entity' }).then(function (response) {
+					assert.equals('application/vnd.com.example', response.request.headers['Content-Type']);
+					assert.equals('write: request entity', response.request.entity);
+					assert.equals('application/vnd.com.example', response.headers['Content-Type']);
+					assert.equals('read: response entity', response.entity);
 				}).then(undef, fail).always(done);
 			},
 			'should have the default client as the parent by default': function () {

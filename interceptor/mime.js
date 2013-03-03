@@ -25,63 +25,70 @@
 
 	define(function (require) {
 
-		var interceptor, registry, when;
+		var interceptor, mimeRegistry, plainText, when;
 
 		interceptor = require('../interceptor');
-		registry = require('../mime/registry');
+		mimeRegistry = require('../mime/registry');
 		when = require('when');
+
+		plainText = mimeRegistry.lookup('text/plain');
 
 		/**
 		 * MIME type support for request and response entities.  Entities are
 		 * (de)serialized using the converter for the MIME type.
 		 *
-		 * Request entities are converted using the desired converter and the 'Accept' request header prefers this MIME.
+		 * Request entities are converted using the desired converter and the
+		 * 'Accept' request header prefers this MIME.
 		 *
 		 * Response entities are converted based on the Content-Type response header.
 		 *
 		 * @param {Client} [client] client to wrap
 		 * @param {string} [config.mime='text/plain'] MIME type to encode the request entity
 		 * @param {string} [config.accept] Accept header for the request
+		 * @param {Registry} [config.registry] MIME registry, defaults to the root registry
 		 *
 		 * @returns {Client}
 		 */
 		return interceptor({
 			request: function (request, config) {
-				var mime, headers, serializer, requestReady;
+				var mime, headers, registry, requestReady;
 
+				registry = config.registry || mimeRegistry;
 				headers = request.headers || (request.headers = {});
-				mime = headers['Content-Type'] || config.mime || 'text/plain';
+				mime = headers['Content-Type'] = headers['Content-Type'] || config.mime || 'text/plain';
 				headers.Accept = headers.Accept || config.accept || mime + ', application/json;q=0.8, text/plain;q=0.5, */*;q=0.2';
 
 				if (!('entity' in request)) {
 					return request;
 				}
 
-				serializer = registry.lookup(mime);
 				requestReady = when.defer();
 
-				when(serializer, function (serializer) {
-					request.entity = serializer.write(request.entity);
-					headers['Content-Type'] = mime;
-
-					requestReady.resolve(request);
-				});
+				registry.lookup(mime).then(
+					function (serializer) {
+						request.entity = serializer.write(request.entity);
+						requestReady.resolve(request);
+					},
+					function () {
+						requestReady.reject('unknown-mime');
+					}
+				);
 
 				return requestReady.promise;
 			},
-			response: function (response) {
+			response: function (response, config) {
 				if (!(response.headers && response.headers['Content-Type'] && response.entity)) {
 					return response;
 				}
 
-				var mime, serializer, responseReady;
+				var mime, registry, responseReady;
 
+				registry = config.registry || mimeRegistry;
 				mime = response.headers['Content-Type'];
 
 				responseReady = when.defer();
-				serializer = registry.lookup(mime);
 
-				when(serializer, function (serializer) {
+				registry.lookup(mime).otherwise(function () { return plainText; }).then(function (serializer) {
 					response.entity = serializer.read(response.entity);
 					responseReady.resolve(response);
 				});

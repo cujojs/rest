@@ -232,6 +232,7 @@ Change Log
 - hateoas and location interceptors default to use request.originator
 - defaultRequest interceptor, provide default values for any portion of a request
 - XDomainRequest support for IE 8 and 9
+- allow child MIME registries and configurable registry for the mime interceptor
 - shared 'this' between request/response phases of a single interceptor per request
 - cleaned up interceptor's request handler for complex requests
 - XHR fall back interceptor for older IE

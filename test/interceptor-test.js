@@ -122,7 +122,7 @@
 				theInterceptor = interceptor({
 					request: function (request) {
 						request.phase = 'request';
-						return when.reject(request);
+						return when.reject('rejected request');
 					}
 				});
 				client = theInterceptor(defaultClient);
@@ -132,6 +132,7 @@
 						// request never makes it to the root client
 						refute(response.id);
 						assert.same('request', response.request.phase);
+						assert.same('rejected request', response.error);
 					})
 				).always(done);
 			},
