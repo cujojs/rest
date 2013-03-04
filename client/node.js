@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -35,6 +35,38 @@
 		normalizeHeaderName = require('../util/normalizeHeaderName');
 
 		httpsExp = /^https/i;
+
+		// TODO remove once Node 0.6 is no longer supported
+		Buffer.concat = Buffer.concat || function (list, length) {
+			/*jshint plusplus:false, shadow:true */
+			// from https://github.com/joyent/node/blob/v0.8.21/lib/buffer.js
+			if (!Array.isArray(list)) {
+				throw new Error('Usage: Buffer.concat(list, [length])');
+			}
+
+			if (list.length === 0) {
+				return new Buffer(0);
+			} else if (list.length === 1) {
+				return list[0];
+			}
+
+			if (typeof length !== 'number') {
+				length = 0;
+				for (var i = 0; i < list.length; i++) {
+					var buf = list[i];
+					length += buf.length;
+				}
+			}
+
+			var buffer = new Buffer(length);
+			var pos = 0;
+			for (var i = 0; i < list.length; i++) {
+				var buf = list[i];
+				buf.copy(buffer, pos);
+				pos += buf.length;
+			}
+			return buffer;
+		};
 
 		function node(request) {
 
