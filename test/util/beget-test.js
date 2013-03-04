@@ -36,7 +36,7 @@
 			'should return an emtpy object for no args': function () {
 				var result, prop;
 				result = beget();
-				assert(result);
+				assert.equals(result, {});
 				for (prop in result) {
 					/*jshint forin:false */
 					refute(result.hasOwnProperty(prop));

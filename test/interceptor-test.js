@@ -322,16 +322,18 @@
 			},
 			'should pass interceptor config to handlers': function (done) {
 				var theInterceptor, client, theConfig;
-				theConfig = {};
+				theConfig = { foo: 'bar' };
 				theInterceptor = interceptor({
 					request: function (request, config) {
 						request.phase = 'request';
-						assert.same(theConfig, config);
+						refute.same(theConfig, config);
+						assert.same(theConfig.foo, config.foo);
 						return request;
 					},
 					response: function (response, config) {
 						response.phase = 'response';
-						assert.same(theConfig, config);
+						refute.same(theConfig, config);
+						assert.same(theConfig.foo, config.foo);
 						return response;
 					}
 				});
@@ -415,6 +417,38 @@
 				client = theInterceptor(defaultClient);
 				client().then(function (response) {
 					assert.same(client, response.client);
+					assert.same('default', response.id);
+				}).then(undef, fail).always(done);
+			},
+			'should initialize the config object, without modifying the provided object': function (done) {
+				var theConfig, theInterceptor, client;
+				theConfig = { foo: 'bar' };
+				theInterceptor = interceptor({
+					init: function (config) {
+						refute.same(theConfig, config);
+						assert.same('bar', config.foo);
+						config.bleep = 'bloop';
+						return config;
+					},
+					request: function (request, config) {
+						refute.same(theConfig, config);
+						assert.same('bar', config.foo);
+						config.foo = 'not-bar';
+						assert.same('bar', theConfig.foo);
+						request.phase = 'request';
+						return request;
+					},
+					response: function (response, config) {
+						assert.same('not-bar', config.foo);
+						assert.same('bar', theConfig.foo);
+						response.phase = 'response';
+						return response;
+					}
+				});
+				client = theInterceptor(defaultClient, theConfig);
+				client().then(function (response) {
+					assert.same('request', response.request.phase);
+					assert.same('response', response.phase);
 					assert.same('default', response.id);
 				}).then(undef, fail).always(done);
 			},

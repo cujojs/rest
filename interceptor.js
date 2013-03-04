@@ -25,9 +25,10 @@
 
 	define(function (require) {
 
-		var defaultClient, mixin, when;
+		var defaultClient, beget, mixin, when;
 
 		defaultClient = require('./rest');
+		beget = require('./util/beget');
 		mixin = require('./util/mixin');
 		when = require('when');
 
@@ -49,6 +50,10 @@
 		 *
 		 * @class Interceptor
 		 */
+
+		function defaultInitHandler(config) {
+			return config;
+		}
 
 		function defaultRequestHandler(request /*, config */) {
 			return request;
@@ -85,6 +90,7 @@
 		/**
 		 * Create a new interceptor for the provided handlers.
 		 *
+		 * @param {Function} [handlers.init] one time intialization, must return the config object
 		 * @param {Function} [handlers.request] request handler
 		 * @param {Function} [handlers.response] response handler regardless of error state
 		 * @param {Function} [handlers.success] response handler when the request is not in error
@@ -95,10 +101,11 @@
 		 */
 		function interceptor(handlers) {
 
-			var requestHandler, successResponseHandler, errorResponseHandler;
+			var initHandler, requestHandler, successResponseHandler, errorResponseHandler;
 
 			handlers = handlers || {};
 
+			initHandler            = handlers.init    || defaultInitHandler;
 			requestHandler         = handlers.request || defaultRequestHandler;
 			successResponseHandler = handlers.success || handlers.response || defaultResponseHandler;
 			errorResponseHandler   = handlers.error   || function () {
@@ -115,7 +122,8 @@
 				if (typeof target !== 'function') {
 					target = handlers.client || defaultClient;
 				}
-				config = config || {};
+
+				config = initHandler(beget(config));
 
 				client = function (request) {
 					var context = {};

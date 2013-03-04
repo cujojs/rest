@@ -234,6 +234,8 @@ Change Log
 - XDomainRequest support for IE 8 and 9
 - allow child MIME registries and configurable registry for the mime interceptor
 - shared 'this' between request/response phases of a single interceptor per request
+- 'init' phase for interceptors, useful for defaulting config properties
+- interceptor config object is now begotten, local modifications will not collide between two interceptors with the same config obj
 - cleaned up interceptor's request handler for complex requests
 - XHR fall back interceptor for older IE
 - SimpleRestStore that provides the functionality of RestStore without Dojo's QueryResults
