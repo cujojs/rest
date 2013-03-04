@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-(function (buster, define) {
+(function (buster, define, location) {
 	'use strict';
 
 	var assert, refute, undef;
@@ -72,6 +72,110 @@
 				refute.same(foo, bar);
 				assert.equals('/', foo.build());
 				assert.equals('/foo/bar?bleep=bloop', bar.build());
+			},
+			'should make the URL fully qualified': {
+				requiresSupportFor: { location: location },
+				'': function () {
+					assert.same(location.toString(), new UrlBuilder('').fullyQualify().build());
+					assert.same(location.protocol + '//' + location.host + '/', new UrlBuilder('/').fullyQualify().build());
+					assert.same(location.protocol + '//' + location.host + '/foo', new UrlBuilder('/foo').fullyQualify().build());
+					assert.same(location.protocol + '//example.com/', new UrlBuilder('//example.com').fullyQualify().build());
+					assert.same('http://example.com/', new UrlBuilder('http://example.com').fullyQualify().build());
+					assert.same('https://example.com/', new UrlBuilder('https://example.com').fullyQualify().build());
+				}
+			},
+			'should indicate if the URL is absolute': function () {
+				refute(new UrlBuilder('').isAbsolute());
+				assert(new UrlBuilder('/foo').isAbsolute());
+				assert(new UrlBuilder('//foo').isAbsolute());
+				assert(new UrlBuilder('http://example.com').isAbsolute());
+				assert(new UrlBuilder('https://example.com').isAbsolute());
+			},
+			'should indicate if the URL is fully qualified': function () {
+				refute(new UrlBuilder('').isFullyQualified());
+				refute(new UrlBuilder('/foo').isFullyQualified());
+				refute(new UrlBuilder('//foo').isFullyQualified());
+				refute(new UrlBuilder('http://example.com').isFullyQualified());
+				refute(new UrlBuilder('https://example.com').isFullyQualified());
+				assert(new UrlBuilder('http://example.com/').isFullyQualified());
+				assert(new UrlBuilder('https://example.com/').isFullyQualified());
+			},
+			'should indicate if the URL is cross origin': {
+				requiresSupportFor: { location: location },
+				'': function () {
+					refute(new UrlBuilder('').isCrossOrigin());
+					refute(new UrlBuilder('/foo').isCrossOrigin());
+					refute(new UrlBuilder(location.protocol + '//' + location.host + '/foo').isCrossOrigin());
+					assert(new UrlBuilder('//example.com').isCrossOrigin());
+					assert(new UrlBuilder('http://example.com').isCrossOrigin());
+					assert(new UrlBuilder('https://example.com').isCrossOrigin());
+				}
+			},
+			'should split a URL into its parts': {
+				'for a simple http URL': function () {
+					var parts = new UrlBuilder('http://www.example.com/').parts();
+					assert.same('http://www.example.com/', parts.href);
+					assert.same('http:', parts.protocol);
+					assert.same('www.example.com', parts.host);
+					assert.same('www.example.com', parts.hostname);
+					assert.same('80', parts.port);
+					assert.same('http://www.example.com', parts.origin);
+					assert.same('/', parts.pathname);
+					assert.same('', parts.search);
+					assert.same('', parts.hash);
+				},
+				'for a simple https URL': function () {
+					var parts = new UrlBuilder('https://www.example.com/').parts();
+					assert.same('https://www.example.com/', parts.href);
+					assert.same('https:', parts.protocol);
+					assert.same('www.example.com', parts.host);
+					assert.same('www.example.com', parts.hostname);
+					assert.same('443', parts.port);
+					assert.same('https://www.example.com', parts.origin);
+					assert.same('/', parts.pathname);
+					assert.same('', parts.search);
+					assert.same('', parts.hash);
+				},
+				'for a complex URL': function () {
+					var parts = new UrlBuilder('http://user:pass@www.example.com:8080/some/path?hello=world#main').parts();
+					assert.same('http://user:pass@www.example.com:8080/some/path?hello=world#main', parts.href);
+					assert.same('http:', parts.protocol);
+					assert.same('www.example.com:8080', parts.host);
+					assert.same('www.example.com', parts.hostname);
+					assert.same('8080', parts.port);
+					assert.same('http://www.example.com:8080', parts.origin);
+					assert.same('/some/path', parts.pathname);
+					assert.same('?hello=world', parts.search);
+					assert.same('#main', parts.hash);
+				},
+				'for a path-less URL': function () {
+					var parts = new UrlBuilder('http://www.example.com/?hello=world#main').parts();
+					assert.same('http://www.example.com/?hello=world#main', parts.href);
+					assert.same('http:', parts.protocol);
+					assert.same('www.example.com', parts.host);
+					assert.same('www.example.com', parts.hostname);
+					assert.same('80', parts.port);
+					assert.same('http://www.example.com', parts.origin);
+					assert.same('/', parts.pathname);
+					assert.same('?hello=world', parts.search);
+					assert.same('#main', parts.hash);
+				},
+				'for a path and query-less URL': function () {
+					var parts = new UrlBuilder('http://www.example.com/#main').parts();
+					assert.same('http://www.example.com/#main', parts.href);
+					assert.same('http:', parts.protocol);
+					assert.same('www.example.com', parts.host);
+					assert.same('www.example.com', parts.hostname);
+					assert.same('80', parts.port);
+					assert.same('http://www.example.com', parts.origin);
+					assert.same('/', parts.pathname);
+					assert.same('', parts.search);
+					assert.same('#main', parts.hash);
+				}
+			},
+			'should be forgiving of non constructor calls': function () {
+				/*jshint newcap:false */
+				assert(UrlBuilder() instanceof UrlBuilder);
 			}
 			// TODO test .absolute()
 		});
@@ -86,6 +190,7 @@
 		factory(function (moduleId) {
 			return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId);
 		});
-	}
+	},
+	this.location
 	// Boilerplate for AMD and Node
 ));

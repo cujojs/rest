@@ -237,6 +237,8 @@ Change Log
 - cleaned up interceptor's request handler for complex requests
 - XHR fall back interceptor for older IE
 - SimpleRestStore that provides the functionality of RestStore without Dojo's QueryResults
+- rename UrlBuilder's 'absolute()' to 'fullyQualify()'
+- added 'isAbsolute()', 'isFullyQualified()', 'isCrossOrigin()' and 'parts()' to UrlBuilder
 - mutli-browser testing with Sauce Labs
 
 0.8.4

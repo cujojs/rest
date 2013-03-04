@@ -20,27 +20,19 @@
  * IN THE SOFTWARE.
  */
 
-(function (define, global) {
+(function (define) {
 	'use strict';
 
 	define(function (require) {
 
-		var interceptor, xdrClient, UrlBuilder, origin, hasXdr, hasXhrCors;
+		var interceptor, xdrClient, UrlBuilder, hasXdr, hasXhrCors;
 
 		interceptor = require('../../interceptor');
 		xdrClient = require('../../client/xdr');
 		UrlBuilder = require('../../UrlBuilder');
 
-		origin = global.location.protocol + '//' + global.location.host + '/';
 		hasXdr = 'XDomainRequest' in window;
 		hasXhrCors = window.XMLHttpRequest && 'withCredentials' in new window.XMLHttpRequest();
-
-		function isCrossOrigin(request) {
-			// crude, but good enough for now
-			var url = new UrlBuilder(request.path, request.params).absolute().build();
-			var index = url.indexOf(origin);
-			return index !== 0;
-		}
 
 		/**
 		 * Apply IE 8 and 9's cross domain support if needed and available.
@@ -68,7 +60,7 @@
 		 */
 		return interceptor({
 			request: function handleRequest(request, config) {
-				if (hasXdr && !hasXhrCors && isCrossOrigin(request)) {
+				if (hasXdr && !hasXhrCors && new UrlBuilder(request.path, request.params).isCrossOrigin()) {
 					return new interceptor.ComplexRequest({ request: request, client: config.xdrClient || xdrClient });
 				}
 				return request;
@@ -78,7 +70,6 @@
 	});
 
 }(
-	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); },
-	this
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
 	// Boilerplate for AMD and Node
 ));

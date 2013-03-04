@@ -102,7 +102,7 @@
 			authorization = config.token;
 			clientId = config.clientId;
 			authorizationUrlBase = config.authorizationUrlBase;
-			redirectUrl = new UrlBuilder(config.redirectUrl).absolute().build();
+			redirectUrl = new UrlBuilder(config.redirectUrl).fullyQualify().build();
 			scope = config.scope;
 			windowStrategy = config.windowStrategy || defaultWindowStrategy;
 
