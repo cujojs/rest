@@ -44,20 +44,24 @@
 		 * @returns {Client}
 		 */
 		return interceptor({
+			init: function (config) {
+				config.initial = config.initial || 100;
+				config.multiplier = config.multiplier || 2;
+				config.max = config.max || Infinity;
+				return config;
+			},
 			error: function (response, config, client) {
-				var request, multiplier, max;
+				var request;
 
 				request = response.request;
-				request.retry = request.retry || config.initial || 100;
-				multiplier = config.multiplier || 2;
-				max = config.max || Infinity;
+				request.retry = request.retry || config.initial;
 
 				return delay(request, request.retry).then(function (request) {
 					if (request.canceled) {
 						// cancel here in case client doesn't check canceled flag
 						return when.reject({ request: request, error: 'precanceled' });
 					}
-					request.retry = Math.min(request.retry * multiplier, max);
+					request.retry = Math.min(request.retry * config.multiplier, config.max);
 					return client(request);
 				});
 			}

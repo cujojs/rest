@@ -25,13 +25,13 @@
 
 	define(function (require) {
 
-		var interceptor, mimeRegistry, plainText, when;
+		var interceptor, registry, plainText, when;
 
 		interceptor = require('../interceptor');
-		mimeRegistry = require('../mime/registry');
+		registry = require('../mime/registry');
 		when = require('when');
 
-		plainText = mimeRegistry.lookup('text/plain');
+		plainText = registry.lookup('text/plain');
 
 		/**
 		 * MIME type support for request and response entities.  Entities are
@@ -50,10 +50,13 @@
 		 * @returns {Client}
 		 */
 		return interceptor({
+			init: function (config) {
+				config.registry = config.registry || registry;
+				return config;
+			},
 			request: function (request, config) {
-				var mime, headers, registry, requestReady;
+				var mime, headers, requestReady;
 
-				registry = config.registry || mimeRegistry;
 				headers = request.headers || (request.headers = {});
 				mime = headers['Content-Type'] = headers['Content-Type'] || config.mime || 'text/plain';
 				headers.Accept = headers.Accept || config.accept || mime + ', application/json;q=0.8, text/plain;q=0.5, */*;q=0.2';
@@ -64,7 +67,7 @@
 
 				requestReady = when.defer();
 
-				registry.lookup(mime).then(
+				config.registry.lookup(mime).then(
 					function (serializer) {
 						request.entity = serializer.write(request.entity);
 						requestReady.resolve(request);
@@ -81,14 +84,13 @@
 					return response;
 				}
 
-				var mime, registry, responseReady;
+				var mime, responseReady;
 
-				registry = config.registry || mimeRegistry;
 				mime = response.headers['Content-Type'];
 
 				responseReady = when.defer();
 
-				registry.lookup(mime).otherwise(function () { return plainText; }).then(function (serializer) {
+				config.registry.lookup(mime).otherwise(function () { return plainText; }).then(function (serializer) {
 					response.entity = serializer.read(response.entity);
 					responseReady.resolve(response);
 				});

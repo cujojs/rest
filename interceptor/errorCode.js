@@ -42,9 +42,12 @@
 		 * @returns {Client}
 		 */
 		return interceptor({
+			init: function (config) {
+				config.code = config.code || 400;
+				return config;
+			},
 			response: function (response, config) {
-				var code = config.code || 400;
-				if (response.status && response.status.code >= code) {
+				if (response.status && response.status.code >= config.code) {
 					return when.reject(response);
 				}
 				return response;

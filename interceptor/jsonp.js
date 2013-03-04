@@ -47,8 +47,11 @@
 		 */
 		return interceptor({
 			client: jsonpClient,
-			request: function (request, config) {
+			init: function (config) {
 				config.callback = config.callback || {};
+				return config;
+			},
+			request: function (request, config) {
 				request.callback = request.callback || {};
 				request.callback.param = request.callback.param || config.callback.param;
 				request.callback.prefix = request.callback.prefix || config.callback.prefix;

@@ -39,9 +39,13 @@
 		 * @returns {Client}
 		 */
 		return interceptor({
+			init: function (config) {
+				config.timeout = config.timeout || 0;
+				return config;
+			},
 			request: function (request, config) {
 				var timeout, abortTrigger;
-				timeout = 'timeout' in request ? request.timeout : 'timeout' in config ? config.timeout : 0;
+				timeout = 'timeout' in request ? request.timeout : config.timeout;
 				if (timeout <= 0) {
 					return request;
 				}

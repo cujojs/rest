@@ -62,11 +62,14 @@
 		 * @returns {Client}
 		 */
 		return interceptor({
+			init: function (config) {
+				config.target = 'target' in config ? config.target || '' : '_links';
+				return config;
+			},
 			response: function (response, config, hateoas) {
-				var targetName, client;
+				var client;
 
 				client = config.client || (response.request && response.request.originator) || hateoas;
-				targetName = 'target' in config ? config.target || '' : '_links';
 
 				function apply(target, links) {
 					links.forEach(function (link) {
@@ -103,12 +106,12 @@
 
 					links = obj.links;
 					if (Array.isArray(links)) {
-						if (targetName === '') {
+						if (config.target === '') {
 							target = obj;
 						}
 						else {
 							target = {};
-							Object.defineProperty(obj, targetName, {
+							Object.defineProperty(obj, config.target, {
 								enumerable: false,
 								value: target
 							});
