@@ -72,6 +72,9 @@
 			};
 
 			clientRequest = client.request(options, function (clientResponse) {
+				// Array of Buffers to collect response chunks
+				var buffers = [];
+
 				response.raw = {
 					request: clientRequest,
 					response: clientResponse
@@ -86,13 +89,15 @@
 				});
 
 				clientResponse.on('data', function (data) {
-					if (!('entity' in response)) {
-						response.entity = '';
-					}
-					// normalize Buffer to a string
-					response.entity += data.toString();
+					// Collect the next Buffer chunk
+					buffers.push(data);
 				});
+
 				clientResponse.on('end', function () {
+					// Create the final response entity
+					response.entity = buffers.length > 0 ? Buffer.concat(buffers).toString() : '';
+					buffers = null;
+
 					d.resolve(response);
 				});
 			});
