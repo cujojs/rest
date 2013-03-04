@@ -64,6 +64,15 @@
 					assert.equals('/foo/bar', response.request.path);
 				}).then(undef, fail).always(done);
 			},
+			'should not prepend prefix before a fully qualified path': function (done) {
+				var client = pathPrefix(
+					function (request) { return { request: request }; },
+					{ prefix: '/foo' }
+				);
+				client({ path: 'http://www.example.com/' }).then(function (response) {
+					assert.equals('http://www.example.com/', response.request.path);
+				}).then(undef, fail).always(done);
+			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, pathPrefix().skip());
 			},

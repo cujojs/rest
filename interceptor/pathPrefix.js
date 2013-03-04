@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 VMware, Inc. All Rights Reserved.
+ * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -25,9 +25,10 @@
 
 	define(function (require) {
 
-		var interceptor;
+		var interceptor, UrlBuilder;
 
 		interceptor = require('../interceptor');
+		UrlBuilder = require('../UrlBuilder');
 
 		function startsWith(str, prefix) {
 			return str.indexOf(prefix) === 0;
@@ -49,7 +50,7 @@
 			request: function (request, config) {
 				var path;
 
-				if (config.prefix) {
+				if (config.prefix && !(new UrlBuilder(request.path).isFullyQualified())) {
 					path = config.prefix;
 					if (request.path) {
 						if (!endsWith(path, '/') && !startsWith(request.path, '/')) {
