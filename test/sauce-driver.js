@@ -29,7 +29,7 @@
 	var webdriver, sauceConnect, when, sequence,
 		failed, host, port, username, accessKey,
 		projectName, travisJobNumber, travisCommit,
-		environments, passFailInterceptor, buster;
+		environments, passFailInterceptor, subAccountClient, buster;
 
 	webdriver = require('wd');
 	sauceConnect = require('sauce-connect-launcher');
@@ -97,6 +97,19 @@
 			},
 			client: basicAuth(mime({ mime: 'application/json' }), { username: username, password: password })
 		});
+	}(username, accessKey));
+
+	subAccountClient = (function (username, password) {
+		var rest, pathPrefix, basicAuth, mime;
+
+		rest = require('../rest');
+		pathPrefix = require('../interceptor/pathPrefix');
+		basicAuth = require('../interceptor/basicAuth');
+		mime = require('../interceptor/mime');
+
+		return rest.chain(pathPrefix, { prefix: 'https://saucelabs.com/rest/v1/users/{username}' })
+		            .chain(mime, { mime: 'application/json' })
+		            .chain(basicAuth, { username: username, password: password });
 	}(username, accessKey));
 
 	function launchBuster(port) {
@@ -171,42 +184,55 @@
 	// must use a port that sauce connect will tunnel
 	buster = launchBuster('8080');
 
-	console.log('Opening tunnel to Sauce Labs');
-	sauceConnect({ username: username, accessKey: accessKey, 'no_progress': true }, function (err, tunnel) {
+	// create a sub account to allow multiple concurrent tunnels
+	subAccountClient({ method: 'post', params: { username: username }, entity: { username: username + '-' + travisJobNumber, password: Math.floor(Math.random() * 1e6).toString(), 'name': 'transient account', email: 'transient@example.com' } }).then(function (subAccount) {
 
-		if (err) {
-			// errors are expected for some tests, like jsonp error handling
-			return;
-		}
+		var username, accessKey;
 
-		var browser, tasks;
+		/*jshint camelcase:false */
+		username = subAccount.entity.id;
+		accessKey = subAccount.entity.access_key;
 
-		browser = webdriver.remote(host, port, username, accessKey);
+		console.log('Opening tunnel to Sauce Labs');
+		sauceConnect({ username: username, accessKey: accessKey, 'no_progress': true }, function (err, tunnel) {
 
-		browser.on('status', function (info) {
-			console.log('\x1b[36m%s\x1b[0m', info);
-		});
-		browser.on('command', function (meth, path) {
-			console.log(' > \x1b[33m%s\x1b[0m: %s', meth, path);
-		});
+			if (err) {
+				// errors are expected for some tests, like jsonp error handling
+				return;
+			}
 
-		tasks = environments.map(function (environment) {
-			return function () {
-				return testWith(browser, environment);
-			};
-		});
+			var browser, tasks;
 
-		sequence(tasks).always(function () {
-			console.log('Stopping buster');
-			buster.exit();
+			browser = webdriver.remote(host, port, username, accessKey);
 
-			console.log('Closing tunnel to Sauce Labs');
-			tunnel.close();
+			browser.on('status', function (info) {
+				console.log('\x1b[36m%s\x1b[0m', info);
+			});
+			browser.on('command', function (meth, path) {
+				console.log(' > \x1b[33m%s\x1b[0m: %s', meth, path);
+			});
 
-			setTimeout(function () {
-				// should exit cleanly, but sometimes the tunnel is stuck open
-				process.exit(failed ? 1 : 0);
-			}, 500);
+			tasks = environments.map(function (environment) {
+				return function () {
+					return testWith(browser, environment);
+				};
+			});
+
+			sequence(tasks).always(function () {
+				console.log('Stopping buster');
+				buster.exit();
+
+				console.log('Closing tunnel to Sauce Labs');
+				tunnel.close();
+
+				subAccountClient({ method: 'delete', params: { username: username } }).always(function () {
+					// TODO find out if delete is actaully possible
+
+					// should exit cleanly, but sometimes the tunnel is stuck open
+					process.exit(failed ? 1 : 0);
+				});
+			});
+
 		});
 
 	});
