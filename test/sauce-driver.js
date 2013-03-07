@@ -29,7 +29,7 @@
 	var webdriver, sauceConnect, when, sequence,
 		failed, host, port, username, accessKey,
 		projectName, travisJobNumber, travisCommit,
-		environments, passFailInterceptor, subAccountClient, buster;
+		environments, subAccountClient, buster;
 
 	webdriver = require('wd');
 	sauceConnect = require('sauce-connect-launcher');
@@ -74,31 +74,6 @@
 		return;
 	}
 
-	passFailInterceptor = (function (username, password) {
-		var interceptor, basicAuth, mime;
-
-		interceptor = require('../interceptor');
-		basicAuth = require('../interceptor/basicAuth');
-		mime = require('../interceptor/mime');
-
-		return interceptor({
-			request: function (passed, config) {
-				return {
-					method: 'put',
-					path: 'http://saucelabs.com/rest/v1/{username}/jobs/{jobId}',
-					params: {
-						username: username,
-						jobId: config.jobId
-					},
-					entity: {
-						passed: passed
-					}
-				};
-			},
-			client: basicAuth(mime({ mime: 'application/json' }), { username: username, password: password })
-		});
-	}(username, accessKey));
-
 	subAccountClient = (function (username, password) {
 		var rest, pathPrefix, basicAuth, mime;
 
@@ -126,7 +101,7 @@
 		return buster;
 	}
 
-	function testWith(browser, environment) {
+	function testWith(browser, environment, passFailInterceptor) {
 		var d, passFail;
 
 		d = when.defer();
@@ -187,11 +162,36 @@
 	// create a sub account to allow multiple concurrent tunnels
 	subAccountClient({ method: 'post', params: { username: username }, entity: { username: username + '-' + travisJobNumber, password: Math.floor(Math.random() * 1e6).toString(), 'name': 'transient account', email: 'transient@example.com' } }).then(function (subAccount) {
 
-		var username, accessKey;
+		var username, accessKey, passFailInterceptor;
 
 		/*jshint camelcase:false */
 		username = subAccount.entity.id;
 		accessKey = subAccount.entity.access_key;
+
+		passFailInterceptor = (function (username, password) {
+			var interceptor, basicAuth, mime;
+
+			interceptor = require('../interceptor');
+			basicAuth = require('../interceptor/basicAuth');
+			mime = require('../interceptor/mime');
+
+			return interceptor({
+				request: function (passed, config) {
+					return {
+						method: 'put',
+						path: 'http://saucelabs.com/rest/v1/{username}/jobs/{jobId}',
+						params: {
+							username: username,
+							jobId: config.jobId
+						},
+						entity: {
+							passed: passed
+						}
+					};
+				},
+				client: basicAuth(mime({ mime: 'application/json' }), { username: username, password: password })
+			});
+		}(username, accessKey));
 
 		console.log('Opening tunnel to Sauce Labs');
 		sauceConnect({ username: username, accessKey: accessKey, 'no_progress': true }, function (err, tunnel) {
@@ -214,7 +214,7 @@
 
 			tasks = environments.map(function (environment) {
 				return function () {
-					return testWith(browser, environment);
+					return testWith(browser, environment, passFailInterceptor);
 				};
 			});
 
