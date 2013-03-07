@@ -48,7 +48,7 @@
 					client: { $ref: 'client!', client: client },
 					plugins: [{ module: 'rest/wire' }]
 				};
-				wire(spec).then(function (spec) {
+				wire(spec, { require: require }).then(function (spec) {
 					return spec.client({}).then(function (response) {
 						assert.equals('bar', response.foo);
 					});
@@ -63,7 +63,7 @@
 					client: { $ref: 'client!path', client: client, accept: 'text/plain', entity: false },
 					plugins: [{ module: 'rest/wire' }]
 				};
-				wire(spec).then(function (spec) {
+				wire(spec, { require: require }).then(function (spec) {
 					return spec.client({ path: 'to/somewhere' }).then(function (response) {
 						assert.equals('path/to/somewhere', response.request.path);
 						assert.equals('text/plain', response.request.headers.Accept);
@@ -80,7 +80,7 @@
 					client: { $ref: 'client!', client: client },
 					plugins: [{ module: 'rest/wire' }]
 				};
-				wire(spec).then(
+				wire(spec, { require: require }).then(
 					function (spec) {
 						return spec.client({}).then(
 							fail,
@@ -101,7 +101,7 @@
 					client: { $ref: 'client!', client: client, errorCode: false },
 					plugins: [{ module: 'rest/wire' }]
 				};
-				wire(spec).then(function (spec) {
+				wire(spec, { require: require }).then(function (spec) {
 					return spec.client({}).then(function (response) {
 						assert.equals('bar', response.foo);
 					});
@@ -116,7 +116,7 @@
 					client: { $ref: 'client!', client: client, mime: false },
 					plugins: [{ module: 'rest/wire' }]
 				};
-				wire(spec).then(function (spec) {
+				wire(spec, { require: require }).then(function (spec) {
 					return spec.client({}).then(function (response) {
 						assert.isString(response);
 					});
@@ -131,7 +131,7 @@
 					client: { $ref: 'client!', client: client, entity: false },
 					plugins: [{ module: 'rest/wire' }]
 				};
-				wire(spec).then(function (spec) {
+				wire(spec, { require: require }).then(function (spec) {
 					return spec.client({ method: 'post', entity: { bleep: 'bloop' } }).then(function (response) {
 						assert.equals('bleep=bloop', response.request.entity);
 						assert.equals(0, response.request.headers.Accept.indexOf('application/x-www-form-urlencoded'));
@@ -158,7 +158,7 @@
 						},
 						plugins: [{ module: 'rest/wire' }]
 					};
-					wire(spec).then(function (spec) {
+					wire(spec, { require: require }).then(function (spec) {
 						assert.same(client, spec.client.skip().skip().skip());
 						spec.client({ method: 'post', path: '/', entity: { bleep: 'bloop' } }).then(function (response) {
 							assert.equals('http://example.com/', response.request.path);
@@ -190,7 +190,7 @@
 						errorCode: { module: 'rest/interceptor/errorCode' },
 						plugins: [{ module: 'rest/wire' }]
 					};
-					wire(spec).then(function (spec) {
+					wire(spec, { require: require }).then(function (spec) {
 						assert.same(client, spec.client.skip().skip().skip());
 						spec.client({ method: 'post', path: '/', entity: { bleep: 'bloop' } }).then(function (response) {
 							assert.equals('http://example.com/', response.request.path);
@@ -217,7 +217,7 @@
 						},
 						plugins: [{ module: 'rest/wire' }]
 					};
-					wire(spec).then(function (spec) {
+					wire(spec, { require: require }).then(function (spec) {
 						assert.same(client, spec.client.skip().skip().skip());
 					}).then(undef, fail).always(done);
 				},
@@ -237,7 +237,7 @@
 						},
 						plugins: [{ module: 'rest/wire' }]
 					};
-					wire(spec).then(function (spec) {
+					wire(spec, { require: require }).then(function (spec) {
 						assert.same(client, spec.client.skip());
 						spec.client().then(function (response) {
 							assert.equals('thePrefix', response.request.path);
@@ -254,7 +254,7 @@
 						},
 						plugins: [{ module: 'rest/wire' }]
 					};
-					wire(spec).then(function (spec) {
+					wire(spec, { require: require }).then(function (spec) {
 						assert.same(rest, spec.client.skip());
 					}).then(undef, fail).always(done);
 				},
@@ -275,7 +275,7 @@
 						parentClient: client,
 						plugins: [{ module: 'rest/wire' }]
 					};
-					wire(spec).then(function (spec) {
+					wire(spec, { require: require }).then(function (spec) {
 						assert.same(client, spec.client.skip());
 					}).then(undef, fail).always(done);
 				},
@@ -298,7 +298,7 @@
 						},
 						plugins: [{ module: 'rest/wire' }]
 					};
-					wire(spec).then(function (spec) {
+					wire(spec, { require: require }).then(function (spec) {
 						assert.same(client, spec.client.skip());
 						spec.client().then(function (response) {
 							assert.equals('useThisOne', response.request.path);
