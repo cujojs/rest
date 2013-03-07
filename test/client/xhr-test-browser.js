@@ -32,11 +32,12 @@
 
 	define('rest/client/xhr-test', function (require) {
 
-		var xhr, rest, xhrFallback, client;
+		var xhr, rest, xhrFallback, when, client;
 
 		xhr = require('rest/client/xhr');
 		rest = require('rest');
 		xhrFallback = require('rest/interceptor/ie/xhr');
+		when = require('when');
 
 		// use xhrFallback when XHR is not native
 		client = !XMLHttpRequest ? xhr.chain(xhrFallback) : xhr;
@@ -113,25 +114,30 @@
 			'should abort the request if canceled': function (done) {
 				// TDOO find an endpoint that takes a bit to respond, cached files may return synchronously
 				var request = { path: '/wait/' + new Date().getTime() };
-				client(request).then(
-					fail,
-					failOnThrow(function (response) {
-						assert(request.canceled);
-						try {
-							// accessing 'status' will throw in older Firefox
-							assert.same(0, response.raw.status);
-						}
-						catch (e) {
-							// ignore
-						}
+				when.all([
+					client(request).then(
+						fail,
+						failOnThrow(function (response) {
+							assert(request.canceled);
+							try {
+								// accessing 'status' will throw in older Firefox
+								assert.same(0, response.raw.status);
+							}
+							catch (e) {
+								// ignore
+							}
 
-						// this assertion is true in every browser except for IE 6
-						// assert.same(XMLHttpRequest.UNSENT || 0, response.raw.readyState);
-						assert(response.raw.readyState <= 3);
+							// this assertion is true in every browser except for IE 6
+							// assert.same(XMLHttpRequest.UNSENT || 0, response.raw.readyState);
+							assert(response.raw.readyState <= 3);
+						})
+					),
+					when({}, function () {
+						// push into when's nextTick resolution
+						refute(request.canceled);
+						request.cancel();
 					})
-				).always(done);
-				refute(request.canceled);
-				request.cancel();
+				]).always(done);
 			},
 			'//should propogate request errors': function (done) {
 				// TODO follow up with Sauce Labs

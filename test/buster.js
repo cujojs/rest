@@ -48,7 +48,8 @@ config['rest:browser'] = {
 		'node_modules/dojo/**/*.js',
 		'node_modules/poly/**/*.js',
 		'node_modules/when/**/*.js',
-		'node_modules/wire/**/*.js'
+		'node_modules/wire/**/*.js',
+		{ path: '/wait', backend: 'http://example.com' }
 	],
 	libs: [
 		'test/curl-config.js',
