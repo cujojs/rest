@@ -39,14 +39,14 @@
 		when = require('when');
 
 		function client(request) {
-			return when({
+			return {
 				request: request,
 				status: { code: 200 },
 				headers: {
 					'Content-Type': 'application/json'
 				},
 				entity: '{"foo":"bar"}'
-			});
+			};
 		}
 
 		buster.testCase('rest/dojo/wire', {
@@ -60,26 +60,10 @@
 					assert(spec.store instanceof RestStore);
 				}).then(undef, fail).always(done);
 			},
-			'//should get with resource! returning a promise': function (done) {
-				// TODO find out if 'wait: false' is still possible with the latest when/wire
-				var spec;
-				spec = {
-					resource: { $ref: 'resource!test/dojo', get: 'hello.json', entity: false, client: client },
-					plugins: [{ module: 'rest/dojo/wire' }]
-				};
-				wire(spec).then(function (spec) {
-					return spec.resource.then(
-						function (response) {
-							assert.equals('bar', response.entity.foo);
-							assert.equals('test/dojo/hello.json', response.request.path);
-						}
-					);
-				}).then(undef, fail).always(done);
-			},
 			'should get with resource! waiting for data': function (done) {
 				var spec;
 				spec = {
-					resource: { $ref: 'resource!test/dojo', get: 'hello.json', entity: false, wait: true, client: client },
+					resource: { $ref: 'resource!test/dojo', get: 'hello.json', entity: false, client: client },
 					plugins: [{ module: 'rest/dojo/wire' }]
 				};
 				wire(spec).then(function (spec) {

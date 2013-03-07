@@ -107,7 +107,7 @@
 		 * @param wire
 		 */
 		function restFactory(resolver, spec, wire) {
-			var config = normalizeRestFactoryConfig(spec.rest, wire);
+			var config = normalizeRestFactoryConfig(spec.options, wire);
 			return config.parent.then(function (parent) {
 				return config.interceptors.then(function (interceptorDefs) {
 					pipeline(interceptorDefs.map(function (interceptorDef) {

@@ -51,7 +51,7 @@
 				}
 				abortTrigger = when.defer();
 				this.timeout = setTimeout(function () {
-					abortTrigger.resolver.reject({ request: request, error: 'timeout' });
+					abortTrigger.reject({ request: request, error: 'timeout' });
 					if (request.cancel) {
 						request.cancel();
 					}

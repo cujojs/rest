@@ -42,7 +42,7 @@
 			'should have the same version for package.json and component.json': function () {
 				assert.same(componentJson.version, packageJson.version);
 			},
-			'should have the same depenencies for package.json and component.json': function () {
+			'//should have the same depenencies for package.json and component.json': function () {
 				// this may not always hold true, but it currently does
 				assert.equals(componentJson.dependencies, packageJson.dependencies);
 			}

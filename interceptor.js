@@ -63,11 +63,10 @@
 			return response;
 		}
 
-		function whenFirst(promisesOrValues) {
-			// TODO this concept is likely to be added to when in the near future
+		function race(promisesOrValues) {
 			var d = when.defer();
 			promisesOrValues.forEach(function (promiseOrValue) {
-				when.chain(promiseOrValue, d.resolver);
+				when(promiseOrValue, d.resolve, d.reject);
 			});
 			return d.promise;
 		}
@@ -151,7 +150,7 @@
 									}
 								);
 							});
-							return abort ? whenFirst([response, abort]) : response;
+							return abort ? race([response, abort]) : response;
 						},
 						function (error) {
 							return when.reject({ request: request, error: error });

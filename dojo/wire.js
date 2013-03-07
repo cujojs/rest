@@ -32,31 +32,6 @@
 		mixin = require('../util/mixin');
 		when = require('when');
 
-		/**
-		 * If wait === true, waits for dataPromise to complete and resolves
-		 * the reference to the resulting concrete data.  If wait !== true,
-		 * resolves the reference to dataPromise.
-		 *
-		 * @param dataPromise
-		 * @param resolver
-		 * @param wait
-		 */
-		function resolveData(dataPromise, resolver, wait) {
-			if (wait === true) {
-				dataPromise.then(
-					function (data) {
-						resolver.resolve(data);
-					},
-					function (err) {
-						resolver.reject(err);
-					}
-				);
-			}
-			else {
-				resolver.resolve(dataPromise);
-			}
-		}
-
 		return {
 			wire$plugin: function restPlugin(/* ready, destroyed, options */) {
 
@@ -83,7 +58,7 @@
 					client = when.defer();
 					plugin.resolvers.client(client.resolver, name, refObj, wire);
 
-					when(client, function (client) {
+					when(client.promise, function (client) {
 						var args, store;
 
 						args = { client: client };
@@ -91,13 +66,11 @@
 
 						store = new RestStore(args);
 						if (refObj.get) {
-							// If get was specified, get it, and resolve with the resulting item.
-							resolveData(store.get(refObj.get), resolver, refObj.wait);
+							store.get(refObj.get).then(resolver.resolve, resolver.reject);
 
 						}
 						else if (refObj.query) {
-							// Similarly, query and resolve with the result set.
-							resolveData(store.query(refObj.query), resolver, refObj.wait);
+							store.query(refObj.query).then(resolver.resolve, resolver.reject);
 
 						}
 						else {

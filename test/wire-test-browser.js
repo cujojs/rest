@@ -32,12 +32,11 @@
 
 	define('rest/wire-test', function (require) {
 
-		var rest, pathPrefixInterceptor, wire, when;
+		var rest, pathPrefixInterceptor, wire;
 
 		rest = require('rest');
 		pathPrefixInterceptor = require('rest/interceptor/pathPrefix');
 		wire = require('wire');
-		when = require('when');
 
 		buster.testCase('rest/wire', {
 			'should use default client! config': function (done) {
