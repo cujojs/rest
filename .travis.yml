@@ -7,7 +7,5 @@ script: npm run-script ci
 env:
   global:
   - BUSTER_TEST_OPT="--reporter specification"
-  - SELENIUM_HOST=ondemand.saucelabs.com
-  - SELENIUM_PORT=80
   - SELENIUM_USERNAME=s2js-rest
   - secure: "jMkfzJLwEdNVNkFDdc/slTTopqJR4uoUsGElmrChrzj3wr9x8Yy2Cu1gYcLx\navO9g6Rw4DzN8uVwFLufr8aTbfMtdN7fUZWC3SdCXpTu15b6hm6Zp7wvqhWp\nlPT6QSZbKtw7h5++ffh2SvLln2JPwghbxrEI31quIXQhefDA/0Y="
