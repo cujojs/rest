@@ -77,6 +77,7 @@
 		 * @param properties.request the traditional request return object
 		 * @param {Promise} [properties.abort] promise that resolves if/when the request is aborted
 		 * @param {Client} [properties.client] override the defined client chain with an alternate client
+		 * @param [properties.response] response for the request, short circuit the request
 		 */
 		function ComplexRequest(properties) {
 			if (!(this instanceof ComplexRequest)) {
