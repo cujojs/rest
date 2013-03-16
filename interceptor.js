@@ -137,9 +137,11 @@
 								// unpack request
 								abort = request.abort;
 								next = request.client || next;
+								response = request.response;
+								// normalize request, must be last
 								request = request.request;
 							}
-							response = when(request, function (request) {
+							response = response || when(request, function (request) {
 								return when(
 									next(request),
 									function (response) {

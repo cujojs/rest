@@ -386,6 +386,21 @@
 					assert.same(client, response.request.originator);
 				}).then(undef, fail).always(done);
 			},
+			'should use the repsponse provided by a ComplexRequest': function (done) {
+				var theInterceptor, client;
+				theInterceptor = interceptor({
+					request: function (request) {
+						return new interceptor.ComplexRequest({
+							response: { request: request, id: 'complex-response' }
+						});
+					}
+				});
+				client = theInterceptor();
+				client().then(function (response) {
+					assert.same('complex-response', response.id);
+					assert.same(client, response.request.originator);
+				}).then(undef, fail).always(done);
+			},
 			'should cancel requests with the abort trigger provided by a ComplexRequest': function (done) {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
