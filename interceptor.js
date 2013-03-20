@@ -59,7 +59,7 @@
 			return request;
 		}
 
-		function defaultResponseHandler(response /*, config, interceptor */) {
+		function defaultResponseHandler(response /*, config, client */) {
 			return response;
 		}
 

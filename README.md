@@ -174,6 +174,12 @@ Rest.js is designed to run in a browser environment, utilizing [AMD modules](htt
 An ECMAScript 5 compatible environment is assumed.  Older browsers, ::cough:: IE, that do not support ES5 natively can be shimmed.  Any shim should work, although we've tested against cujo's [poly](https://github.com/cujojs/poly)
 
 
+Documentation
+-------------
+
+Full project documentation is available in the [docs directory](docs).
+
+
 Reporting Issues
 ----------------
 
