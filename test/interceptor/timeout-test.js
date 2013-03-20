@@ -67,18 +67,16 @@
 			return d.promise;
 		}
 
-		// TODO setTimeout hack will not be nessesary once when resolves promises in nextTick.
-		// Expected in the when 2.0 time frame
-
 		buster.testCase('rest/interceptor/timeout', {
 			'should resolve if client responds immediately': function (done) {
 				var client, request;
-				client = timeout(immediateClient, { timeout: 10 });
+				client = timeout(immediateClient, { timeout: 20 });
 				request = {};
 				client(request).then(function (response) {
 					assert.same(request, response.request);
 					refute(response.error);
-					return delay(20).then(function () {
+					return delay(40).then(function () {
+						// delay to make sure timeout has fired, but not rejected the response
 						refute(request.canceled);
 					});
 				}).then(undef, fail).always(done);
@@ -90,9 +88,7 @@
 				client(request).then(function (response) {
 					assert.same(request, response.request);
 					refute(response.error);
-					return delay(0).then(function () {
-						refute(request.canceled);
-					});
+					refute(request.canceled);
 				}).then(undef, fail).always(done);
 			},
 			'should reject even if client responds after timeout': function (done) {
@@ -104,9 +100,7 @@
 					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert.equals('timeout', response.error);
-						return delay(0).then(function () {
-							assert(request.canceled);
-						});
+						assert(request.canceled);
 					})
 				).always(done);
 			},
@@ -119,9 +113,7 @@
 					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert.equals('timeout', response.error);
-						return delay(0).then(function () {
-							assert(request.canceled);
-						});
+						assert(request.canceled);
 					})
 				).always(done);
 			},
@@ -132,9 +124,7 @@
 				client(request).then(function (response) {
 					assert.same(request, response.request);
 					refute(response.error);
-					return delay(0).then(function () {
-						refute(request.canceled);
-					});
+					refute(request.canceled);
 				}).then(undef, fail).always(done);
 			},
 			'should not reject without a configured timeout value': function (done) {
@@ -144,9 +134,7 @@
 				client(request).then(function (response) {
 					assert.same(request, response.request);
 					refute(response.error);
-					return delay(0).then(function () {
-						refute(request.canceled);
-					});
+					refute(request.canceled);
 				}).then(undef, fail).always(done);
 			},
 			'should cancel request if client support cancelation': function (done) {
@@ -158,9 +146,7 @@
 					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert.equals('timeout', response.error);
-						return delay(0).then(function () {
-							assert(request.canceled);
-						});
+						assert(request.canceled);
 					})
 				).always(done);
 				refute(request.canceled);
