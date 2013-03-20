@@ -7,11 +7,9 @@
 
 How interceptors are applied to clients with configuration.  Descriptions for all interceptors provided with rest.js including configuration properties. How to create custom interceptors using the interceptor factory with links to real interceptors that demonstrate different interceptor characteristics.
 
-
 [Clients](clients.md)
 
 Description of built in clients including the default client and client specific properties.
-
 
 [Common Interfaces](interfaces.md)
 
