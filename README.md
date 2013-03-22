@@ -1,28 +1,28 @@
-Rest.js
+rest.js
 =======
 
-Just enough client, as you need it.  Make HTTP requests from a browser or Node.js applying the only the client features you need.  Configure a client once, and share it safely throughout your application.  Easily extend with interceptors that wrap the request and/or response, or MIME type converters for rich data formats.
+Just enough client, as you need it.  Make HTTP requests from a browser or Node.js applying only the client features you need.  Configure a client once, and share it safely throughout your application.  Easily extend with interceptors that wrap the request and/or response, or MIME type converters for rich data formats.
 
 
 Build Status
 ------------
 
 <table>
-  <tr><td>Master</td><td><a href="http://travis-ci.org/s2js/rest" target="_blank"><img src="https://secure.travis-ci.org/s2js/rest.png?branch=master" /></a></tr>
-  <tr><td>Development</td><td><a href="http://travis-ci.org/s2js/rest" target="_blank"><img src="https://secure.travis-ci.org/s2js/rest.png?branch=dev" /></a></tr>
+  <tr><td>Master</td><td><a href="http://travis-ci.org/cujojs/rest" target="_blank"><img src="https://secure.travis-ci.org/cujojs/rest.png?branch=master" /></a></tr>
+  <tr><td>Development</td><td><a href="http://travis-ci.org/cujojs/rest" target="_blank"><img src="https://secure.travis-ci.org/cujojs/rest.png?branch=dev" /></a></tr>
 </table>
 
 
 Usage
 -----
 
-Using Rest.js is easy.  The core clients provide limited functionality around the request and response lifecycle.  The input and response objects are normalized to support portability between browser and server environments.
+Using rest.js is easy.  The core clients provide limited functionality around the request and response lifecycle.  The request and response objects are normalized to support portability between different JavaScript environments.
 
-The response from a client is a promise that is resolved when the remote request finishes.
+The return value from a client is a promise that is resolved with the response when the remote request finishes.
 
-The core client behavior can be augmented with interceptors.  An interceptor wraps the client and transforms the request and response.  For example: an interceptor may authenticate a request, or reject the promise if an error is encountered.  Interceptors may be combined to create a client with the desired behavior.  A configured interceptor acts just like a client.  The default client is dumb, it only know the low level mechanics of making a request and parsing the response.  All other behavior is applied and configurated with interceptors.
+The core client behavior can be augmented with [interceptors](docs/interceptors.md#interceptor-principals).  An interceptor wraps the client and transforms the request and response.  For example: an interceptor may authenticate a request, or reject the promise if an error is encountered.  Interceptors may be combined to create a client with the desired behavior.  A configured interceptor acts just like a client.  The core clients are basic, they only know the low level mechanics of making a request and parsing the response.  All other behavior is applied and configurated with interceptors.
 
-Interceptors are applied to a client by chaining.  To chain a client with an interceptor to a client, call the `chain` function on the client providing the interceptor behavior and optionally a configuration object.  A new client is returned containing the new behavior applied to the client.  It's important to note that the behavior of the original client is not modified, in order to use the new behavior, you must use the returned client.
+Interceptors are applied to a client by chaining.  To chain a client with an interceptor, call the `chain` function on the client providing the interceptor and optionally a configuration object.  A new client is returned containing the interceptor's behavior applied to the parent client.  It's important to note that the behavior of the original client is not modified, in order to use the new behavior, you must use the returned client.
 
 
 ### Making a basic request: ###
@@ -42,7 +42,7 @@ The response should look familiar as well, it contains all the fields you would 
 
 ### Working with JSON: ###
 
-If you paid attention when executing the previous example, you may have noticed that the response.entity is a string.  Often we work with more complex data types.  For this, Rest.js supports a rich set of MIME type conversions with the `mime` interceptor.  The correct converter will automatically be chosen based on the `Content-Type` response header.  Custom converts can be registered for a MIME type, more on that later...
+If you paid attention when executing the previous example, you may have noticed that the response.entity is a string.  Often we work with more complex data types.  For this, rest.js supports a rich set of [MIME type conversions](docs/mime.md) with the [MIME Interceptor](docs/interceptors.md#module-rest/interceptor/mime).  The correct converter will automatically be chosen based on the `Content-Type` response header.  Custom converts can be registered for a MIME type, more on that later...
 
 ```javascript
 var rest, mime, client;
@@ -80,16 +80,16 @@ client({ path: '/data.json' }).then(
 );
 ```
 
-In this example, we take the client create by the `mime` interceptor, and wrap it with the `errorCode` interceptor.  The errorCode interceptor accepts a configuration object that indicates what status codes should be considered an error.  In this case we override the default value of <=400, to only reject with 500 or greater status code.
+In this example, we take the client create by the [MIME Interceptor](docs/interceptors.md#module-rest/interceptor/mime), and wrap it with the [Error Code Interceptor](https://github.com/s2js/rest/blob/cujojs/docs/interceptors.md#module-rest/interceptor/errorCode).  The error code interceptor accepts a configuration object that indicates what status codes should be considered an error.  In this case we override the default value of <=400, to only reject with 500 or greater status code.
 
-Since the errorCode interceptor can reject the response promise, we also add a second handler function to receive the response for requests in error.
+Since the error code interceptor can reject the response promise, we also add a second handler function to receive the response for requests in error.
 
 Clients can continue to be composed with interceptors as needed.  At any point the client as configured can be shared.  It is safe to share clients and allow other parts of your application to continue to compose other clients around the shared core.  Your client is protected from additional interceptors that other parts of the application may add.
 
 
 ### Declarative Interceptor Composition: ###
 
-First class support is provided for declaratively composing interceptors using [wire.js](https://github.com/cujojs/wire).  Wire is an dependency injection container; you specify how the parts of your application interrelate and wire takes care of the dirty work to make it so.
+First class support is provided for [declaratively composing interceptors using wire.js](docs/wire.md).  wire.js is an dependency injection container; you specify how the parts of your application interrelate and wire takes care of the dirty work to make it so.
 
 Let's take the previous example and configure the client using a wire specification instead of imperative code.
 
@@ -129,7 +129,7 @@ registry.register('application/vnd.com.example', {
 });
 ```
 
-Registering a custom converter is a simple as calling the register function on the mime registry with the type and converter.  A converter has just two methods: `read` and `write`.  Read converts a String to a more complex Object.  Write converts an Object back into a String to be sent to the server.  HTTP is fundamentally a text based protocol after all.
+Registering a custom converter is a simple as calling the register function on the [mime registry](docs/mime.md#module-rest/mime/registry) with the type and converter.  A converter has just two methods: `read` and `write`.  Read converts a String to a more complex Object.  Write converts an Object back into a String to be sent to the server.  HTTP is fundamentally a text based protocol after all.
 
 Built in converters are available under `rest/mime/type/{type}`, as an example, JSON support is located at `rest/mime/type/application/json`.  You never need to know this as a consumer, but it's a good place to find examples.
 
@@ -149,13 +149,13 @@ Tested environments:
 - Safari (5, 6, iOS 4-6, should work in earlier versions)
 - Opera (11, 12, should work in earlier versions)
 
-Specific browser test are provided by [Travis CI](https://travis-ci.org/s2js/rest) and [Sauce Labs' Open Sauce Plan](https://saucelabs.com/opensource). You can see [specific browser test results](https://saucelabs.com/u/s2js-rest), although odds are they do not reference this specific release/branch/commit.
+Specific browser test are provided by [Travis CI](https://travis-ci.org/cujojs/rest) and [Sauce Labs' Open Sauce Plan](https://saucelabs.com/opensource). You can see [specific browser test results](https://saucelabs.com/u/cujojs-rest), although odds are they do not reference this specific release/branch/commit.
 
 
 Getting Started
 ---------------
 
-Rest can be installed via [npm](https://npmjs.org/), [Bower](http://twitter.github.com/bower/), or from source.
+rest.js can be installed via [npm](https://npmjs.org/), [Bower](http://twitter.github.com/bower/), or from source.
 
 To install without source:
 
@@ -169,9 +169,9 @@ From source:
 
     $ npm install
 
-Rest.js is designed to run in a browser environment, utilizing [AMD modules](https://github.com/amdjs/amdjs-api/wiki/AMD), or within [Node.js](http://nodejs.org/).  [curl](https://github.com/cujojs/curl) is highly recommended as an AMD loader, although any loader should work.
+rest.js is designed to run in a browser environment, utilizing [AMD modules](https://github.com/amdjs/amdjs-api/wiki/AMD), or within [Node.js](http://nodejs.org/).  [curl.js](https://github.com/cujojs/curl) is highly recommended as an AMD loader, although any loader should work.
 
-An ECMAScript 5 compatible environment is assumed.  Older browsers, ::cough:: IE, that do not support ES5 natively can be shimmed.  Any shim should work, although we've tested against cujo's [poly](https://github.com/cujojs/poly)
+An ECMAScript 5 compatible environment is assumed.  Older browsers, ::cough:: IE, that do not support ES5 natively can be shimmed.  Any shim should work, although we've tested against cujo's [poly.js](https://github.com/cujojs/poly)
 
 
 Documentation
@@ -183,7 +183,7 @@ Full project documentation is available in the [docs directory](docs).
 Reporting Issues
 ----------------
 
-Please report issues on [GitHub](https://github.com/s2js/rest/issues).  Include a brief description of the error, information about the runtime (including shims) and any error messages.
+Please report issues on [GitHub](https://github.com/cujojs/rest/issues).  Include a brief description of the error, information about the runtime (including shims) and any error messages.
 
 Feature requests are also welcome.
 
@@ -219,19 +219,16 @@ Please see CONTRIBUTING.md for details on how to contribute to this project.
 Copyright
 ---------
 
-Rest.js is made available under the MIT license.  See LICENSE.txt for details.
+Copyright 2012-2013 the original author or authors
 
-Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
-
-VMware, Inc.
-3401 Hillview Avenue
-Palo Alto, CA 94304
+rest.js is made available under the MIT license.  See LICENSE.txt for details.
 
 
 Change Log
 ----------
 
 .next
+- moving from the 's2js' to the 'cujojs' organization
 - Dropping Node 0.6 support
 - Interceptor configuration chaining
 - wire.js factory

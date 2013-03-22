@@ -1,29 +1,14 @@
 /*
- * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
+ * Copyright 2012-2013 the original author or authors
+ * @license MIT, see LICENSE.txt for details
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to
- * deal in the Software without restriction, including without limitation the
- * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
- * sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
+ * @author Scott Andrews
  */
 
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute, fail, failOnThrow, undef;
+	var assert, refute, fail, failOnThrow;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
@@ -58,7 +43,7 @@
 						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 					}
 					refute(request.canceled);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should make an explicit GET': function (done) {
 				var request = { path: '/', method: 'GET' };
@@ -75,7 +60,7 @@
 						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 					}
 					refute(request.canceled);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should make a POST with an entity': function (done) {
 				var request = { path: '/', entity: 'hello world' };
@@ -92,7 +77,7 @@
 						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 					}
 					refute(request.canceled);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should make an explicit POST with an entity': function (done) {
 				var request = { path: '/', entity: 'hello world', method: 'POST' };
@@ -109,7 +94,7 @@
 						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 					}
 					refute(request.canceled);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should abort the request if canceled': function (done) {
 				// TDOO find an endpoint that takes a bit to respond, cached files may return synchronously
@@ -137,7 +122,7 @@
 						refute(request.canceled);
 						request.cancel();
 					})
-				]).always(done);
+				]).ensure(done);
 			},
 			'//should propogate request errors': function (done) {
 				// TODO follow up with Sauce Labs
@@ -148,7 +133,7 @@
 					failOnThrow(function (response) {
 						assert.same('loaderror', response.error);
 					})
-				).always(done);
+				).ensure(done);
 			},
 			'should not make a request that has already been canceled': function (done) {
 				var request = { canceled: true, path: '/' };
@@ -159,7 +144,7 @@
 						assert(request.canceled);
 						assert.same('precanceled', response.error);
 					})
-				).always(done);
+				).ensure(done);
 			},
 			'should reject if an XHR impl is not available': {
 				requiresSupportFor: { 'no-xhr': !window.XMLHttpRequest },
@@ -171,7 +156,7 @@
 							assert.same(request, response.request);
 							assert.same('xhr-not-available', response.error);
 						})
-					).always(done);
+					).ensure(done);
 				}
 			},
 			'should be the default client': function () {

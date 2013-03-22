@@ -1,6 +1,6 @@
 # Dojo Toolkit
 
-Dojo provides a common [Store API](http://dojotoolkit.org/reference-guide/1.8/dojo/store.html) for data store operations. Rest.js provides two implementations of these APIs that use a rest client under the hood. Typical Dojo stores include an in memory `MemoryStore` or the ever popular `JsonRest`. The issue with JsonRest is fundamentally that it presumes the mechanics of the request and response. If your server doesn't fit the convention it expects, you're out of luck. Rest.js doesn't presume to force a particular content type, or structure.  Any client can be wrapped to provide the full power and flexibility of rest.js with the Dojo Store API.
+Dojo provides a common [Store API](http://dojotoolkit.org/reference-guide/1.8/dojo/store.html) for data store operations. rest.js provides two implementations of these APIs that use a rest client under the hood. Typical Dojo stores include an in memory `MemoryStore` or the ever popular `JsonRest`. The issue with JsonRest is fundamentally that it presumes the mechanics of the request and response. If your server doesn't fit the convention it expects, you're out of luck. rest.js doesn't presume to force a particular content type, or structure.  Any client can be wrapped to provide the full power and flexibility of rest.js with the Dojo Store API.
 
 
 <a name="dojo-stores"></a>
@@ -28,7 +28,7 @@ Extends `SimpleRestStore` providing enhanced support for queries via [Dojo's Que
 
 
 <a name="module-rest/dojo/wire"></a>
-### Wire.js
+### wire.js
 
 `rest/dojo/wire` ([src](../dojo/wire.js))
 

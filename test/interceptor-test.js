@@ -1,23 +1,8 @@
 /*
- * Copyright (c) 2013 VMware, Inc. All Rights Reserved.
+ * Copyright 2013 the original author or authors
+ * @license MIT, see LICENSE.txt for details
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to
- * deal in the Software without restriction, including without limitation the
- * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
- * sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
+ * @author Scott Andrews
  */
 
 (function (buster, define) {
@@ -64,7 +49,7 @@
 				client().then(function (response) {
 					assert.same('default', response.id);
 					assert.same(client, response.request.originator);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should use the client configured into the interceptor by default': function (done) {
 				var theInterceptor, client;
@@ -75,7 +60,7 @@
 				client().then(function (response) {
 					assert.same('default', response.id);
 					assert.same(client, response.request.originator);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should override the client configured into the interceptor by default': function (done) {
 				var theInterceptor, client;
@@ -86,7 +71,7 @@
 				client().then(function (response) {
 					assert.same('other', response.id);
 					assert.same(client, response.request.originator);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should intercept the request phase': function (done) {
 				var theInterceptor, client;
@@ -99,7 +84,7 @@
 				client = theInterceptor(defaultClient);
 				client().then(function (response) {
 					assert.same('request', response.request.phase);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should intercept the request phase and handle a promise': function (done) {
 				var theInterceptor, client;
@@ -115,7 +100,7 @@
 				client().then(function (response) {
 					assert.same('default', response.id);
 					assert.same('request', response.request.phase);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should intercept the request phase and handle a rejected promise': function (done) {
 				var theInterceptor, client;
@@ -134,7 +119,7 @@
 						assert.same('request', response.request.phase);
 						assert.same('rejected request', response.error);
 					})
-				).always(done);
+				).ensure(done);
 			},
 			'should intercept the response phase': function (done) {
 				var theInterceptor, client;
@@ -147,7 +132,7 @@
 				client = theInterceptor(defaultClient);
 				client().then(function (response) {
 					assert.same('response', response.phase);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should intercept the response phase and handle a promise': function (done) {
 				var theInterceptor, client;
@@ -162,7 +147,7 @@
 				client = theInterceptor(defaultClient);
 				client().then(function (response) {
 					assert.same('response', response.phase);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should intercept the response phase and handle a rejceted promise': function (done) {
 				var theInterceptor, client;
@@ -178,7 +163,7 @@
 					failOnThrow(function (response) {
 						assert.same('response', response.phase);
 					})
-				).always(done);
+				).ensure(done);
 			},
 			'should intercept the response phase for an error': function (done) {
 				var theInterceptor, client;
@@ -194,7 +179,7 @@
 					failOnThrow(function (response) {
 						assert.same('response', response.phase);
 					})
-				).always(done);
+				).ensure(done);
 			},
 			'should intercept the response phase for an error and handle a promise maintaining the error': function (done) {
 				var theInterceptor, client;
@@ -210,7 +195,7 @@
 					failOnThrow(function (response) {
 						assert.same('response', response.phase);
 					})
-				).always(done);
+				).ensure(done);
 			},
 			'should intercept the response phase for an error and handle a rejected promise maintaining the error': function (done) {
 				var theInterceptor, client;
@@ -226,7 +211,7 @@
 					failOnThrow(function (response) {
 						assert.same('response', response.phase);
 					})
-				).always(done);
+				).ensure(done);
 			},
 			'should intercept the success phase': function (done) {
 				var theInterceptor, client;
@@ -240,7 +225,7 @@
 				client = theInterceptor(defaultClient);
 				client().then(function (response) {
 					assert.same('success', response.phase);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should intercept the success phase and handle a promise': function (done) {
 				var theInterceptor, client;
@@ -256,7 +241,7 @@
 				client = theInterceptor(defaultClient);
 				client().then(function (response) {
 					assert.same('success', response.phase);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should intercept the success phase and handle a rejceted promise': function (done) {
 				var theInterceptor, client;
@@ -273,7 +258,7 @@
 					failOnThrow(function (response) {
 						assert.same('success', response.phase);
 					})
-				).always(done);
+				).ensure(done);
 			},
 			'should intercept the error phase': function (done) {
 				var theInterceptor, client;
@@ -287,7 +272,7 @@
 				client = theInterceptor(errorClient);
 				client().then(function (response) {
 					assert.same('error', response.phase);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should intercept the error phase and handle a promise': function (done) {
 				var theInterceptor, client;
@@ -301,7 +286,7 @@
 				client = theInterceptor(errorClient);
 				client().then(function (response) {
 					assert.same('error', response.phase);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should intercept the error phase and handle a rejceted promise': function (done) {
 				var theInterceptor, client;
@@ -318,7 +303,7 @@
 					failOnThrow(function (response) {
 						assert.same('error', response.phase);
 					})
-				).always(done);
+				).ensure(done);
 			},
 			'should pass interceptor config to handlers': function (done) {
 				var theInterceptor, client, theConfig;
@@ -341,7 +326,7 @@
 				client().then(function (response) {
 					assert.same('request', response.request.phase);
 					assert.same('response', response.phase);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should share context between handlers that is unique per request': function (done) {
 				var theInterceptor, client, count, counted;
@@ -368,7 +353,7 @@
 					assert(counted.indexOf(2) === -1);
 					assert(counted.indexOf(undef) >= 0);
 					assert(counted.indexOf(3) >= 0);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should use the client provided by a ComplexRequest': function (done) {
 				var theInterceptor, client;
@@ -384,7 +369,7 @@
 				client().then(function (response) {
 					assert.same('default', response.id);
 					assert.same(client, response.request.originator);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should use the repsponse provided by a ComplexRequest': function (done) {
 				var theInterceptor, client;
@@ -399,7 +384,7 @@
 				client().then(function (response) {
 					assert.same('complex-response', response.id);
 					assert.same(client, response.request.originator);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should cancel requests with the abort trigger provided by a ComplexRequest': function (done) {
 				var theInterceptor, client;
@@ -419,7 +404,7 @@
 						assert.same('abort', response.id);
 						assert.same('unresponsive', response.request.id);
 					})
-				).always(done);
+				).ensure(done);
 			},
 			'should have access to the client in the response handlers for subsequent requests': function (done) {
 				var theInterceptor, client;
@@ -433,7 +418,7 @@
 				client().then(function (response) {
 					assert.same(client, response.client);
 					assert.same('default', response.id);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should initialize the config object, without modifying the provided object': function (done) {
 				var theConfig, theInterceptor, client;
@@ -465,7 +450,7 @@
 					assert.same('request', response.request.phase);
 					assert.same('response', response.phase);
 					assert.same('default', response.id);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should have the default client as the parent by default': function () {
 				var theInterceptor = interceptor();

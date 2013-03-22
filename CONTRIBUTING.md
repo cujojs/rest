@@ -1,7 +1,7 @@
-_Have something you'd like to contribute to the framework?  We welcome pull
-requests, but ask that you carefully read this document first to understand how
-best to submit them; what kind of changes are likely to be accepted; and what
-to expect from the Spring team when evaluating your submission._
+_Thanks for your interest in rest.js.  Have something you'd like to contribute?
+We welcome pull requests, but ask that you read this document first to
+understand how best to submit them; what kind of changes are likely to be
+accepted; and what to expect from the team when evaluating your submission._
 
 _Please refer back to this document as a checklist before issuing any pull
 request; this will save time for everyone!_
@@ -24,29 +24,10 @@ truly trivial, e.g. typo fixes, removing compiler warnings, etc.
 ## Discuss non-trivial contribution ideas with committers
 
 If you're considering anything more than correcting a typo or fixing a minor
-bug, please discuss it on the [s2js-contrib][] mailing list before submitting a
-pull request. We're happy to provide guidance but please research the subject
-on your own including searching the mailing list for prior discussions.
-
-
-## Sign the Contributor License Agreement
-
-If you have not previously done so, please fill out and submit the
-[s2js CLA form][]. You'll receive a token when this process is complete. Keep
-track of this; you may be asked for it later!
-
-Note that emailing/postal mailing a signed copy is _not_ necessary. Submission
-of the web form is all that is required.
-
-Once you've completed the web form, simply add the following in a comment on
-your pull request:
-
-    I have signed and agree to the terms of the s2js Contributor License
-    Agreement.
-
-You do not need to include your token/id. Please add the statement above to all
-future pull requests as well, simply so that the team knows immediately that
-this process is complete.
+bug, please discuss it on the cujojs [mailing list][], or the #cujojs IRC
+channel on freenode, before submitting a pull request. We're happy to provide
+guidance but please research the subject on your own including searching the
+mailing list for prior discussions.
 
 
 ## Create your branch from `dev`
@@ -84,34 +65,22 @@ present in the framework.
 1. Preserve existing formatting; i.e. do not reformat code for its own sake
 1. Search the codebase using `git grep` and other tools to discover common
    naming conventions, etc.
-1. ascii encoding for JS sources, escape special characters
+1. utf8 encoding for JS sources, escape special characters
 
 
-## Add MIT license header to all new source files
+## Add MIT license block to all new source files
 
 ```javascript
 /*
- * Copyright (c) 2013 VMware, Inc. All Rights Reserved.
+ * Copyright 2013 the original author or authors
+ * @license MIT, see LICENSE.txt for details
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to
- * deal in the Software without restriction, including without limitation the
- * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
- * sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
+ * @author FirstName LastName <OptionalEmailAddress>
  */
 ```
+
+If you are uncomfortable making the contribution under the MIT license, please
+contact us before making a contribution.
 
 
 ## Update license header to modified files as necessary
@@ -120,13 +89,13 @@ Always check the date range in the license header. For example, if you've
 modified a file in 2013 whose header still reads
 
 ```javascript
- * Copyright (c) 2012 VMware, Inc.
+ * Copyright 2012 the original author or authors
 ```
 
 then be sure to update it to 2013 appropriately
 
 ```javascript
- * Copyright (c) 2012-2013 VMware, Inc.
+ * Copyright 2012-2013 the original author or authors
 ```
 
 
@@ -157,33 +126,6 @@ Use `git rebase --interactive`, `git add --patch` and other tools to "squash"
 multiple commits into atomic changes. In addition to the man pages for git,
 there are many resources online to help you understand how these tools work.
 Here is one: http://book.git-scm.com/4_interactive_rebasing.html.
-
-
-## Use real name in git commits
-
-Please configure git to use your real first and last name for any commits you
-intend to submit as pull requests. For example, this is not acceptable:
-
-    Author: Nickname <user@mail.com>
-
-Rather, please include your first and last name, properly capitalized, as
-submitted against the SpringSource contributor license agreement:
-
-    Author: First Last <user@mail.com>
-
-This helps ensure traceability against the CLA, and also goes a long way to
-ensuring useful output from tools like `git shortlog` and others.
-
-You can configure this globally via the account admin area GitHub (useful for
-fork-and-edit cases); globally with
-
-    git config --global user.name "First Last"
-    git config --global user.email user@mail.com
-
-or for the local repository only by omitting the '--global' flag:
-
-    git config user.name "First Last"
-    git config user.email user@mail.com
 
 
 ## Format commit messages
@@ -283,8 +225,7 @@ issue a new pull request when asked to make changes.
 
 
 [help documentation]: http://help.github.com/send-pull-requests
-[issue tracker]: https://github.com/s2js/rest/issues
-[s2js-contrib]: https://groups.google.com/forum/#!forum/s2js-contrib
-[s2js CLA form]: http://support.springsource.com/spring_s2js_signup
+[issue tracker]: https://github.com/cujojs/rest/issues
+[mailing list]: https://groups.google.com/forum/#!forum/cujojs
 [fork-and-edit]: https://github.com/blog/844-forking-with-the-edit-button
 [commit guidelines section of Pro Git]: http://progit.org/book/ch5-2.html#commit_guidelines

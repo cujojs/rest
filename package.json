@@ -1,8 +1,8 @@
 {
 	"name": "rest",
 	"version": "0.8.4-next",
-	"description": "HTTP client library inspired by the Spring Framework's RestTemplate",
-	"keywords": ["rest", "http", "client", "rest-template", "spring", "s2js"],
+	"description": "RESTful HTTP client library",
+	"keywords": ["rest", "http", "client", "rest-template", "spring", "cujojs"],
 	"licenses": [
 		{
 			"type": "MIT",
@@ -12,10 +12,10 @@
 	"repositories": [
 		{
 			"type": "git",
-			"url": "https://github.com/s2js/rest"
+			"url": "https://github.com/cujojs/rest"
 		}
 	],
-	"bugs": "https://github.com/s2js/rest/issues",
+	"bugs": "https://github.com/cujojs/rest/issues",
 	"maintainers": [
 		{
 			"name": "Scott Andrews",

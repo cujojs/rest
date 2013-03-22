@@ -39,7 +39,7 @@
 <a name="interceptor-principals"></a>
 ## Incerceptor Principals
 
-Rest.js distinguishes itself from other HTTP client libraries by providing a minimal core that can be wrapped by more advanced behavior.  These configured clients can then be consumed by our application.  If a portion of our application needs more advanced behavior, it can continue to wrap the client without impacting other portions of the application.  Functional programming FTW.
+rest.js distinguishes itself from other HTTP client libraries by providing a minimal core that can be wrapped by more advanced behavior.  These configured clients can then be consumed by our application.  If a portion of our application needs more advanced behavior, it can continue to wrap the client without impacting other portions of the application.  Functional programming FTW.
 
 Each [interceptor](interfaces.md#interface-interceptor) is a function that optionally accepts a parent [client](interfaces.md#interface-client) and some configuration returning a new [client](interfaces.md#interface-client).
 
@@ -494,7 +494,7 @@ Support for the OAuth implicit flow.  In a separate window users are redirected 
 
 **TIP:** A client request may take a very long time to respond while the user is being prompted to authenticate.  Once the user returns to the app, the original request is made with the new access token.  If an access token expires, the next request may take a similarly long time to respond as a new token is obtained from the authorization server.  The oAuth interceptor should typically be after time sensitive interceptors such as timeout.
 
-**IMPORTANT:** Rest.js is only able to provide part of the client flow.  When the user is redirected back from the authentication server, the application server must handle the initial request and provide an HTML page with the scripts to parse the URL fragment containing the access token and provide the token to the callback function.  As rest.js is not a server side web framework, it is unable to provide support for this part of the oAuth flow.
+**IMPORTANT:** rest.js is only able to provide part of the client flow.  When the user is redirected back from the authentication server, the application server must handle the initial request and provide an HTML page with the scripts to parse the URL fragment containing the access token and provide the token to the callback function.  As rest.js is not a server side web framework, it is unable to provide support for this part of the oAuth flow.
 
 **Phases**
 
@@ -584,7 +584,7 @@ client({ path: 'http://resourceserver.example.com' }).then(function (response) {
 
 `rest/interceptor/errorCode` ([src](../interceptor/errorCode.js))
 
-Marks a response as an error based on the status code.  According to the HTTP spec, 5xx status codes are server errors, 4xx codes are client errors.  Rest.js by default will treat any response from a server as successful, this allows interceptors to define what constitutes an error.  The errorCode interceptor will mark a request in error if the status code is equal or greater than the configured value.
+Marks a response as an error based on the status code.  According to the HTTP spec, 500s status codes are server errors, 400s codes are client errors.  rest.js by default will treat any response from a server as successful, this allows interceptors to define what constitutes an error.  The errorCode interceptor will mark a request in error if the status code is equal or greater than the configured value.
 
 **Phases**
 

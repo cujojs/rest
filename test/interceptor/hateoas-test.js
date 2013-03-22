@@ -1,29 +1,14 @@
 /*
- * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
+ * Copyright 2012-2013 the original author or authors
+ * @license MIT, see LICENSE.txt for details
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to
- * deal in the Software without restriction, including without limitation the
- * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
- * sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
+ * @author Scott Andrews
  */
 
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute, fail, undef;
+	var assert, refute, fail;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
@@ -75,7 +60,7 @@
 				client().then(function (response) {
 					assert.same(parent, response.entity._links.parentLink);
 					assert.same(self, response.entity._links.selfLink);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should parse links in the entity into the entity': function (done) {
 				var client, body, parent, self;
@@ -89,7 +74,7 @@
 				client().then(function (response) {
 					assert.same(parent, response.entity.parentLink);
 					assert.same(self, response.entity.selfLink);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should create a client for the related resource': function (done) {
 				var client, body, parent, self;
@@ -105,7 +90,7 @@
 					return parentClient().then(function (response) {
 						assert.same(parent.href, response.request.path);
 					});
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should fetch a related resource': {
 				requiresSupportFor: { 'ES5 getters': supports['ES5 getters'] },
@@ -126,7 +111,7 @@
 							assert.same('/resource', response.request.path);
 							assert.same('/resource', response.entity._links.selfLink.href);
 						});
-					}).then(undef, fail).always(done);
+					}).otherwise(fail).ensure(done);
 				}
 			},
 			'should have the default client as the parent by default': function () {

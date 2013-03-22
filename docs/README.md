@@ -1,4 +1,4 @@
-# Rest.js
+# rest.js Documentation
 
 
 ## Core Facilities
@@ -25,7 +25,7 @@ Support for serializing/deserializing objects to/from HTTP requests/responses.
 
 ## Optional Libraries
 
-[Wire.js](wire.md)
+[wire.js](wire.md)
 
 Declarative client configuration with wire.js.
 

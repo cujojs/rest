@@ -1,29 +1,14 @@
 /*
- * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
+ * Copyright 2012-2013 the original author or authors
+ * @license MIT, see LICENSE.txt for details
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to
- * deal in the Software without restriction, including without limitation the
- * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
- * sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
+ * @author Scott Andrews
  */
 
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute, fail, failOnThrow, undef;
+	var assert, refute, fail, failOnThrow;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
@@ -52,7 +37,7 @@
 					return spec.client({}).then(function (response) {
 						assert.equals('bar', response.foo);
 					});
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should use client! config with entity interceptor disabled': function (done) {
 				var spec, client;
@@ -69,7 +54,7 @@
 						assert.equals('text/plain', response.request.headers.Accept);
 						assert.equals('bar', response.entity.foo);
 					});
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should be rejected for a server error status code': function (done) {
 				var spec, client;
@@ -90,7 +75,7 @@
 						);
 					},
 					fail
-				).always(done);
+				).ensure(done);
 			},
 			'should ignore status code when errorCode interceptor is disabled': function (done) {
 				var spec, client;
@@ -105,7 +90,7 @@
 					return spec.client({}).then(function (response) {
 						assert.equals('bar', response.foo);
 					});
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should ignore Content-Type and entity when mime interceptor is disabled': function (done) {
 				var spec, client;
@@ -120,7 +105,7 @@
 					return spec.client({}).then(function (response) {
 						assert.isString(response);
 					});
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should use x-www-form-urlencoded as the default Content-Type for POSTs': function (done) {
 				var spec, client;
@@ -137,7 +122,7 @@
 						assert.equals(0, response.request.headers.Accept.indexOf('application/x-www-form-urlencoded'));
 						assert.equals('application/x-www-form-urlencoded', response.request.headers['Content-Type']);
 					});
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should use the rest factory': {
 				'': function (done) {
@@ -167,7 +152,7 @@
 							assert.equals(0, response.request.headers.Accept.indexOf('application/json'));
 							assert.equals('application/json', response.request.headers['Content-Type']);
 						});
-					}).then(undef, fail).always(done);
+					}).otherwise(fail).ensure(done);
 				},
 				'with interceptor references': function (done) {
 					var spec, client;
@@ -199,7 +184,7 @@
 							assert.equals(0, response.request.headers.Accept.indexOf('application/json'));
 							assert.equals('application/json', response.request.headers['Content-Type']);
 						});
-					}).then(undef, fail).always(done);
+					}).otherwise(fail).ensure(done);
 				},
 				'with interceptor string shortcuts': function (done) {
 					var spec, client;
@@ -219,7 +204,7 @@
 					};
 					wire(spec, { require: require }).then(function (spec) {
 						assert.same(client, spec.client.skip().skip().skip());
-					}).then(undef, fail).always(done);
+					}).otherwise(fail).ensure(done);
 				},
 				'with concrete interceptors': function (done) {
 					var spec, client;
@@ -242,7 +227,7 @@
 						spec.client().then(function (response) {
 							assert.equals('thePrefix', response.request.path);
 						});
-					}).then(undef, fail).always(done);
+					}).otherwise(fail).ensure(done);
 				},
 				'using the default client': function (done) {
 					var spec;
@@ -256,7 +241,7 @@
 					};
 					wire(spec, { require: require }).then(function (spec) {
 						assert.same(rest, spec.client.skip());
-					}).then(undef, fail).always(done);
+					}).otherwise(fail).ensure(done);
 				},
 				'using a referenced parent client': function (done) {
 					var spec, client;
@@ -277,7 +262,7 @@
 					};
 					wire(spec, { require: require }).then(function (spec) {
 						assert.same(client, spec.client.skip());
-					}).then(undef, fail).always(done);
+					}).otherwise(fail).ensure(done);
 				},
 				'without wiring interceptor configurations': function (done) {
 					var spec, client;
@@ -303,7 +288,7 @@
 						spec.client().then(function (response) {
 							assert.equals('useThisOne', response.request.path);
 						});
-					}).then(undef, fail).always(done);
+					}).otherwise(fail).ensure(done);
 				}
 			}
 		});

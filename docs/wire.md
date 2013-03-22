@@ -1,6 +1,6 @@
-# Wire.js
+# wire.js
 
-[Wire.js](https://github.com/cujojs/wire/) is an Inversion of Control container that allows applications to be composed together at runtime based on a declarative configuration. A rest.js plugin is provided for wire that enables declarative configuration of rest clients, including chaning interceptors with their configuration.
+[wire.js](https://github.com/cujojs/wire/) is an Inversion of Control container that allows applications to be composed together at runtime based on a declarative configuration. A rest.js plugin is provided for wire that enables declarative configuration of rest clients, including chaning interceptors with their configuration.
 
 
 <a name="module-rest/wire"></a>

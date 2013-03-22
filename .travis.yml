@@ -6,5 +6,5 @@ script: npm run-script ci
 env:
   global:
   - BUSTER_TEST_OPT="--reporter specification"
-  - SELENIUM_USERNAME=s2js-rest
-  - secure: "jMkfzJLwEdNVNkFDdc/slTTopqJR4uoUsGElmrChrzj3wr9x8Yy2Cu1gYcLx\navO9g6Rw4DzN8uVwFLufr8aTbfMtdN7fUZWC3SdCXpTu15b6hm6Zp7wvqhWp\nlPT6QSZbKtw7h5++ffh2SvLln2JPwghbxrEI31quIXQhefDA/0Y="
+  - SELENIUM_USERNAME=cujojs-rest
+  - secure: "kxs2tHuJ3Vd1lO/mBoUJ5EpLdojYuAsCGm7xP03VVjuuJs7zf1gux3xx3e+5\nb2LaZL4p4/rPmkPaYGNmh/FE2XrmcAejF1bSKyX0VLD0LUPnB/afwWMF1vvI\nupa+JAXxNlM2tNaK+TiLdq0uFhjs8GyTdxHm9jujdzOmGf7IF8o="

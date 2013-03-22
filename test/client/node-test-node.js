@@ -1,36 +1,22 @@
 /*
- * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
+ * Copyright 2012-2013 the original author or authors
+ * @license MIT, see LICENSE.txt for details
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to
- * deal in the Software without restriction, including without limitation the
- * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
- * sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
+ * @author Jeremy Grelle
+ * @author Scott Andrews
  */
 
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute, fail, failOnThrow, undef;
+	var assert, refute, fail, failOnThrow;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
 	failOnThrow = buster.assertions.failOnThrow;
 
-	define('rest/client/jsonp-test', function (require) {
+	define('rest/client/node-test', function (require) {
 
 		var rest, client, http, server;
 
@@ -78,7 +64,7 @@
 					assert.equals('text/plain', response.headers['Content-Type']);
 					assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
 					refute(request.canceled);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should make an explicit GET': function (done) {
 				var request = { path: 'http://localhost:8080/', method: 'GET' };
@@ -88,7 +74,7 @@
 					assert.equals(response.entity, 'hello world');
 					assert.equals(response.status.code, 200);
 					refute(request.canceled);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should make a POST with an entity': function (done) {
 				var request = { path: 'http://localhost:8080/', entity: 'echo' };
@@ -100,7 +86,7 @@
 					assert.equals('text/plain', response.headers['Content-Type']);
 					assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
 					refute(request.canceled);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should make an explicit POST with an entity': function (done) {
 				var request = { path: 'http://localhost:8080/', entity: 'echo', method: 'POST' };
@@ -109,7 +95,7 @@
 					assert.equals(response.request.method, 'POST');
 					assert.equals(response.entity, 'echo');
 					refute(request.canceled);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should abort the request if canceled': function (done) {
 				var request = { path: 'http://localhost:8080/' };
@@ -118,7 +104,7 @@
 					failOnThrow(function (/* response */) {
 						assert(request.canceled);
 					})
-				).always(done);
+				).ensure(done);
 				refute(request.canceled);
 				request.cancel();
 			},
@@ -129,7 +115,7 @@
 					failOnThrow(function (response) {
 						assert(response.error);
 					})
-				).always(done);
+				).ensure(done);
 			},
 			'should not make a request that has already been canceled': function (done) {
 				var request = { canceled: true, path: 'http://localhost:1234' };
@@ -140,7 +126,7 @@
 						assert(request.canceled);
 						assert.same('precanceled', response.error);
 					})
-				).always(done);
+				).ensure(done);
 			},
 			'should be the default client': function () {
 				assert.same(client, rest);

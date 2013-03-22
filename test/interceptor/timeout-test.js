@@ -1,29 +1,15 @@
 /*
- * Copyright (c) 2012-2013 VMware, Inc. All Rights Reserved.
+ * Copyright 2012-2013 the original author or authors
+ * @license MIT, see LICENSE.txt for details
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to
- * deal in the Software without restriction, including without limitation the
- * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
- * sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
+ * @author Jeremy Grelle
+ * @author Scott Andrews
  */
 
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute, fail, failOnThrow, undef;
+	var assert, refute, fail, failOnThrow;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
@@ -79,7 +65,7 @@
 						// delay to make sure timeout has fired, but not rejected the response
 						refute(request.canceled);
 					});
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should resolve if client responds before timeout': function (done) {
 				var client, request;
@@ -89,7 +75,7 @@
 					assert.same(request, response.request);
 					refute(response.error);
 					refute(request.canceled);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should reject even if client responds after timeout': function (done) {
 				var client, request;
@@ -102,7 +88,7 @@
 						assert.equals('timeout', response.error);
 						assert(request.canceled);
 					})
-				).always(done);
+				).ensure(done);
 			},
 			'should reject if client hanges': function (done) {
 				var client, request;
@@ -115,7 +101,7 @@
 						assert.equals('timeout', response.error);
 						assert(request.canceled);
 					})
-				).always(done);
+				).ensure(done);
 			},
 			'should use request timeout value in perference to interceptor value': function (done) {
 				var client, request;
@@ -125,7 +111,7 @@
 					assert.same(request, response.request);
 					refute(response.error);
 					refute(request.canceled);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should not reject without a configured timeout value': function (done) {
 				var client, request;
@@ -135,7 +121,7 @@
 					assert.same(request, response.request);
 					refute(response.error);
 					refute(request.canceled);
-				}).then(undef, fail).always(done);
+				}).otherwise(fail).ensure(done);
 			},
 			'should cancel request if client support cancelation': function (done) {
 				var client, request;
@@ -148,7 +134,7 @@
 						assert.equals('timeout', response.error);
 						assert(request.canceled);
 					})
-				).always(done);
+				).ensure(done);
 				refute(request.canceled);
 			},
 			'should have the default client as the parent by default': function () {

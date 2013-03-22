@@ -1,5 +1,4 @@
 /*
- * Base 64 implementation in JavaScript
  * Copyright (c) 2009 Nicholas C. Zakas. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,6 +21,7 @@
  */
 
 /*
+ * Base 64 implementation in JavaScript
  * Original source available at https://raw.github.com/nzakas/computer-science-in-javascript/02a2745b4aa8214f2cae1bf0b15b447ca1a91b23/encodings/base64/base64.js
  *
  * Converted to AMD and linter refinement by Scott Andrews
