@@ -60,7 +60,7 @@
 			},
 			'should accept custom config': function (done) {
 				var count = 0, client, start;
-				
+
 				client = retry(
 					function (request) {
 						count += 1;
@@ -71,7 +71,7 @@
 						}
 					}, { initial: 10, multiplier: 3, max: 20 }
 				);
-				
+
 				client = interceptor({
 					request: function (request /*, config */) {
 						start = new Date().getTime();
@@ -87,7 +87,7 @@
 						return response;
 					}
 				})(client);
-				
+
 				client({}).then(
 					function (response) {
 					    assert.equals(200, response.status.code);

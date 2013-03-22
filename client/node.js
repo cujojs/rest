@@ -96,7 +96,7 @@
 					d.resolve(response);
 				});
 			});
-				
+
 			clientRequest.on('error', function (e) {
 				response.error = e;
 				d.reject(response);

@@ -66,7 +66,7 @@
 			tearDown: function () {
 				server.close();
 			},
-			
+
 			'should make a GET by default': function (done) {
 				var request = { path: 'http://localhost:8080/' };
 				client(request).then(

@@ -58,7 +58,8 @@
 		 * @return the converter
 		 */
 		function register(mime, converter) {
-			return registry[mime] = converter;
+			registry[mime] = converter;
+			return converter;
 		}
 
 		function loadAMD(mime) {
