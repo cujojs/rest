@@ -180,14 +180,6 @@ Documentation
 Full project documentation is available in the [docs directory](docs).
 
 
-Reporting Issues
-----------------
-
-Please report issues on [GitHub](https://github.com/cujojs/rest/issues).  Include a brief description of the error, information about the runtime (including shims) and any error messages.
-
-Feature requests are also welcome.
-
-
 Running the Tests
 -----------------
 
@@ -205,6 +197,16 @@ To run the suite in a browser:
 
     $ npm start
     browse to http://localhost:8282/ in the browser(s) you wish to test.  It can take a few seconds to start.
+
+
+Get in Touch
+------------
+
+You can find us on the [cujojs mailing list](https://groups.google.com/forum/#!forum/cujojs), or the #cujojs IRC channel on freenode.
+
+Please report issues on [GitHub](https://github.com/cujojs/rest/issues).  Include a brief description of the error, information about the runtime (including shims) and any error messages.
+
+Feature requests are also welcome.
 
 
 Contributors
