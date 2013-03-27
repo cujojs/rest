@@ -142,7 +142,7 @@ Our goal is to work in every major JavaScript environment; Node.js and major bro
 If your preferred environment is not supported, please let us know. Some features may not be available in all environments.
 
 Tested environments:
-- Node.js (0.8, should wok in earlier versions)
+- Node.js (0.8, 0.6, should work in 0.10)
 - Chrome (stable)
 - Firefox (stable, ESR, should work in earlier versions)
 - IE (6-10)
@@ -229,23 +229,24 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
-.next
+0.9.0
 - moving from the 's2js' to the 'cujojs' organization
-- Interceptor configuration chaining
+- new reference documentation in the docs directory
+- Interceptor configuration chaining `rest.chain(interceptor, config).chain(interceptor, config)...`
 - wire.js factory
-- access to the originating client as request.originator
 - hateoas and location interceptors default to use request.originator
 - defaultRequest interceptor, provide default values for any portion of a request
 - XDomainRequest support for IE 8 and 9
+- XHR fall back interceptor for older IE
 - allow child MIME registries and configurable registry for the mime interceptor
+- SimpleRestStore that provides the functionality of RestStore without Dojo's QueryResults
+- rename UrlBuilder's 'absolute()' to 'fullyQualify()'
+- added 'isAbsolute()', 'isFullyQualified()', 'isCrossOrigin()' and 'parts()' to UrlBuilder
+- access to the originating client as request.originator
 - shared 'this' between request/response phases of a single interceptor per request
 - 'init' phase for interceptors, useful for defaulting config properties
 - interceptor config object is now begotten, local modifications will not collide between two interceptors with the same config obj
 - cleaned up interceptor's request handler for complex requests
-- XHR fall back interceptor for older IE
-- SimpleRestStore that provides the functionality of RestStore without Dojo's QueryResults
-- rename UrlBuilder's 'absolute()' to 'fullyQualify()'
-- added 'isAbsolute()', 'isFullyQualified()', 'isCrossOrigin()' and 'parts()' to UrlBuilder
 - mutli-browser testing with Sauce Labs
 
 0.8.4
