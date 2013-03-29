@@ -104,7 +104,6 @@ Let's take the previous example and configure the client using a wire specificat
 	},
 	plugins: [{ module: 'rest/wire' }]
 }
-
 ```
 
 There are a couple things to notice.  First is the 'plugins' section, by declaring the `rest/wire` module, the `rest` factory becomes available within the specification.  The second thing to notice is that we no longer need to individually `require()` interceptor modules; wire is smart enough to automatically fetch the modules.  The interceptors are then chained together in the order they are defined and provided with the corresponding config object, if it's defined.  The resulting client can then be injected into any other object using standard wire facilities.
@@ -142,7 +141,7 @@ Our goal is to work in every major JavaScript environment; Node.js and major bro
 If your preferred environment is not supported, please let us know. Some features may not be available in all environments.
 
 Tested environments:
-- Node.js (0.8, 0.6, should work in 0.10)
+- Node.js (0.6, 0.8. 0.10)
 - Chrome (stable)
 - Firefox (stable, ESR, should work in earlier versions)
 - IE (6-10)
@@ -228,6 +227,9 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 
 Change Log
 ----------
+
+.next
+- add Node 0.10 as a tested environment
 
 0.9.0
 - moving from the 's2js' to the 'cujojs' organization
