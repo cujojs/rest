@@ -17,7 +17,7 @@
 
 	define('rest/interceptor/retry-test', function (require) {
 
-		var interceptor, retry, rest, when, delay, clock, timeout;
+		var interceptor, retry, rest, when, delay, clock, nextTick;
 
 		interceptor = require('rest/interceptor');
 		retry = require('rest/interceptor/retry');
@@ -26,7 +26,15 @@
 		delay = require('when/delay');
 
 		// retain access to the native setTimeout function
-		timeout = setTimeout;
+		nextTick = (function (setTimeout) {
+			return process && process.nextTick ?
+				function (work) {
+					process.nextTick(work);
+				} :
+				function (work) {
+					setTimeout(work, 0);
+				};
+		}(setTimeout));
 
 		buster.testCase('rest/interceptor/retry', {
 			'should retry until successful': function (done) {
@@ -63,7 +71,7 @@
 							if (count === 4) {
 								return { request: request, status: { code: 200 } };
 							} else {
-								timeout(function () {
+								nextTick(function () {
 									clock.tick(tick);
 								}, 0);
 								return when.reject({ request: request, error: 'Thrown by fake client' });
