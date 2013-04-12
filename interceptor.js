@@ -93,7 +93,7 @@
 			initHandler            = handlers.init    || defaultInitHandler;
 			requestHandler         = handlers.request || defaultRequestHandler;
 			successResponseHandler = handlers.success || handlers.response || defaultResponseHandler;
-			errorResponseHandler   = handlers.error   || function () {
+			errorResponseHandler   = handlers.error   || function () {
 				// Propagate the rejection, with the result of the handler
 				return when.reject((handlers.response || defaultResponseHandler).apply(this, arguments));
 			};
