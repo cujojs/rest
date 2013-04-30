@@ -54,88 +54,89 @@
 		}
 
 		buster.testCase('rest/interceptor/timeout', {
-			'should resolve if client responds immediately': function (done) {
+			'should resolve if client responds immediately': function () {
 				var client, request;
 				client = timeout(immediateClient, { timeout: 20 });
 				request = {};
-				client(request).then(function (response) {
+				return client(request).then(function (response) {
 					assert.same(request, response.request);
 					refute(response.error);
 					return delay(40).then(function () {
 						// delay to make sure timeout has fired, but not rejected the response
 						refute(request.canceled);
 					});
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should resolve if client responds before timeout': function (done) {
+			'should resolve if client responds before timeout': function () {
 				var client, request;
 				client = timeout(delayedClient, { timeout: 100 });
 				request = {};
-				client(request).then(function (response) {
+				return client(request).then(function (response) {
 					assert.same(request, response.request);
 					refute(response.error);
 					refute(request.canceled);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should reject even if client responds after timeout': function (done) {
+			'should reject even if client responds after timeout': function () {
 				var client, request;
 				client = timeout(delayedClient, { timeout: 10 });
 				request = {};
-				client(request).then(
+				return client(request).then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert.equals('timeout', response.error);
 						assert(request.canceled);
 					})
-				).ensure(done);
+				);
 			},
-			'should reject if client hanges': function (done) {
+			'should reject if client hanges': function () {
 				var client, request;
 				client = timeout(hangClient, { timeout: 50 });
 				request = {};
-				client(request).then(
+				return client(request).then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert.equals('timeout', response.error);
 						assert(request.canceled);
 					})
-				).ensure(done);
+				);
 			},
-			'should use request timeout value in perference to interceptor value': function (done) {
+			'should use request timeout value in perference to interceptor value': function () {
 				var client, request;
 				client = timeout(delayedClient, { timeout: 10 });
 				request = { timeout: 0 };
-				client(request).then(function (response) {
+				return client(request).then(function (response) {
 					assert.same(request, response.request);
 					refute(response.error);
 					refute(request.canceled);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should not reject without a configured timeout value': function (done) {
+			'should not reject without a configured timeout value': function () {
 				var client, request;
 				client = timeout(delayedClient);
 				request = {};
-				client(request).then(function (response) {
+				return client(request).then(function (response) {
 					assert.same(request, response.request);
 					refute(response.error);
 					refute(request.canceled);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should cancel request if client support cancelation': function (done) {
-				var client, request;
+			'should cancel request if client support cancelation': function () {
+				var client, request, response;
 				client = timeout(cancelableClient, { timeout: 11 });
 				request = {};
-				client(request).then(
+				response = client(request).then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert.equals('timeout', response.error);
 						assert(request.canceled);
 					})
-				).ensure(done);
+				);
 				refute(request.canceled);
+				return response;
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, timeout().skip());

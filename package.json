@@ -30,7 +30,7 @@
 		}
 	],
 	"dependencies": {
-		"when": "~2"
+		"when": ">1.8.0 <=3.0.0"
 	},
 	"devDependencies": {
 		"wire": "~0.9",

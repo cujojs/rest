@@ -27,80 +27,82 @@
 		buster.testCase('rest/client/xdr', {
 			'': {
 				requiresSupportFor: { xdr: 'XDomainRequest' in window },
-				'should make a GET by default': function (done) {
+				'should make a GET by default': function () {
 					var request = { path: flickrUrl };
-					client(request).then(function (response) {
+					return client(request).then(function (response) {
 						var xdr;
 						xdr = response.raw;
 						assert.same(request, response.request);
 						assert.equals(response.request.method, 'GET');
 						refute(request.canceled);
-					}).otherwise(fail).ensure(done);
+					}).otherwise(fail);
 				},
-				'should make an explicit GET': function (done) {
+				'should make an explicit GET': function () {
 					var request = { path: flickrUrl, method: 'GET' };
-					client(request).then(function (response) {
+					return client(request).then(function (response) {
 						var xdr;
 						xdr = response.raw;
 						assert.same(request, response.request);
 						assert.equals(response.request.method, 'GET');
 						assert.equals(xdr.responseText, response.entity);
 						refute(request.canceled);
-					}).otherwise(fail).ensure(done);
+					}).otherwise(fail);
 				},
-				'should make a POST with an entity': function (done) {
+				'should make a POST with an entity': function () {
 					var request = { path: flickrUrl, entity: 'hello world' };
-					client(request).then(function (response) {
+					return client(request).then(function (response) {
 						var xdr;
 						xdr = response.raw;
 						assert.same(request, response.request);
 						assert.equals(response.request.method, 'POST');
 						assert.equals(xdr.responseText, response.entity);
 						refute(request.canceled);
-					}).otherwise(fail).ensure(done);
+					}).otherwise(fail);
 				},
-				'should make an explicit POST with an entity': function (done) {
+				'should make an explicit POST with an entity': function () {
 					var request = { path: flickrUrl, entity: 'hello world', method: 'POST' };
-					client(request).then(function (response) {
+					return client(request).then(function (response) {
 						var xdr;
 						xdr = response.raw;
 						assert.same(request, response.request);
 						assert.equals(response.request.method, 'POST');
 						assert.equals(xdr.responseText, response.entity);
 						refute(request.canceled);
-					}).otherwise(fail).ensure(done);
+					}).otherwise(fail);
 				},
-				'should abort the request if canceled': function (done) {
+				'should abort the request if canceled': function () {
 					// TDOO find an endpoint that takes a bit to respond, cached files may return synchronously
-					var request = { path: flickrUrl, params: { q: Date.now() } };
-					client(request).then(
+					var request, response;
+					request = { path: flickrUrl, params: { q: Date.now() } };
+					response = client(request).then(
 						fail,
 						failOnThrow(function (response) {
 							assert(response.request.canceled);
 						})
-					).ensure(done);
+					);
 					refute(request.canceled);
 					request.cancel();
+					return response;
 				},
-				'should propogate request errors': function (done) {
+				'should propogate request errors': function () {
 					var request = { path: 'http://localhost:1234' };
-					client(request).then(
+					return client(request).then(
 						fail,
 						failOnThrow(function (response) {
 							assert.same('loaderror', response.error);
 						})
-					).ensure(done);
+					);
 				},
-				'should not make a request that has already been canceled': function (done) {
+				'should not make a request that has already been canceled': function () {
 					var request = { canceled: true, path: '/' };
-					client(request).then(
+					return client(request).then(
 						fail,
 						failOnThrow(function (response) {
 							assert.same(request, response.request);
 							assert(request.canceled);
 							assert.same('precanceled', response.error);
 						})
-					).ensure(done);
+					);
 				}
 			},
 			'should not be the default client': function () {

@@ -230,6 +230,7 @@ Change Log
 
 .next
 - add Node 0.10 as a tested environment
+- restore when 1.8 compat, when 2.0 is still preferred
 
 0.9.0
 - moving from the 's2js' to the 'cujojs' organization

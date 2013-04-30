@@ -23,36 +23,36 @@
 		rest = require('rest');
 
 		buster.testCase('rest/interceptor/errorCode', {
-			'should resolve for less than 400 by default': function (done) {
+			'should resolve for less than 400 by default': function () {
 				var client = errorCode(
 					function () { return { status: { code: 399 } }; }
 				);
-				client({}).then(function (response) {
+				return client({}).then(function (response) {
 					assert.equals(399, response.status.code);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should reject for 400 or greater by default': function (done) {
+			'should reject for 400 or greater by default': function () {
 				var client = errorCode(
 					function () { return { status: { code: 400 } }; }
 				);
-				client({}).then(
+				return client({}).then(
 					fail,
 					failOnThrow(function (response) {
 						assert.equals(400, response.status.code);
 					})
-				).ensure(done);
+				);
 			},
-			'should reject lower then 400 with a custom code': function (done) {
+			'should reject lower then 400 with a custom code': function () {
 				var client = errorCode(
 					function () { return { status: { code: 300 } }; },
 					{ code: 300 }
 				);
-				client({}).then(
+				return client({}).then(
 					fail,
 					failOnThrow(function (response) {
 						assert.equals(300, response.status.code);
 					})
-				).ensure(done);
+				);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, errorCode().skip());

@@ -42,38 +42,38 @@
 		}
 
 		buster.testCase('rest/interceptor', {
-			'should set the originator client on the request for the, but do not overwrite': function (done) {
+			'should set the originator client on the request for the, but do not overwrite': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor();
 				client = theInterceptor(defaultClient).chain(theInterceptor);
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same('default', response.id);
 					assert.same(client, response.request.originator);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should use the client configured into the interceptor by default': function (done) {
+			'should use the client configured into the interceptor by default': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					client: defaultClient
 				});
 				client = theInterceptor();
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same('default', response.id);
 					assert.same(client, response.request.originator);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should override the client configured into the interceptor by default': function (done) {
+			'should override the client configured into the interceptor by default': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					client: defaultClient
 				});
 				client = theInterceptor(otherClient);
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same('other', response.id);
 					assert.same(client, response.request.originator);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should intercept the request phase': function (done) {
+			'should intercept the request phase': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					request: function (request) {
@@ -82,11 +82,11 @@
 					}
 				});
 				client = theInterceptor(defaultClient);
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same('request', response.request.phase);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should intercept the request phase and handle a promise': function (done) {
+			'should intercept the request phase and handle a promise': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					request: function (request) {
@@ -97,12 +97,12 @@
 					}
 				});
 				client = theInterceptor(defaultClient);
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same('default', response.id);
 					assert.same('request', response.request.phase);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should intercept the request phase and handle a rejected promise': function (done) {
+			'should intercept the request phase and handle a rejected promise': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					request: function (request) {
@@ -111,7 +111,7 @@
 					}
 				});
 				client = theInterceptor(defaultClient);
-				client().then(
+				return client().then(
 					fail,
 					failOnThrow(function (response) {
 						// request never makes it to the root client
@@ -119,9 +119,9 @@
 						assert.same('request', response.request.phase);
 						assert.same('rejected request', response.error);
 					})
-				).ensure(done);
+				);
 			},
-			'should intercept the response phase': function (done) {
+			'should intercept the response phase': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					response: function (response) {
@@ -130,11 +130,11 @@
 					}
 				});
 				client = theInterceptor(defaultClient);
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same('response', response.phase);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should intercept the response phase and handle a promise': function (done) {
+			'should intercept the response phase and handle a promise': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					response: function (response) {
@@ -145,11 +145,11 @@
 					}
 				});
 				client = theInterceptor(defaultClient);
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same('response', response.phase);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should intercept the response phase and handle a rejceted promise': function (done) {
+			'should intercept the response phase and handle a rejceted promise': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					response: function (response) {
@@ -158,14 +158,14 @@
 					}
 				});
 				client = theInterceptor(defaultClient);
-				client().then(
+				return client().then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same('response', response.phase);
 					})
-				).ensure(done);
+				);
 			},
-			'should intercept the response phase for an error': function (done) {
+			'should intercept the response phase for an error': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					response: function (response) {
@@ -174,14 +174,14 @@
 					}
 				});
 				client = theInterceptor(errorClient);
-				client().then(
+				return client().then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same('response', response.phase);
 					})
-				).ensure(done);
+				);
 			},
-			'should intercept the response phase for an error and handle a promise maintaining the error': function (done) {
+			'should intercept the response phase for an error and handle a promise maintaining the error': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					response: function (response) {
@@ -190,14 +190,14 @@
 					}
 				});
 				client = theInterceptor(errorClient);
-				client().then(
+				return client().then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same('response', response.phase);
 					})
-				).ensure(done);
+				);
 			},
-			'should intercept the response phase for an error and handle a rejected promise maintaining the error': function (done) {
+			'should intercept the response phase for an error and handle a rejected promise maintaining the error': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					response: function (response) {
@@ -206,14 +206,14 @@
 					}
 				});
 				client = theInterceptor(errorClient);
-				client().then(
+				return client().then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same('response', response.phase);
 					})
-				).ensure(done);
+				);
 			},
-			'should intercept the success phase': function (done) {
+			'should intercept the success phase': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					response: fail,
@@ -223,11 +223,11 @@
 					}
 				});
 				client = theInterceptor(defaultClient);
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same('success', response.phase);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should intercept the success phase and handle a promise': function (done) {
+			'should intercept the success phase and handle a promise': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					response: fail,
@@ -239,11 +239,11 @@
 					}
 				});
 				client = theInterceptor(defaultClient);
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same('success', response.phase);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should intercept the success phase and handle a rejceted promise': function (done) {
+			'should intercept the success phase and handle a rejceted promise': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					response: fail,
@@ -253,14 +253,14 @@
 					}
 				});
 				client = theInterceptor(defaultClient);
-				client().then(
+				return client().then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same('success', response.phase);
 					})
-				).ensure(done);
+				);
 			},
-			'should intercept the error phase': function (done) {
+			'should intercept the error phase': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					response: fail,
@@ -270,11 +270,11 @@
 					}
 				});
 				client = theInterceptor(errorClient);
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same('error', response.phase);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should intercept the error phase and handle a promise': function (done) {
+			'should intercept the error phase and handle a promise': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					response: fail,
@@ -284,11 +284,11 @@
 					}
 				});
 				client = theInterceptor(errorClient);
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same('error', response.phase);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should intercept the error phase and handle a rejceted promise': function (done) {
+			'should intercept the error phase and handle a rejceted promise': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					response: fail,
@@ -298,14 +298,14 @@
 					}
 				});
 				client = theInterceptor(errorClient);
-				client().then(
+				return client().then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same('error', response.phase);
 					})
-				).ensure(done);
+				);
 			},
-			'should pass interceptor config to handlers': function (done) {
+			'should pass interceptor config to handlers': function () {
 				var theInterceptor, client, theConfig;
 				theConfig = { foo: 'bar' };
 				theInterceptor = interceptor({
@@ -323,12 +323,12 @@
 					}
 				});
 				client = theInterceptor(defaultClient, theConfig);
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same('request', response.request.phase);
 					assert.same('response', response.phase);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should share context between handlers that is unique per request': function (done) {
+			'should share context between handlers that is unique per request': function () {
 				var theInterceptor, client, count, counted;
 				count = 0;
 				counted = [];
@@ -346,16 +346,16 @@
 					}
 				});
 				client = theInterceptor(defaultClient);
-				when.all([client(), client(), client()]).then(function () {
+				return when.all([client(), client(), client()]).then(function () {
 					assert.same(3, counted.length);
 					assert(counted.indexOf(1) >= 0);
 					// if 'this' was shared between requests, we'd have 1 twice and no undef
 					assert(counted.indexOf(2) === -1);
 					assert(counted.indexOf(undef) >= 0);
 					assert(counted.indexOf(3) >= 0);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should use the client provided by a ComplexRequest': function (done) {
+			'should use the client provided by a ComplexRequest': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					request: function (request) {
@@ -366,12 +366,12 @@
 					}
 				});
 				client = theInterceptor();
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same('default', response.id);
 					assert.same(client, response.request.originator);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should use the repsponse provided by a ComplexRequest': function (done) {
+			'should use the repsponse provided by a ComplexRequest': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					request: function (request) {
@@ -381,12 +381,12 @@
 					}
 				});
 				client = theInterceptor();
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same('complex-response', response.id);
 					assert.same(client, response.request.originator);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should cancel requests with the abort trigger provided by a ComplexRequest': function (done) {
+			'should cancel requests with the abort trigger provided by a ComplexRequest': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					request: function (request) {
@@ -398,15 +398,15 @@
 					}
 				});
 				client = theInterceptor(unresponsiveClient);
-				client().then(
+				return client().then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same('abort', response.id);
 						assert.same('unresponsive', response.request.id);
 					})
-				).ensure(done);
+				);
 			},
-			'should have access to the client in the response handlers for subsequent requests': function (done) {
+			'should have access to the client in the response handlers for subsequent requests': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					response: function (response, config, client) {
@@ -415,12 +415,12 @@
 					}
 				});
 				client = theInterceptor(defaultClient);
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same(client, response.client);
 					assert.same('default', response.id);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should initialize the config object, without modifying the provided object': function (done) {
+			'should initialize the config object, without modifying the provided object': function () {
 				var theConfig, theInterceptor, client;
 				theConfig = { foo: 'bar' };
 				theInterceptor = interceptor({
@@ -446,11 +446,11 @@
 					}
 				});
 				client = theInterceptor(defaultClient, theConfig);
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same('request', response.request.phase);
 					assert.same('response', response.phase);
 					assert.same('default', response.id);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
 			'should have the default client as the parent by default': function () {
 				var theInterceptor = interceptor();

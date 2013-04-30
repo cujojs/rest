@@ -35,38 +35,38 @@
 		}
 
 		buster.testCase('rest/dojo/wire', {
-			'should create a RestStore for resource!': function (done) {
+			'should create a RestStore for resource!': function () {
 				var spec;
 				spec = {
 					store: { $ref: 'resource!', client: client },
 					plugins: [{ module: 'rest/dojo/wire' }]
 				};
-				wire(spec).then(function (spec) {
+				return wire(spec).then(function (spec) {
 					assert(spec.store instanceof RestStore);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should get with resource! waiting for data': function (done) {
+			'should get with resource! waiting for data': function () {
 				var spec;
 				spec = {
 					resource: { $ref: 'resource!test/dojo', get: 'hello.json', entity: false, client: client },
 					plugins: [{ module: 'rest/dojo/wire' }]
 				};
-				wire(spec).then(function (spec) {
+				return wire(spec).then(function (spec) {
 					assert.equals('bar', spec.resource.entity.foo);
 					assert.equals('test/dojo/hello.json', spec.resource.request.path);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should support client!': function (done) {
+			'should support client!': function () {
 				var spec;
 				spec = {
 					client: { $ref: 'client!', client: client },
 					plugins: [{ module: 'rest/dojo/wire' }]
 				};
-				wire(spec).then(function (spec) {
+				return wire(spec).then(function (spec) {
 					return spec.client({}).then(function (response) {
 						assert.equals('bar', response.foo);
 					});
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			}
 		});
 

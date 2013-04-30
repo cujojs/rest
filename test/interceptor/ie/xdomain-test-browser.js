@@ -37,28 +37,28 @@
 		buster.testCase('rest/interceptor/ie/xdomain', {
 			'for XDomainRequest enabled browsers': {
 				requiresSupportFor: { 'xdr': xdr, 'not-xhrCors': !xhrCors },
-				'should use the XDomainRequest engine for cross domain requests': function (done) {
-					client({ path: 'http://example.com' }).then(function (response) {
+				'should use the XDomainRequest engine for cross domain requests': function () {
+					return client({ path: 'http://example.com' }).then(function (response) {
 						assert.same('xdr', response.client);
-					}).otherwise(fail).ensure(done);
+					}).otherwise(fail);
 				},
-				'should use the standard engine for same domain requests, with absolute paths': function (done) {
-					client({ path: window.location.toString() }).then(function (response) {
+				'should use the standard engine for same domain requests, with absolute paths': function () {
+					return client({ path: window.location.toString() }).then(function (response) {
 						assert.same('default', response.client);
-					}).otherwise(fail).ensure(done);
+					}).otherwise(fail);
 				},
-				'should use the standard engine for same domain requests, with relative paths': function (done) {
-					client({ path: '/' }).then(function (response) {
+				'should use the standard engine for same domain requests, with relative paths': function () {
+					return client({ path: '/' }).then(function (response) {
 						assert.same('default', response.client);
-					}).otherwise(fail).ensure(done);
+					}).otherwise(fail);
 				}
 			},
 			'for non-XDomainRequest enabled browsers': {
 				requiresSupportForAny: { 'not-xdr': !xdr, 'xhrCors': xhrCors },
-				'should always use the standard engine': function (done) {
-					client({ path: 'http://example.com' }).then(function (response) {
+				'should always use the standard engine': function () {
+					return client({ path: 'http://example.com' }).then(function (response) {
 						assert.same('default', response.client);
-					}).otherwise(fail).ensure(done);
+					}).otherwise(fail);
 				}
 			},
 			'should have the default client as the parent by default': function () {

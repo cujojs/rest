@@ -22,7 +22,7 @@
 		rest = require('rest');
 
 		buster.testCase('rest/interceptor/location', {
-			'should follow the location header': function (done) {
+			'should follow the location header': function () {
 				var client, spy;
 				spy = this.spy(function (request) {
 					var response = { request: request, headers: {  } };
@@ -32,7 +32,7 @@
 					return response;
 				});
 				client = location(spy);
-				client({}).then(function (response) {
+				return client({}).then(function (response) {
 					refute(response.headers.Location);
 					assert.same(3, spy.callCount);
 					assert.same(spy.returnValues[0].headers.Location, '/foo/1');
@@ -42,16 +42,16 @@
 					assert.same(spy.args[2][0].path, '/foo/2');
 					assert.same(spy.args[2][0].method, 'GET');
 					refute(spy.returnValues[2].headers.Location);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should return the response if there is no location header': function (done) {
+			'should return the response if there is no location header': function () {
 				var client, spy;
 				spy = this.spy(function () { return { status: { code: 200 } }; });
 				client = location(spy);
-				client({}).then(function (response) {
+				return client({}).then(function (response) {
 					assert.equals(200, response.status.code);
 					assert.same(1, spy.callCount);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, location().skip());

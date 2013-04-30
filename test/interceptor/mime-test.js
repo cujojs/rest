@@ -24,18 +24,18 @@
 		rest = require('rest');
 
 		buster.testCase('rest/interceptor/mime', {
-			'should return the response entity decoded': function (done) {
+			'should return the response entity decoded': function () {
 				var client;
 
 				client = mime(function () {
 					return { entity: '{}', headers: { 'Content-Type': 'application/json' } };
 				});
 
-				client({}).then(function (response) {
+				return client({}).then(function (response) {
 					assert.equals({}, response.entity);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should encode the request entity': function (done) {
+			'should encode the request entity': function () {
 				var client;
 
 				client = mime(
@@ -45,11 +45,11 @@
 					{ mime: 'application/json' }
 				);
 
-				client({ entity: {} }).then(function (response) {
+				return client({ entity: {} }).then(function (response) {
 					assert.equals('{}', response.request.entity);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should encode the request entity from the Content-Type of the request, ignoring the filter config': function (done) {
+			'should encode the request entity from the Content-Type of the request, ignoring the filter config': function () {
 				var client;
 
 				client = mime(
@@ -59,13 +59,13 @@
 					{ mime: 'text/plain' }
 				);
 
-				client({ entity: {}, headers: { 'Content-Type': 'application/json' } }).then(function (response) {
+				return client({ entity: {}, headers: { 'Content-Type': 'application/json' } }).then(function (response) {
 					assert.equals('{}', response.request.entity);
 					assert.equals('application/json', response.request.headers['Content-Type']);
 					assert.equals(0, response.request.headers.Accept.indexOf('application/json'));
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should not overwrite the requests Accept header': function (done) {
+			'should not overwrite the requests Accept header': function () {
 				var client;
 
 				client = mime(
@@ -75,38 +75,38 @@
 					{ mime: 'application/json' }
 				);
 
-				client({ entity: {}, headers: { Accept: 'foo' } }).then(function (response) {
+				return client({ entity: {}, headers: { Accept: 'foo' } }).then(function (response) {
 					assert.equals('{}', response.request.entity);
 					assert.equals('application/json', response.request.headers['Content-Type']);
 					assert.equals('foo', response.request.headers.Accept);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should error the request if unable to find a converter for the desired mime': function (done) {
+			'should error the request if unable to find a converter for the desired mime': function () {
 				var client, request;
 
 				client = mime();
 
 				request = { headers: { 'Content-Type': 'application/vnd.com.example' }, entity: {} };
-				client(request).then(
+				return client(request).then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same('unknown-mime', response.error);
 						assert.same(request, response.request);
 					})
-				).ensure(done);
+				);
 			},
-			'should use text/plain converter for a response if unable to find a converter for the desired mime': function (done) {
+			'should use text/plain converter for a response if unable to find a converter for the desired mime': function () {
 				var client;
 
 				client = mime(function () {
 					return { entity: '{}', headers: { 'Content-Type': 'application/vnd.com.example' } };
 				});
 
-				client({}).then(function (response) {
+				return client({}).then(function (response) {
 					assert.same('{}', response.entity);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should use the configured mime registry': function (done) {
+			'should use the configured mime registry': function () {
 				var client, customRegistry;
 
 				customRegistry = registry.child();
@@ -126,12 +126,12 @@
 					{ mime: 'application/vnd.com.example', registry: customRegistry }
 				);
 
-				client({ entity: 'request entity' }).then(function (response) {
+				return client({ entity: 'request entity' }).then(function (response) {
 					assert.equals('application/vnd.com.example', response.request.headers['Content-Type']);
 					assert.equals('write: request entity', response.request.entity);
 					assert.equals('application/vnd.com.example', response.headers['Content-Type']);
 					assert.equals('read: response entity', response.entity);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, mime().skip());

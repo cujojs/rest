@@ -29,22 +29,22 @@
 			'should provide the native XHR object as the engine': {
 				// native XHR
 				requiresSupportFor: { xhr: !!XMLHttpRequest },
-				'': function (done) {
+				'': function () {
 					var client = xhr(defaultClient);
-					client({}).then(function (response) {
+					return client({}).then(function (response) {
 						assert.same(XMLHttpRequest, response.request.engine);
-					}).otherwise(fail).ensure(done);
+					}).otherwise(fail);
 				}
 			},
 			'should fall back to an ActiveX XHR-like object as the engine': {
 				// XHR ActiveX fallback
 				requiresSupportFor: { xhr: !XMLHttpRequest },
-				'': function (done) {
+				'': function () {
 					var client = xhr(defaultClient);
-					client({}).then(function (response) {
+					return client({}).then(function (response) {
 						refute.same(XMLHttpRequest, response.request.engine);
 						assert.same('function', typeof response.request.engine);
-					}).otherwise(fail).ensure(done);
+					}).otherwise(fail);
 				}
 			},
 			'should have the default client as the parent by default': function () {

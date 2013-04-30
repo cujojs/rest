@@ -22,30 +22,30 @@
 		rest = require('rest');
 
 		buster.testCase('rest/interceptor/basicAuth', {
-			'should authenticate the requst from the config': function (done) {
+			'should authenticate the requst from the config': function () {
 				var client = basicAuth(
 					function (request) { return { request: request }; },
 					{ username: 'user', password: 'pass'}
 				);
-				client({}).then(function (response) {
+				return client({}).then(function (response) {
 					assert.equals('Basic dXNlcjpwYXNz', response.request.headers.Authorization);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should authenticate the requst from the request': function (done) {
+			'should authenticate the requst from the request': function () {
 				var client = basicAuth(
 					function (request) { return { request: request }; }
 				);
-				client({ username: 'user', password: 'pass'}).then(function (response) {
+				return client({ username: 'user', password: 'pass'}).then(function (response) {
 					assert.equals('Basic dXNlcjpwYXNz', response.request.headers.Authorization);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should not authenticate without a username': function (done) {
+			'should not authenticate without a username': function () {
 				var client = basicAuth(
 					function (request) { return { request: request }; }
 				);
-				client({}).then(function (response) {
+				return client({}).then(function (response) {
 					refute.defined(response.request.headers.Authorization);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, basicAuth().skip());

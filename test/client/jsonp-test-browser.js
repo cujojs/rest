@@ -24,56 +24,58 @@
 		rest = require('rest');
 
 		buster.testCase('rest/client/jsonp', {
-			'should make a GET by default': function (done) {
+			'should make a GET by default': function () {
 				var request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'javascript' } };
-				client(request).then(function (response) {
+				return client(request).then(function (response) {
 					assert(response.entity.responseData);
 					assert.same(request, response.request);
 					refute(request.canceled);
 					refute(response.raw.parentNode);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should use the jsonp client from the jsonp interceptor by default': function (done) {
+			'should use the jsonp client from the jsonp interceptor by default': function () {
 				var request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'html5' } };
-				jsonpInterceptor()(request).then(function (response) {
+				return jsonpInterceptor()(request).then(function (response) {
 					assert(response.entity.responseData);
 					assert.same(request, response.request);
 					refute(request.canceled);
 					refute(response.raw.parentNode);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should abort the request if canceled': function (done) {
-				var request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'html5' } };
-				client(request).then(
+			'should abort the request if canceled': function () {
+				var request, response;
+				request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'html5' } };
+				response = client(request).then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert(request.canceled);
 						refute(response.raw.parentNode);
 					})
-				).ensure(done);
+				);
 				refute(request.canceled);
 				request.cancel();
+				return response;
 			},
-			'should propogate request errors': function (done) {
+			'should propogate request errors': function () {
 				var request = { path: 'http://localhost:1234' };
-				client(request).then(
+				return client(request).then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same('loaderror', response.error);
 					})
-				).ensure(done);
+				);
 			},
-			'should not make a request that has already been canceled': function (done) {
+			'should not make a request that has already been canceled': function () {
 				var request = { canceled: true, path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'javascript' } };
-				client(request).then(
+				return client(request).then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert(request.canceled);
 						assert.same('precanceled', response.error);
 					})
-				).ensure(done);
+				);
 			},
 			'should not be the default client': function () {
 				refute.same(client, rest);

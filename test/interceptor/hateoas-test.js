@@ -48,7 +48,7 @@
 		buster.testCase('rest/interceptor/hateoas', {
 			requiresSupportFor: { 'Object.defineProperty': supports['Object.defineProperty'] },
 
-			'should parse links in the entity': function (done) {
+			'should parse links in the entity': function () {
 				var client, body, parent, self;
 
 				parent = { rel: 'parent', href: '/' };
@@ -57,12 +57,12 @@
 				body = { links: [ parent, self ]};
 				client = hateoas(function () { return { entity: body }; });
 
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same(parent, response.entity._links.parentLink);
 					assert.same(self, response.entity._links.selfLink);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should parse links in the entity into the entity': function (done) {
+			'should parse links in the entity into the entity': function () {
 				var client, body, parent, self;
 
 				parent = { rel: 'parent', href: '/' };
@@ -71,12 +71,12 @@
 				body = { links: [ parent, self ]};
 				client = hateoas(function () { return { entity: body }; }, { target: '' });
 
-				client().then(function (response) {
+				return client().then(function (response) {
 					assert.same(parent, response.entity.parentLink);
 					assert.same(self, response.entity.selfLink);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should create a client for the related resource': function (done) {
+			'should create a client for the related resource': function () {
 				var client, body, parent, self;
 
 				parent = { rel: 'parent', href: '/' };
@@ -85,16 +85,16 @@
 				body = { links: [ parent, self ]};
 				client = hateoas(function () { return { entity: body }; });
 
-				client().then(function (response) {
+				return client().then(function (response) {
 					var parentClient = response.entity._links.clientFor('parent', function (request) { return { request: request }; });
 					return parentClient().then(function (response) {
 						assert.same(parent.href, response.request.path);
 					});
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
 			'should fetch a related resource': {
 				requiresSupportFor: { 'ES5 getters': supports['ES5 getters'] },
-				'': function (done) {
+				'': function () {
 					var client, parentClient;
 
 					parentClient = function (request) {
@@ -104,14 +104,14 @@
 					};
 					client = hateoas(parentClient);
 
-					client({ path: '/' }).then(function (response) {
+					return client({ path: '/' }).then(function (response) {
 						assert.same('/', response.request.path);
 						assert.same('/', response.entity._links.selfLink.href);
 						return response.entity._links.child.then(function (response) {
 							assert.same('/resource', response.request.path);
 							assert.same('/resource', response.entity._links.selfLink.href);
 						});
-					}).otherwise(fail).ensure(done);
+					}).otherwise(fail);
 				}
 			},
 			'should have the default client as the parent by default': function () {

@@ -51,9 +51,9 @@
 				server.close();
 			},
 
-			'should make a GET by default': function (done) {
+			'should make a GET by default': function () {
 				var request = { path: 'http://localhost:8080/' };
-				client(request).then(function (response) {
+				return client(request).then(function (response) {
 					assert(response.raw.request instanceof http.ClientRequest);
 					// assert(response.raw.response instanceof http.ClientResponse);
 					assert(response.raw.response);
@@ -64,21 +64,21 @@
 					assert.equals('text/plain', response.headers['Content-Type']);
 					assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
 					refute(request.canceled);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should make an explicit GET': function (done) {
+			'should make an explicit GET': function () {
 				var request = { path: 'http://localhost:8080/', method: 'GET' };
-				client(request).then(function (response) {
+				return client(request).then(function (response) {
 					assert.same(request, response.request);
 					assert.equals(response.request.method, 'GET');
 					assert.equals(response.entity, 'hello world');
 					assert.equals(response.status.code, 200);
 					refute(request.canceled);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should make a POST with an entity': function (done) {
+			'should make a POST with an entity': function () {
 				var request = { path: 'http://localhost:8080/', entity: 'echo' };
-				client(request).then(function (response) {
+				return client(request).then(function (response) {
 					assert.same(request, response.request);
 					assert.equals(response.request.method, 'POST');
 					assert.equals(response.entity, 'echo');
@@ -86,47 +86,49 @@
 					assert.equals('text/plain', response.headers['Content-Type']);
 					assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
 					refute(request.canceled);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should make an explicit POST with an entity': function (done) {
+			'should make an explicit POST with an entity': function () {
 				var request = { path: 'http://localhost:8080/', entity: 'echo', method: 'POST' };
-				client(request).then(function (response) {
+				return client(request).then(function (response) {
 					assert.same(request, response.request);
 					assert.equals(response.request.method, 'POST');
 					assert.equals(response.entity, 'echo');
 					refute(request.canceled);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should abort the request if canceled': function (done) {
-				var request = { path: 'http://localhost:8080/' };
+			'should abort the request if canceled': function () {
+				var request, response;
+				request = { path: 'http://localhost:8080/' };
 				client(request).then(
 					fail,
 					failOnThrow(function (/* response */) {
 						assert(request.canceled);
 					})
-				).ensure(done);
+				);
 				refute(request.canceled);
 				request.cancel();
+				return response;
 			},
-			'should propogate request errors': function (done) {
+			'should propogate request errors': function () {
 				var request = { path: 'http://localhost:1234' };
-				client(request).then(
+				return client(request).then(
 					fail,
 					failOnThrow(function (response) {
 						assert(response.error);
 					})
-				).ensure(done);
+				);
 			},
-			'should not make a request that has already been canceled': function (done) {
+			'should not make a request that has already been canceled': function () {
 				var request = { canceled: true, path: 'http://localhost:1234' };
-				client(request).then(
+				return client(request).then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert(request.canceled);
 						assert.same('precanceled', response.error);
 					})
-				).ensure(done);
+				);
 			},
 			'should be the default client': function () {
 				assert.same(client, rest);

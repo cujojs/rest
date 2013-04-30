@@ -37,7 +37,7 @@
 		}(setTimeout));
 
 		buster.testCase('rest/interceptor/retry', {
-			'should retry until successful': function (done) {
+			'should retry until successful': function () {
 				var count = 0, client = retry(
 					function (request) {
 						count += 1;
@@ -48,9 +48,9 @@
 						}
 					}
 				);
-				client({}).then(function (response) {
+				return client({}).then(function (response) {
 				    assert.equals(200, response.status.code);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
 			'should accept custom config': {
 				setUp: function () {
@@ -59,7 +59,7 @@
 				tearDown: function () {
 					clock.restore();
 				},
-				'': function (done) {
+				'': function () {
 					var count = 0, client, start, config;
 
 					start = new Date().getTime();
@@ -80,15 +80,15 @@
 						config
 					);
 
-					client({}).then(function (response) {
+					return client({}).then(function (response) {
 						assert.equals(200, response.status.code);
 					    assert.equals(count, 4);
 						assert.equals(50, new Date().getTime() - start);
-					}).otherwise(fail).ensure(done);
+					}).otherwise(fail);
 				}
 			},
-			'should not make propagate request if marked as canceled': function (done) {
-				var parent, client, request;
+			'should not make propagate request if marked as canceled': function () {
+				var parent, client, request, response;
 
 				parent = this.spy(function (request) {
 					return when.reject({ request: request });
@@ -96,16 +96,17 @@
 				client = retry(parent, { initial: 10 });
 
 				request = {};
-				client(request).then(
+				response = client(request).then(
 					fail,
 					failOnThrow(function (response) {
 						assert(request.canceled);
 						assert.equals('precanceled', response.error);
 						assert.same(1, parent.callCount);
 					})
-				).ensure(done);
-
+				);
 				request.canceled = true;
+
+				return response;
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, retry().skip());

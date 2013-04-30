@@ -22,41 +22,41 @@
 		rest = require('rest');
 
 		buster.testCase('rest/interceptor/pathPrefix', {
-			'should prepend prefix before path': function (done) {
+			'should prepend prefix before path': function () {
 				var client = pathPrefix(
 					function (request) { return { request: request }; },
 					{ prefix: '/foo' }
 				);
-				client({ path: '/bar' }).then(function (response) {
+				return client({ path: '/bar' }).then(function (response) {
 					assert.equals('/foo/bar', response.request.path);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should prepend prefix before path, adding slash between path segments': function (done) {
+			'should prepend prefix before path, adding slash between path segments': function () {
 				var client = pathPrefix(
 					function (request) { return { request: request }; },
 					{ prefix: '/foo' }
 				);
-				client({ path: 'bar' }).then(function (response) {
+				return client({ path: 'bar' }).then(function (response) {
 					assert.equals('/foo/bar', response.request.path);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should prepend prefix before path, not adding extra slash between path segments': function (done) {
+			'should prepend prefix before path, not adding extra slash between path segments': function () {
 				var client = pathPrefix(
 					function (request) { return { request: request }; },
 					{ prefix: '/foo/' }
 				);
-				client({ path: 'bar' }).then(function (response) {
+				return client({ path: 'bar' }).then(function (response) {
 					assert.equals('/foo/bar', response.request.path);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should not prepend prefix before a fully qualified path': function (done) {
+			'should not prepend prefix before a fully qualified path': function () {
 				var client = pathPrefix(
 					function (request) { return { request: request }; },
 					{ prefix: '/foo' }
 				);
-				client({ path: 'http://www.example.com/' }).then(function (response) {
+				return client({ path: 'http://www.example.com/' }).then(function (response) {
 					assert.equals('http://www.example.com/', response.request.path);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, pathPrefix().skip());

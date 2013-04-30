@@ -23,7 +23,7 @@
 		rest = require('rest');
 
 		buster.testCase('rest/interceptor/oAuth', {
-			'should authenticate the request for a known token': function (done) {
+			'should authenticate the request for a known token': function () {
 				var client;
 
 				client = oAuth(
@@ -31,11 +31,11 @@
 					{ token: 'bearer abcxyz' }
 				);
 
-				client({}).then(function (response) {
+				return client({}).then(function (response) {
 					assert.equals('bearer abcxyz', response.request.headers.Authorization);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should use implicit flow to authenticate the request': function (done) {
+			'should use implicit flow to authenticate the request': function () {
 				var client, windowStrategy, windowStrategyClose, oAuthCallbackName;
 
 				oAuthCallbackName = 'oAuthCallback' + Math.round(Math.random() * 100000);
@@ -64,10 +64,10 @@
 					}
 				);
 
-				client({}).then(function (response) {
+				return client({}).then(function (response) {
 					assert.equals('bearer abcxyz', response.request.headers.Authorization);
 					assert.called(windowStrategyClose);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, oAuth({ token: 'bearer abcxyz' }).skip());

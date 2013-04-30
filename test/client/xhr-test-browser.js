@@ -28,9 +28,9 @@
 		client = !XMLHttpRequest ? xhr.chain(xhrFallback) : xhr;
 
 		buster.testCase('rest/client/xhr', {
-			'should make a GET by default': function (done) {
+			'should make a GET by default': function () {
 				var request = { path: '/' };
-				client(request).then(function (response) {
+				return client(request).then(function (response) {
 					var xhr, name;
 					xhr = response.raw;
 					assert.same(request, response.request);
@@ -43,11 +43,11 @@
 						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 					}
 					refute(request.canceled);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should make an explicit GET': function (done) {
+			'should make an explicit GET': function () {
 				var request = { path: '/', method: 'GET' };
-				client(request).then(function (response) {
+				return client(request).then(function (response) {
 					var xhr, name;
 					xhr = response.raw;
 					assert.same(request, response.request);
@@ -60,11 +60,11 @@
 						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 					}
 					refute(request.canceled);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should make a POST with an entity': function (done) {
+			'should make a POST with an entity': function () {
 				var request = { path: '/', entity: 'hello world' };
-				client(request).then(function (response) {
+				return client(request).then(function (response) {
 					var xhr, name;
 					xhr = response.raw;
 					assert.same(request, response.request);
@@ -77,11 +77,11 @@
 						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 					}
 					refute(request.canceled);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
-			'should make an explicit POST with an entity': function (done) {
+			'should make an explicit POST with an entity': function () {
 				var request = { path: '/', entity: 'hello world', method: 'POST' };
-				client(request).then(function (response) {
+				return client(request).then(function (response) {
 					var xhr, name;
 					xhr = response.raw;
 					assert.same(request, response.request);
@@ -94,7 +94,7 @@
 						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
 					}
 					refute(request.canceled);
-				}).otherwise(fail).ensure(done);
+				}).otherwise(fail);
 			},
 			'should abort the request if canceled': function (done) {
 				// TDOO find an endpoint that takes a bit to respond, cached files may return synchronously
@@ -122,41 +122,41 @@
 						refute(request.canceled);
 						request.cancel();
 					})
-				]).ensure(done);
+				]).always(done);
 			},
-			'//should propogate request errors': function (done) {
+			'//should propogate request errors': function () {
 				// TODO follow up with Sauce Labs
 				// this test is valid, but fails with sauce as their proxy returns a 400
 				var request = { path: 'http://localhost:1234' };
-				client(request).then(
+				return client(request).then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same('loaderror', response.error);
 					})
-				).ensure(done);
+				);
 			},
-			'should not make a request that has already been canceled': function (done) {
+			'should not make a request that has already been canceled': function () {
 				var request = { canceled: true, path: '/' };
-				client(request).then(
+				return client(request).then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert(request.canceled);
 						assert.same('precanceled', response.error);
 					})
-				).ensure(done);
+				);
 			},
 			'should reject if an XHR impl is not available': {
 				requiresSupportFor: { 'no-xhr': !window.XMLHttpRequest },
-				'': function (done) {
+				'': function () {
 					var request = { path: '/' };
-					xhr(request).then(
+					return xhr(request).then(
 						fail,
 						failOnThrow(function (response) {
 							assert.same(request, response.request);
 							assert.same('xhr-not-available', response.error);
 						})
-					).ensure(done);
+					);
 				}
 			},
 			'should be the default client': function () {
