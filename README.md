@@ -228,6 +228,9 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
+.next
+- nothing yet
+
 0.9.1
 - add Node 0.10 as a tested environment
 - restore when 1.8 compat, when 2.0 is still preferred
