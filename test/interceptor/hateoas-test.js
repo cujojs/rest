@@ -46,51 +46,101 @@
 		};
 
 		buster.testCase('rest/interceptor/hateoas', {
-			requiresSupportFor: { 'Object.defineProperty': supports['Object.defineProperty'] },
+			'should parse header links': function () {
+				var client, entity, headers;
 
-			'should parse links in the entity': function () {
-				var client, body, parent, self;
-
-				parent = { rel: 'parent', href: '/' };
-				self = { rel: 'self', href: '/resource' };
-
-				body = { links: [ parent, self ]};
-				client = hateoas(function () { return { entity: body }; });
+				headers = {
+					Link: [
+						'<http://example.com/TheBook/chapter2>; rel="previous"; title="previous chapter"',
+						'<http://example.com/TheBook/chapter4>; rel="next"; title="next chapter"'
+					]
+				};
+				entity = {};
+				client = hateoas(function () { return { entity: entity, headers: headers }; });
 
 				return client().then(function (response) {
-					assert.same(parent, response.entity._links.parentLink);
-					assert.same(self, response.entity._links.selfLink);
+					assert('previous' in response.links);
+					assert.same(response.links.previousLink.href, 'http://example.com/TheBook/chapter2');
+					assert.same(response.links.previousLink.title, 'previous chapter');
+					assert('next' in response.links);
+					assert.same(response.links.nextLink.href, 'http://example.com/TheBook/chapter4');
+					assert.same(response.links.nextLink.title, 'next chapter');
 				}).otherwise(fail);
 			},
-			'should parse links in the entity into the entity': function () {
-				var client, body, parent, self;
+			'should parse compound header links': function () {
+				var client, entity, headers;
 
-				parent = { rel: 'parent', href: '/' };
-				self = { rel: 'self', href: '/resource' };
-
-				body = { links: [ parent, self ]};
-				client = hateoas(function () { return { entity: body }; }, { target: '' });
+				headers = {	Link: '<http://example.com/TheBook/chapter2>; rel="previous"; title="previous chapter", <http://example.com/TheBook/chapter4>; rel="next"; title="next chapter"' };
+				entity = {};
+				client = hateoas(function () { return { entity: entity, headers: headers }; });
 
 				return client().then(function (response) {
-					assert.same(parent, response.entity.parentLink);
-					assert.same(self, response.entity.selfLink);
+					assert('previous' in response.links);
+					assert.same(response.links.previousLink.href, 'http://example.com/TheBook/chapter2');
+					assert.same(response.links.previousLink.title, 'previous chapter');
+					assert('next' in response.links);
+					assert.same(response.links.nextLink.href, 'http://example.com/TheBook/chapter4');
+					assert.same(response.links.nextLink.title, 'next chapter');
 				}).otherwise(fail);
 			},
-			'should create a client for the related resource': function () {
-				var client, body, parent, self;
+			'should gracefully recover from maleformed header links': function () {
+				var client, entity, headers;
 
-				parent = { rel: 'parent', href: '/' };
-				self = { rel: 'self', href: '/resource' };
-
-				body = { links: [ parent, self ]};
-				client = hateoas(function () { return { entity: body }; });
+				headers = {	Link: 'foo bar' };
+				entity = {};
+				client = hateoas(function () { return { entity: entity, headers: headers }; });
 
 				return client().then(function (response) {
-					var parentClient = response.entity._links.clientFor('parent', function (request) { return { request: request }; });
-					return parentClient().then(function (response) {
-						assert.same(parent.href, response.request.path);
-					});
+					assert.same(entity, response.entity);
 				}).otherwise(fail);
+			},
+			'': {
+				requiresSupportFor: { 'Object.defineProperty': supports['Object.defineProperty'] },
+
+				'should parse links in the entity': function () {
+					var client, body, parent, self;
+
+					parent = { rel: 'parent', href: '/' };
+					self = { rel: 'self', href: '/resource' };
+
+					body = { links: [ parent, self ]};
+					client = hateoas(function () { return { entity: body }; });
+
+					return client().then(function (response) {
+						assert.same(parent, response.entity._links.parentLink);
+						assert.same(self, response.entity._links.selfLink);
+					}).otherwise(fail);
+				},
+				'should parse links in the entity into the entity': function () {
+					var client, body, parent, self;
+
+					parent = { rel: 'parent', href: '/' };
+					self = { rel: 'self', href: '/resource' };
+
+					body = { links: [ parent, self ]};
+					client = hateoas(function () { return { entity: body }; }, { target: '' });
+
+					return client().then(function (response) {
+						assert.same(parent, response.entity.parentLink);
+						assert.same(self, response.entity.selfLink);
+					}).otherwise(fail);
+				},
+				'should create a client for the related resource': function () {
+					var client, body, parent, self;
+
+					parent = { rel: 'parent', href: '/' };
+					self = { rel: 'self', href: '/resource' };
+
+					body = { links: [ parent, self ]};
+					client = hateoas(function () { return { entity: body }; });
+
+					return client().then(function (response) {
+						var parentClient = response.entity._links.clientFor('parent', function (request) { return { request: request }; });
+						return parentClient().then(function (response) {
+							assert.same(parent.href, response.request.path);
+						});
+					}).otherwise(fail);
+				}
 			},
 			'should fetch a related resource': {
 				requiresSupportFor: { 'ES5 getters': supports['ES5 getters'] },

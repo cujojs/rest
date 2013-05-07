@@ -211,6 +211,8 @@ Links are index in two ways:
 1. as link's `rel` which when accessed issues a request for the linked resource. A promise for the related resource is expected to be returned.
 2. as link's `rel` with 'Link' appended, as a reference to the link object.
 
+The 'Link' response header is also parsed for related resources following rfc5988. The values parsed from the headers are indexed into the response.links object.
+
 Also defines a `clientFor` factory function that creates a new client configured to communicate with a related resource.
 
 The client for the resource reference and the `clientFor` function can be provided by the `client` config property.  This method is also useful if the request for the resource

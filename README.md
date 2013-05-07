@@ -229,7 +229,7 @@ Change Log
 ----------
 
 .next
-- nothing yet
+- parsing 'Link' response headers in hateoas interceptor (rfc5988)
 
 0.9.1
 - add Node 0.10 as a tested environment

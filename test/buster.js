@@ -28,6 +28,7 @@ config['rest:browser'] = {
 		'dojo/**/*.js',
 		'interceptor/**/*.js',
 		'mime/**/*.js',
+		'parsers/**/*.js',
 		'util/**/*.js',
 		'node_modules/curl/**/*.js',
 		'node_modules/dojo/**/*.js',

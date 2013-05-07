@@ -10,10 +10,11 @@
 
 	define(function (require) {
 
-		var interceptor, pathPrefix, cycleFlag;
+		var interceptor, pathPrefix, rfc5988LinkParser, cycleFlag;
 
 		interceptor = require('../interceptor');
 		pathPrefix = require('./pathPrefix');
+		rfc5988LinkParser = require('../parsers/rfc5988');
 
 		cycleFlag = '__rest_hateoas_seen__';
 
@@ -30,6 +31,10 @@
 		 *    to be returned.
 		 * 2. as link's 'rel' with 'Link' appended, as a reference to the link
 		 *    object
+		 *
+		 * The 'Link' response header is also parsed for related resources
+		 * following rfc5988. The values parsed from the headers are indexed
+		 * into the response.links object.
 		 *
 		 * Also defines a 'clientFor' factory function that creates a new
 		 * client configured to communicate with a related resource.
@@ -113,6 +118,24 @@
 					delete obj[cycleFlag];
 				}
 
+				function parseLinkHeaders(headers) {
+					var links = [];
+					[].concat(headers).forEach(function (header) {
+						try {
+							links = links.concat(rfc5988LinkParser.parse(header));
+						}
+						catch (e) {
+							// ignore
+							// TODO consider a debug mode that logs
+						}
+					});
+					return links;
+				}
+
+				if (response.headers && response.headers.Link) {
+					response.links = response.links || {};
+					apply(response.links, parseLinkHeaders(response.headers.Link));
+				}
 				walk(response);
 
 				return response;
