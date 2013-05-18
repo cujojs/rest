@@ -21,7 +21,8 @@ SOFTWARE.
 
 ---
 
-Code published by Scott Andrews or Jeremy Grelle is copyright VMware.
+Code published by Scott Andrews or Jeremy Grelle is copyright VMware and
+licensed under the above terms.
 
 VMware, Inc.
 3401 Hillview Avenue
