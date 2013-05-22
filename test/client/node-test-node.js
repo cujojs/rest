@@ -130,6 +130,11 @@
 					})
 				);
 			},
+			'should normalize a string to a request object': function () {
+				return client('http://localhost:8080/').then(function (response) {
+					assert.same('http://localhost:8080/', response.request.path);
+				}).otherwise(fail);
+			},
 			'should be the default client': function () {
 				assert.same(client, rest);
 			},

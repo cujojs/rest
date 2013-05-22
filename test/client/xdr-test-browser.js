@@ -30,8 +30,6 @@
 				'should make a GET by default': function () {
 					var request = { path: flickrUrl };
 					return client(request).then(function (response) {
-						var xdr;
-						xdr = response.raw;
 						assert.same(request, response.request);
 						assert.equals(response.request.method, 'GET');
 						refute(request.canceled);
@@ -103,6 +101,11 @@
 							assert.same('precanceled', response.error);
 						})
 					);
+				},
+				'should normalize a string to a request object': function () {
+					return client(flickrUrl).then(function (response) {
+						assert.same(flickrUrl, response.request.path);
+					}).otherwise(fail);
 				}
 			},
 			'should not be the default client': function () {

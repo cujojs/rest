@@ -112,7 +112,7 @@
 
 				client = function (request) {
 					var context = {};
-					request = request || {};
+					request = typeof request === 'string' ? { path: request } : request || {};
 					request.originator = request.originator || client;
 					return when(
 						requestHandler.call(context, request, config),

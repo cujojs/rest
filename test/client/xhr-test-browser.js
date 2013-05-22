@@ -159,6 +159,11 @@
 					);
 				}
 			},
+			'should normalize a string to a request object': function () {
+				return client('/').then(function (response) {
+					assert.same('/', response.request.path);
+				}).otherwise(fail);
+			},
 			'should be the default client': function () {
 				assert.same(xhr, rest);
 			},

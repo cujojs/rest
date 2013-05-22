@@ -452,6 +452,14 @@
 					assert.same('default', response.id);
 				}).otherwise(fail);
 			},
+			'should normalize a string to a request object': function () {
+				var theInterceptor, client;
+				theInterceptor = interceptor();
+				client = theInterceptor(defaultClient);
+				return client('/').then(function (response) {
+					assert.same('/', response.request.path);
+				}).otherwise(fail);
+			},
 			'should have the default client as the parent by default': function () {
 				var theInterceptor = interceptor();
 				assert.same(rest, theInterceptor().skip());

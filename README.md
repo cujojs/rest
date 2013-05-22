@@ -30,12 +30,12 @@ Interceptors are applied to a client by chaining.  To chain a client with an int
 ```javascript
 var rest = require('rest');
 
-rest({ path: '/' }).then(function(response) {
+rest('/').then(function(response) {
     console.log('response: ', response);
 });
 ```
 
-In this example, you can see that the request object is very simple, it just includes the path.  All of the attributes of a request are optional.
+In this example, you can see that the request object is very simple, it just a string representing the path.  The request may also be a proper [object containing other HTTP properties](docs/interfaces.md#interface-request).
 
 The response should look familiar as well, it contains all the fields you would expect, including the response headers (many clients ignore the headers).
 
@@ -229,6 +229,7 @@ Change Log
 ----------
 
 .next
+- allow strings to represent request objects, the string value is treated as the path property
 - parsing 'Link' response headers in hateoas interceptor (rfc5988)
 
 0.9.1

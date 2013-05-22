@@ -77,6 +77,12 @@
 					})
 				);
 			},
+			'should normalize a string to a request object': function () {
+				var request = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=javascript';
+				return client(request).then(function (response) {
+					assert.same(request, response.request.path);
+				}).otherwise(fail);
+			},
 			'should not be the default client': function () {
 				refute.same(client, rest);
 			},

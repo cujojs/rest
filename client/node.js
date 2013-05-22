@@ -58,8 +58,8 @@
 
 			var d, options, clientRequest, client, url, headers, entity, response;
 
-			response = {};
-			response.request = request;
+			request = typeof request === 'string' ? { path: request } : request || {};
+			response = { request: request };
 
 			if (request.canceled) {
 				response.error = 'precanceled';

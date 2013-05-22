@@ -67,9 +67,8 @@
 		function jsonp(request) {
 			var d, callbackName, callbackParams, script, firstScript, response;
 
-			response = {
-				request: request
-			};
+			request = typeof request === 'string' ? { path: request } : request || {};
+			response = { request: request };
 
 			if (request.canceled) {
 				response.error = 'precanceled';

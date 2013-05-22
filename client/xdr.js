@@ -18,8 +18,8 @@
 		function xdr(request) {
 			var d, client, method, url, entity, response;
 
-			response = {};
-			response.request = request;
+			request = typeof request === 'string' ? { path: request } : request || {};
+			response = { request: request };
 
 			if (request.canceled) {
 				response.error = 'precanceled';

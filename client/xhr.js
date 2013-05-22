@@ -52,8 +52,8 @@
 		function xhr(request) {
 			var d, client, method, url, headers, entity, headerName, response, XMLHttpRequest;
 
-			response = {};
-			response.request = request;
+			request = typeof request === 'string' ? { path: request } : request || {};
+			response = { request: request };
 
 			if (request.canceled) {
 				response.error = 'precanceled';

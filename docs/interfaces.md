@@ -6,6 +6,8 @@ Types in rest.js are based on duck typing; there are no concrete types that need
 <a name="interface-request"></a>
 ## Common Request Properties
 
+A request may be represented by either a string or an object.  Strings are coerced to an object as soon as they are encountered, where the string's value becomes the value of the path property on the object.
+
 <table>
 <tr>
   <th>Property</th>
