@@ -77,20 +77,21 @@
 		function loadAMD(mime) {
 			var d, timeout;
 
-			d = when.defer();
-			timeout = setTimeout(function () {
-				// HOPE reject on a local require would be nice
+			function reject(ex) {
 				clearTimeout(timeout);
-				timeout = null;
-				d.reject();
-			}, 1000);
+				d.reject(ex || new Error('Timeout while loading mime module: ' + mime));
+			}
 
-			// 'define' is a bit of a hack, but other options are non-standard
-			define('rest/mime/type/' + mime + '-' + Math.random(), ['./type/' + mime], function (m) {
+			function resolve(m) {
 				clearTimeout(timeout);
-				timeout = null;
 				d.resolve(m);
-			});
+			}
+
+			d = when.defer();
+			// HOPE reject on a local require would be nice
+			timeout = setTimeout(reject, 1000);
+
+			require(['./type/' + mime], resolve, reject);
 
 			return d.promise;
 		}
@@ -108,7 +109,7 @@
 			return d.promise;
 		}
 
-		registry = new Registry(typeof require === 'function' && require.amd ? loadAMD : loadNode);
+		registry = new Registry(typeof define === 'function' && define.amd ? loadAMD : loadNode);
 
 		// include text/plain and application/json by default
 		registry.register('text/plain', require('./type/text/plain'));
