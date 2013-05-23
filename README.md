@@ -228,6 +228,9 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
+.next
+- nothing yet
+
 0.9.2
 - allow strings to represent request objects, the string value is treated as the path property
 - parsing 'Link' response headers in hateoas interceptor (rfc5988)
