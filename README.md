@@ -89,9 +89,9 @@ Clients can continue to be composed with interceptors as needed.  At any point t
 
 ### Declarative Interceptor Composition: ###
 
-First class support is provided for [declaratively composing interceptors using wire.js](docs/wire.md).  wire.js is an dependency injection container; you specify how the parts of your application interrelate and wire takes care of the dirty work to make it so.
+First class support is provided for [declaratively composing interceptors using wire.js](docs/wire.md).  wire.js is an dependency injection container; you specify how the parts of your application interrelate and wire.js takes care of the dirty work to make it so.
 
-Let's take the previous example and configure the client using a wire specification instead of imperative code.
+Let's take the previous example and configure the client using a wire.js specification instead of imperative code.
 
 ```javascript
 {
@@ -106,7 +106,7 @@ Let's take the previous example and configure the client using a wire specificat
 }
 ```
 
-There are a couple things to notice.  First is the 'plugins' section, by declaring the `rest/wire` module, the `rest` factory becomes available within the specification.  The second thing to notice is that we no longer need to individually `require()` interceptor modules; wire is smart enough to automatically fetch the modules.  The interceptors are then chained together in the order they are defined and provided with the corresponding config object, if it's defined.  The resulting client can then be injected into any other object using standard wire facilities.
+There are a couple things to notice.  First is the 'plugins' section, by declaring the `rest/wire` module, the `rest` factory becomes available within the specification.  The second thing to notice is that we no longer need to individually `require()` interceptor modules; wire.js is smart enough to automatically fetch the modules.  The interceptors are then chained together in the order they are defined and provided with the corresponding config object, if it's defined.  The resulting client can then be injected into any other object using standard wire.js facilities.
 
 
 ### Custom MIME Converters: ###
@@ -234,7 +234,7 @@ Change Log
 
 0.9.1
 - add Node 0.10 as a tested environment
-- restore when 1.8 compat, when 2.0 is still preferred
+- restore when.js 1.8 compat, when.js 2.0 is still preferred
 
 0.9.0
 - moving from the 's2js' to the 'cujojs' organization

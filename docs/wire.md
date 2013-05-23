@@ -1,6 +1,6 @@
 # wire.js
 
-[wire.js](https://github.com/cujojs/wire/) is an Inversion of Control container that allows applications to be composed together at runtime based on a declarative configuration. A rest.js plugin is provided for wire that enables declarative configuration of rest clients, including chaning interceptors with their configuration.
+[wire.js](https://github.com/cujojs/wire/) is an Inversion of Control container that allows applications to be composed together at runtime based on a declarative configuration. A rest.js plugin is provided for wire.js that enables declarative configuration of rest.js clients, including chaning interceptors with their configuration.
 
 
 <a name="module-rest/wire"></a>
@@ -10,13 +10,13 @@
 
 There are two aspects to the wire plugin the `rest` factory, and the `client!` reference resolver.
 
-**TIP:** In each of these examples, `{ module: 'rest/wire' }` is loaded as it provides the 'rest' factory to the wire spec.  Without this module being loaded into the spec, the facilities below will silently fail.
+**TIP:** In each of these examples, `{ module: 'rest/wire' }` is loaded as it provides the 'rest' factory to the wire.js spec.  Without this module being loaded into the spec, the facilities below will silently fail.
 
 
 <a name="wire-rest-factory"></a>
 ### 'rest' Factory
 
-The `rest` factory provides a declarative way to define a client with an interceptor chain that is nearly identical in capability to imperative JavaScript. The factory access two main config properties, a parent client, and an array of interceptors. Each entry in the interceptor array contains a reference to the interceptor module, and the configuration for that interceptor. The array of interceptors is chained off the client in order returning the resulting client as the wire component.
+The `rest` factory provides a declarative way to define a client with an interceptor chain that is nearly identical in capability to imperative JavaScript. The factory access two main config properties, a parent client, and an array of interceptors. Each entry in the interceptor array contains a reference to the interceptor module, and the configuration for that interceptor. The array of interceptors is chained off the client in order returning the resulting client as the wire.js component.
 
 In it's basic form, the array of interceptors is processed in order, chaining off the parent client.
 
@@ -64,7 +64,7 @@ client: {
 plugins: [{ module: 'rest/wire' }]
 ```
 
-An individual interceptors array entry can use any facility available within wire, including $ref.
+An individual interceptors array entry can use any facility available within wire.js, including $ref.
 
 ```javascript
 client: {
