@@ -8,5 +8,5 @@ script: npm run-script ci
 env:
   global:
   - BUSTER_TEST_OPT="--reporter specification"
-  - SELENIUM_USERNAME=cujojs-rest
-  - secure: "kxs2tHuJ3Vd1lO/mBoUJ5EpLdojYuAsCGm7xP03VVjuuJs7zf1gux3xx3e+5\nb2LaZL4p4/rPmkPaYGNmh/FE2XrmcAejF1bSKyX0VLD0LUPnB/afwWMF1vvI\nupa+JAXxNlM2tNaK+TiLdq0uFhjs8GyTdxHm9jujdzOmGf7IF8o="
+  - SAUCE_USERNAME=cujojs-rest
+  - secure: "WaOqXhResNiTSfK29NHdRsgckcl/ec5Qp04Vc2ny0WmUT/9t9lIb13fCnSds\n5vuYXi4yCLnue1q03jy4ggLGr74118P5JsaRjG7V4ua0TrAoBZsnsEOvDF3V\nm7jh62SMeXvV0LnhfEvr6D2hmjkUQDN5KTKr9YK0qZgDj78aj1U="
