@@ -44,7 +44,7 @@
 			},
 			'should abort the request if canceled': function () {
 				var request, response;
-				request = { path: '/test/client/fixtures/data.js', callback: { name: 'callback' } };
+				request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'jsonp' } };
 				response = client(request).then(
 					fail,
 					failOnThrow(function (response) {
@@ -67,7 +67,7 @@
 				);
 			},
 			'should not make a request that has already been canceled': function () {
-				var request = { canceled: true, path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'javascript' } };
+				var request = { canceled: true, path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'html5' } };
 				return client(request).then(
 					fail,
 					failOnThrow(function (response) {
