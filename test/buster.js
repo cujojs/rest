@@ -35,6 +35,7 @@ config['rest:browser'] = {
 		'node_modules/poly/**/*.js',
 		'node_modules/when/**/*.js',
 		'node_modules/wire/**/*.js',
+		'test/**/fixtures/**',
 		{ path: '/wait', backend: 'http://example.com' }
 	],
 	libs: [

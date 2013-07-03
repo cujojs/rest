@@ -229,7 +229,7 @@ Change Log
 ----------
 
 .next
-- nothing yet
+- fixes issues with uglified JSONP client in IE 8
 
 0.9.2
 - allow strings to represent request objects, the string value is treated as the path property

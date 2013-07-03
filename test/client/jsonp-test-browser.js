@@ -24,7 +24,7 @@
 		rest = require('rest');
 
 		buster.testCase('rest/client/jsonp', {
-			'should make a GET by default': function () {
+			'should make a cross origin request': function () {
 				var request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'javascript' } };
 				return client(request).then(function (response) {
 					assert(response.entity.responseData);
@@ -34,9 +34,9 @@
 				}).otherwise(fail);
 			},
 			'should use the jsonp client from the jsonp interceptor by default': function () {
-				var request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'html5' } };
+				var request = { path: '/test/client/fixtures/data.js', callback: { name: 'callback' } };
 				return jsonpInterceptor()(request).then(function (response) {
-					assert(response.entity.responseData);
+					assert(response.entity.data);
 					assert.same(request, response.request);
 					refute(request.canceled);
 					refute(response.raw.parentNode);
@@ -44,7 +44,7 @@
 			},
 			'should abort the request if canceled': function () {
 				var request, response;
-				request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'html5' } };
+				request = { path: '/test/client/fixtures/data.js', callback: { name: 'callback' } };
 				response = client(request).then(
 					fail,
 					failOnThrow(function (response) {
@@ -74,6 +74,24 @@
 						assert.same(request, response.request);
 						assert(request.canceled);
 						assert.same('precanceled', response.error);
+					})
+				);
+			},
+			'should error if callback not invoked': function () {
+				var request = { path: '/test/client/fixtures/noop.js' };
+				return client(request).then(
+					fail,
+					failOnThrow(function (response) {
+						assert.same('loaderror', response.error);
+					})
+				);
+			},
+			'should error if script throws': function () {
+				var request = { path: '/test/client/fixtures/throw.js' };
+				return client(request).then(
+					fail,
+					failOnThrow(function (response) {
+						assert.same('loaderror', response.error);
 					})
 				);
 			},
