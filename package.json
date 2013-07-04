@@ -1,6 +1,6 @@
 {
 	"name": "rest",
-	"version": "0.9.3",
+	"version": "0.9.4-next",
 	"description": "RESTful HTTP client library",
 	"keywords": ["rest", "http", "client", "rest-template", "spring", "cujojs"],
 	"licenses": [

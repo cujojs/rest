@@ -1,6 +1,6 @@
 {
 	"name": "rest",
-	"version": "0.9.3",
+	"version": "0.9.4-next",
 	"main": "./rest.js",
 	"dependencies": {
 		"when": ">1.8.0 <=3.0.0"

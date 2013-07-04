@@ -228,6 +228,9 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
+.next
+- nothing yet
+
 0.9.3
 - fixes issues with uglified JSONP client in IE 8
 
