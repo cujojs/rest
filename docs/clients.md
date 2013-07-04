@@ -100,6 +100,12 @@ JSONP client for browsers.  Allows basic cross-origin GETs via script tags.  Thi
   <td>'jsonp'</td>
   <td>common prefix for callback function names as they are placed on the window object</td>
 </tr>
+<tr>
+  <td>request.callback.name</td>
+  <td>optional</td>
+  <td><em>generated</em></td>
+  <td>pins the name of the callback function, useful for cases where the server doesn't allow custom callback names. Generally not recommended.</td>
+</tr>
 </table>
 
 

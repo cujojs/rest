@@ -769,6 +769,12 @@ Configures a request to use the [JSONP client](clients.md#module-rest/client/jso
   <td>'jsonp'</td>
   <td>prefix for the jsonp callback function name</td>
 </tr>
+<tr>
+  <td>callback.name</td>
+  <td>optional</td>
+  <td><em>generated</em></td>
+  <td>pins the name of the callback function, useful for cases where the server doesn't allow custom callback names. Generally not recommended.</td>
+</tr>
 </table>
 
 **Example**

@@ -72,7 +72,7 @@
 		 *   unobtrusive prefix is desired
 		 * @param {string} [request.callback.name=<generated>] pins the name of the
 		 *   callback function, useful for cases where the server doesn't allow
-		 *   custom callback names. Generally not recomended.
+		 *   custom callback names. Generally not recommended.
 		 *
 		 * @returns {Promise<Response>}
 		 */
