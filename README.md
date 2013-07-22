@@ -229,7 +229,7 @@ Change Log
 ----------
 
 .next
-- nothing yet
+- support bower 0.10+, older versions of bower will no longer work
 
 0.9.3
 - fixes issues with uglified JSONP client in IE 8
