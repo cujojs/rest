@@ -104,7 +104,7 @@
 					self = { rel: 'self', href: '/resource' };
 
 					body = { links: [ parent, self ]};
-					client = hateoas(function () { return { entity: body }; });
+					client = hateoas(function () { return { entity: body }; }, { target: '_links' });
 
 					return client().then(function (response) {
 						assert.same(parent, response.entity._links.parentLink);
@@ -118,7 +118,7 @@
 					self = { rel: 'self', href: '/resource' };
 
 					body = { links: [ parent, self ]};
-					client = hateoas(function () { return { entity: body }; }, { target: '' });
+					client = hateoas(function () { return { entity: body }; });
 
 					return client().then(function (response) {
 						assert.same(parent, response.entity.parentLink);
@@ -135,7 +135,7 @@
 					client = hateoas(function () { return { entity: body }; });
 
 					return client().then(function (response) {
-						var parentClient = response.entity._links.clientFor('parent', function (request) { return { request: request }; });
+						var parentClient = response.entity.clientFor('parent', function (request) { return { request: request }; });
 						return parentClient().then(function (response) {
 							assert.same(parent.href, response.request.path);
 						});
@@ -156,10 +156,10 @@
 
 					return client({ path: '/' }).then(function (response) {
 						assert.same('/', response.request.path);
-						assert.same('/', response.entity._links.selfLink.href);
-						return response.entity._links.child.then(function (response) {
+						assert.same('/', response.entity.selfLink.href);
+						return response.entity.child.then(function (response) {
 							assert.same('/resource', response.request.path);
-							assert.same('/resource', response.entity._links.selfLink.href);
+							assert.same('/resource', response.entity.selfLink.href);
 						});
 					}).otherwise(fail);
 				}

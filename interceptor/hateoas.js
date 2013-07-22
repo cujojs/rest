@@ -42,18 +42,22 @@
 		 * The client for the resoruce reference and the 'clientFor' function
 		 * can be provided by the 'client' config property.
 		 *
-		 * Index links are exposed by default under the '_links' property, and
-		 * may be configed by the 'target' config property.
+		 * Index links are exposed by default on the entity.  A child object may be
+		 * configed by the 'target' config property.
 		 *
 		 * @param {Client} [client] client to wrap
-		 * @param {string} [config.target='_links'] property to create on the entity and parse links into. If present and falsey, the response entity is used directly.
-		 * @param {Client} [config.client=request.originator] the parent client to use when creating clients for a linked resources. Defaults to the request's originator if available, otherwise the current interceptor's client
+		 * @param {string} [config.target=''] property to create on the entity and
+		 *   parse links into. If empty, the response entity is used directly.
+		 * @param {Client} [config.client=request.originator] the parent client to
+		 *   use when creating clients for a linked resources. Defaults to the
+		 *   request's originator if available, otherwise the current interceptor's
+		 *   client
 		 *
 		 * @returns {Client}
 		 */
 		return interceptor({
 			init: function (config) {
-				config.target = 'target' in config ? config.target || '' : '_links';
+				config.target = config.target || '';
 				return config;
 			},
 			response: function (response, config, hateoas) {

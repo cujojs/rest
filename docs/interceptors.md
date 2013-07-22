@@ -217,7 +217,7 @@ Also defines a `clientFor` factory function that creates a new client configured
 
 The client for the resource reference and the `clientFor` function can be provided by the `client` config property.  This method is also useful if the request for the resource
 
-Index links are exposed by default under the `_links` property, and may be configured by the `target` property.  Links may be indexed directly on the entity instead of a child object by providing a falsy value.
+Index links are exposed by default on the entity.  A child object may be configed by the 'target' config property.
 
 The entire response object graph will be inspected looking for an Array property names `links`; object cycles are detected and not reindexed.
 
@@ -243,8 +243,8 @@ The entire response object graph will be inspected looking for an Array property
 <tr>
   <td>target</td>
   <td>optional</td>
-  <td>'_links'</td>
-  <td>property to create on the entity and parse links into. If present and falsey, the response entity is used directly.</td>
+  <td>''</td>
+  <td>property to create on the entity and parse links into. If empty, the response entity is used directly.</td>
 </tr>
 <tr>
   <td>client</td>
@@ -264,7 +264,7 @@ client({ path: '/people/scott' }).then(function (response) {
     // assuming response for /people/ron: { entity: '{ "name": "Ron", ... }', ... }
 
     assert.same('Scott', response.entity.name);
-    return response.entity._links.father;
+    return response.entity.father;
 }).then(function (response) {
     assert.same('Ron', response.entity.name);
 });
@@ -278,7 +278,7 @@ client({ path: '/people/scott' }).then(function (response) {
     // assuming response for /people/ron: { entity: '{ "name": "Ron", ... }', ... }
 
     assert.same('Scott', response.entity.name);
-    response.entity._links.clientFor('father')({}).then(function (father) {
+    response.entity.clientFor('father')({}).then(function (father) {
         assert.same('Ron', father.entity.name);
     });
 });

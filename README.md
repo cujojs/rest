@@ -229,6 +229,7 @@ Change Log
 ----------
 
 .next
+- HATEOAS interceptor defaults to indexing relationships directly on the host entity instead of the '_links' child object.  A child object may still be configured.
 - support bower 0.10+, older versions of bower will no longer work
 
 0.9.3
