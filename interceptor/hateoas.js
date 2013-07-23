@@ -69,12 +69,20 @@
 					links.forEach(function (link) {
 						Object.defineProperty(target, link.rel + 'Link', {
 							enumerable: false,
+							configurable: true,
 							value: link
 						});
 						Object.defineProperty(target, link.rel, {
 							enumerable: false,
+							configurable: true,
 							get: function () {
-								return client({ path: link.href });
+								var response = client({ path: link.href });
+								Object.defineProperty(target, link.rel, {
+									enumerable: false,
+									configurable: true,
+									value: response
+								});
+								return response;
 							}
 						});
 					});

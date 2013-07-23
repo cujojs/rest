@@ -140,6 +140,16 @@
 							assert.same(parent.href, response.request.path);
 						});
 					}).otherwise(fail);
+				},
+				'should return the same value for multiple property accesses': function () {
+					var client, body;
+
+					body = { links: [ { rel: 'self', href: '/resource' } ]};
+					client = hateoas(function () { return { entity: body }; });
+
+					return client().then(function (response) {
+						assert.same(response.entity.self, response.entity.self);
+					}).otherwise(fail);
 				}
 			},
 			'should fetch a related resource': {
