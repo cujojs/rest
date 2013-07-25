@@ -10,13 +10,12 @@
 
 	define(function (require) {
 
-		var interceptor, pathPrefix, rfc5988LinkParser, cycleFlag;
+		var interceptor, pathPrefix, rfc5988LinkParser, find;
 
 		interceptor = require('../interceptor');
 		pathPrefix = require('./pathPrefix');
 		rfc5988LinkParser = require('../parsers/rfc5988');
-
-		cycleFlag = '__rest_hateoas_seen__';
+		find = require('../util/find');
 
 		/**
 		 * [Experimental]
@@ -99,37 +98,6 @@
 					});
 				}
 
-				function walk(obj) {
-					if (typeof obj !== 'object' || obj === null || cycleFlag in obj) { return; }
-
-					var target, links;
-
-					Object.defineProperty(obj, cycleFlag, { enumerable: false, configurable: true, value: true });
-
-					links = obj.links;
-					if (Array.isArray(links)) {
-						if (config.target === '') {
-							target = obj;
-						}
-						else {
-							target = {};
-							Object.defineProperty(obj, config.target, {
-								enumerable: false,
-								value: target
-							});
-						}
-
-						apply(target, links);
-					}
-
-					Object.keys(obj).forEach(function (prop) {
-						walk(obj[prop]);
-					});
-
-					// some nodes will be visited twice, but cycles will not be infinite
-					delete obj[cycleFlag];
-				}
-
 				function parseLinkHeaders(headers) {
 					var links = [];
 					[].concat(headers).forEach(function (header) {
@@ -148,7 +116,25 @@
 					response.links = response.links || {};
 					apply(response.links, parseLinkHeaders(response.headers.Link));
 				}
-				walk(response);
+
+				find.findProperties(response, 'links', function (obj, host) {
+					var target;
+
+					if (Array.isArray(host.links)) {
+						if (config.target === '') {
+							target = host;
+						}
+						else {
+							target = {};
+							Object.defineProperty(host, config.target, {
+								enumerable: false,
+								value: target
+							});
+						}
+
+						apply(target, host.links);
+					}
+				});
 
 				return response;
 			}
