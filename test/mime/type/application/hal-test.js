@@ -16,7 +16,7 @@
 
 	define('rest/mime/type/application/hal-test', function (require) {
 
-		var hal, mime;
+		var hal, mime, supports;
 
 		hal = require('rest/mime/type/application/hal');
 		mime = require('rest/interceptor/mime');
@@ -24,6 +24,20 @@
 		function client(request) {
 			return { request: request };
 		}
+
+		supports = {
+			'Object.defineProperty': (function () {
+				try {
+					var obj = {};
+					Object.defineProperty(obj, 'test', { enumerable: false, configurable: true, value: true });
+					return obj.test;
+				}
+				catch (e) {
+					return false;
+				}
+			}())
+		};
+
 
 		buster.testCase('rest/mime/type/application/hal', {
 			'should stringify json': function () {
@@ -125,11 +139,14 @@
 				read = hal.read(JSON.stringify(raw));
 				writen = hal.write(read);
 
-				refute.match(writen, '_embedded');
-				refute.match(writen, '_links');
-				refute.match(writen, 'clientFor');
-				refute.match(writen, 'prop');
 				assert.match(writen, '"foo":"bar"');
+
+				if (!supports['Object.defineProperty']) {
+					refute.match(writen, '_embedded');
+					refute.match(writen, '_links');
+					refute.match(writen, 'clientFor');
+					refute.match(writen, 'prop');
+				}
 			}
 		});
 
