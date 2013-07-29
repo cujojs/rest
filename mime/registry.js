@@ -15,7 +15,8 @@
 		when = require('when');
 
 		function normalizeMime(mime) {
-			return mime.split(';')[0].trim();
+			// TODO we're dropping info that may be important
+			return mime.split(/[;\+]/)[0].trim();
 		}
 
 		function Registry(parent) {

@@ -31,6 +31,7 @@ registry.lookup('application/json').then(function (jsonConverter) {
 Serveral common MIME types are supported out of the box including:
 
 - text/plain
+- application/hal+json
 - application/json
 - application/x-form-www-urlencoded
 
@@ -42,12 +43,14 @@ These converters are loaded lazily and are located under `rest/mime/type/*`. So 
 
 A converter is fundamentally a object with two methods: `read` and `write`. The read method accepts the entity as a string and returns an object. The write method accepts the entity as an object and returns a string. While not strictly required, the read and write methods are typically reflexive. A convert may implement either the read or write methods, but that limits the converters ability to handle response or request entities, respectively.
 
+The `read` and `write` methods may additionaly accept an `opts` argument. Common opts include the `request` or `response`, and a `client` to make further requests if needed.
+
 ```javascript
 numberConverter = {
-    read: function (str) {
+    read: function (str, opts) {
         return parseFloat(str);
     },
-    write: function (obj) {
+    write: function (obj, opts) {
         return obj.toString();
     }
 };
@@ -55,7 +58,7 @@ numberConverter = {
 registry.register('application/vnd.numbers', numberConverter);
 ```
 
-Converters registered within the registered will be available to all consumers of the registry. If a custom converter needs to be installed to override a well known MIME type, or different parts of the application need different converters for the same MIME type, a child registry should be used instead. The custom registry can be provided to the mime interceptor to override using the main registry.
+Converters registered within the registry will be available to all consumers of the registry. If a custom converter needs to be installed to override a well known MIME type, or different parts of the application need different converters for the same MIME type, a child registry should be used instead. The custom registry can be provided to the mime interceptor to override using the main registry.
 
 ```javascript
 childRegistry = registry.child();

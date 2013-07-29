@@ -107,17 +107,19 @@
 				}).otherwise(fail);
 			},
 			'should use the configured mime registry': function () {
-				var client, customRegistry;
+				var client, converter, customRegistry;
+
+				converter = {
+					read: this.spy(function (str) {
+						return 'read: ' + str;
+					}),
+					write: this.spy(function (obj) {
+						return 'write: ' + obj.toString();
+					})
+				};
 
 				customRegistry = registry.child();
-				customRegistry.register('application/vnd.com.example', {
-					read: function (str) {
-						return 'read: ' + str;
-					},
-					write: function (obj) {
-						return 'write: ' + obj.toString();
-					}
-				});
+				customRegistry.register('application/vnd.com.example', converter);
 
 				client = mime(
 					function (request) {
@@ -131,6 +133,9 @@
 					assert.equals('write: request entity', response.request.entity);
 					assert.equals('application/vnd.com.example', response.headers['Content-Type']);
 					assert.equals('read: response entity', response.entity);
+
+					assert.calledWith(converter.read, 'response entity', { client: client, response: response });
+					assert.calledWith(converter.write, 'request entity', { client: client, request: response.request });
 				}).otherwise(fail);
 			},
 			'should have the default client as the parent by default': function () {

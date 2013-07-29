@@ -28,9 +28,13 @@
 		 * Response entities are converted based on the Content-Type response header.
 		 *
 		 * @param {Client} [client] client to wrap
-		 * @param {string} [config.mime='text/plain'] MIME type to encode the request entity
+		 * @param {string} [config.mime='text/plain'] MIME type to encode the request
+		 *   entity
 		 * @param {string} [config.accept] Accept header for the request
-		 * @param {Registry} [config.registry] MIME registry, defaults to the root registry
+		 * @param {Client} [config.client=<request.originator>] client passed to the
+		 *   serializer, defaults to the client originating the request
+		 * @param {Registry} [config.registry] MIME registry, defaults to the root
+		 *   registry
 		 *
 		 * @returns {Client}
 		 */
@@ -54,7 +58,8 @@
 
 				config.registry.lookup(mime).then(
 					function (serializer) {
-						request.entity = serializer.write(request.entity);
+						var client = config.client || request.originator;
+						request.entity = serializer.write(request.entity, { client: client, request: request });
 						requestReady.resolve(request);
 					},
 					function () {
@@ -76,7 +81,8 @@
 				responseReady = when.defer();
 
 				config.registry.lookup(mime).otherwise(function () { return plainText; }).then(function (serializer) {
-					response.entity = serializer.read(response.entity);
+					var client = config.client || response.request && response.request.originator;
+					response.entity = serializer.read(response.entity, { client: client, response: response });
 					responseReady.resolve(response);
 				});
 
