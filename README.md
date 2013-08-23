@@ -229,6 +229,7 @@ Change Log
 ----------
 
 .next
+- CSRF protection interceptor
 - support bower 0.10+, older versions of bower will no longer work
 
 0.9.3
