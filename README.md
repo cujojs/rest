@@ -230,6 +230,7 @@ Change Log
 
 .next
 - JSON HAL mime serializer for application/hal+json
+- CSRF protection interceptor
 - HATEOAS interceptor defaults to indexing relationships directly on the host entity instead of the '_links' child object.  A child object may still be configured.
 - HATEOAS interceptor returns same promise on multiple relationship property accesses
 - support bower 0.10+, older versions of bower will no longer work

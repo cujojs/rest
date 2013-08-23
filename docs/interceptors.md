@@ -12,6 +12,7 @@
     - [Authentication Interceptors](#interceptor-provided-auth)
         - [Basic Auth Interceptor](#module-rest/interceptor/basicAuth)
         - [OAuth Interceptor](#module-rest/interceptor/oAuth)
+        - [CSRF Interceptor](#module-rest/interceptor/csrf)
     - [Error Detection and Recovery Interceptors](#interceptor-provided-error)
         - [Error Code Interceptor](#module-rest/interceptor/errorCode)
         - [Retry Interceptor](#module-rest/interceptor/retry)
@@ -573,6 +574,61 @@ client = rest.chain(oAuth, {
 });
 client({ path: 'http://resourceserver.example.com' }).then(function (response) {
     // authenticated response from the resource server
+});
+```
+
+
+<a name="module-rest/interceptor/csrf"></a>
+#### CSRF Interceptor
+
+`rest/interceptor/csrf` ([src](../interceptor/csrf.js))
+
+Applies a Cross-Site Request Forgery protection header to a request
+
+CSRF protection helps a server verify that a request came from a trusted client and not another client that was able to masquerade as an authorized client. Sites that use cookie based authentication are particularly vulnerable to request forgeries without extra protection.
+
+**Phases**
+
+- request
+
+**Configuration**
+
+<table>
+<tr>
+  <th>Property</th>
+  <th>Required?</th>
+  <th>Default</th>
+  <th>Description</th>
+</tr>
+<tr>
+  <td>name</td>
+  <td>optional</td>
+  <td>'X-Csrf-Token'</td>
+  <td>name of the request header, may be overridden by `request.csrfTokenName`</td>
+</tr>
+<tr>
+  <td>token</td>
+  <td>optional</td>
+  <td><em>none</em></td>
+  <td>CSRF token, may be overridden by `request.csrfToken`</td>
+</tr>
+</table>
+
+**Example**
+
+```javascript
+client = rest.chain(csrf, { token: 'abc123xyz789' });
+// interceptor config
+client({}).then(function (response) {
+    assert.same('abc123xyz789', response.request.headers['X-Csrf-Token']);
+});
+```
+
+```javascript
+client = rest.chain(csrf);
+// request config
+client({ csrfToken: 'abc123xyz789' }).then(function (reponse) {
+    assert.same('abc123xyz789', response.request.headers['X-Csrf-Token']);
 });
 ```
 
