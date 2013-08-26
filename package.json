@@ -17,14 +17,14 @@
 	"maintainers": [
 		{
 			"name": "Scott Andrews",
-			"email": "andrewss@vmware.com",
+			"email": "sandrews@gopivotal.com",
 			"web": "http://twitter.com/scothis"
 		}
 	],
 	"contributors": [
 		{
 			"name": "Jeremy Grelle",
-			"email": "jgrelle@vmware.com"
+			"email": "jgrelle@gopivotal.com"
 		}
 	],
 	"dependencies": {

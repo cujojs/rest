@@ -211,8 +211,8 @@ Feature requests are also welcome.
 Contributors
 ------------
 
-- Scott Andrews <andrewss@vmware.com>
-- Jeremy Grelle <jgrelle@vmware.com>
+- Scott Andrews <sandrews@gopivotal.com>
+- Jeremy Grelle <jgrelle@gopivotal.com>
 
 Please see CONTRIBUTING.md for details on how to contribute to this project.
 
