@@ -59,10 +59,10 @@
 				config.target = config.target || '';
 				return config;
 			},
-			response: function (response, config, hateoas) {
+			response: function (response, config, meta) {
 				var client;
 
-				client = config.client || (response.request && response.request.originator) || hateoas;
+				client = config.client || (response.request && response.request.originator) || meta.client;
 
 				function apply(target, links) {
 					links.forEach(function (link) {

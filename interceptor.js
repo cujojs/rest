@@ -40,11 +40,11 @@
 			return config;
 		}
 
-		function defaultRequestHandler(request /*, config */) {
+		function defaultRequestHandler(request /*, config, meta */) {
 			return request;
 		}
 
-		function defaultResponseHandler(response /*, config, client */) {
+		function defaultResponseHandler(response /*, config, meta */) {
 			return response;
 		}
 
@@ -111,11 +111,13 @@
 				config = initHandler(beget(config));
 
 				client = function (request) {
-					var context = {};
+					var context, meta;
+					context = {};
+					meta = { 'arguments': Array.prototype.slice.call(arguments), client: client };
 					request = typeof request === 'string' ? { path: request } : request || {};
 					request.originator = request.originator || client;
 					return when(
-						requestHandler.call(context, request, config),
+						requestHandler.call(context, request, config, meta),
 						function (request) {
 							var response, abort, next;
 							next = target;
@@ -131,10 +133,10 @@
 								return when(
 									next(request),
 									function (response) {
-										return successResponseHandler.call(context, response, config, client);
+										return successResponseHandler.call(context, response, config, meta);
 									},
 									function (response) {
-										return errorResponseHandler.call(context, response, config, client);
+										return errorResponseHandler.call(context, response, config, meta);
 									}
 								);
 							});

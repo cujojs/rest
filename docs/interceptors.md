@@ -942,19 +942,19 @@ noopInterceptor = interceptor({
         // do studd with the config
         return config;
     },
-    request: function (request, config) {
+    request: function (request, config, meta) {
         // do stuff with the request
         return request;
     },
-    response: function (response, config, client) {
+    response: function (response, config, meta) {
         // do stuff with the response
         return response;
     },
-    success: function (response, config, client) {
+    success: function (response, config, meta) {
         // do stuff with the response
         return response;
     },
-    error: function (response, config, client) {
+    error: function (response, config, meta) {
         // do stuff with the response
         return response;
     }
@@ -973,17 +973,19 @@ delayRequestInterceptor = interceptor({
 });
 ```
 
+The `meta` argument contains additional information about the context of the request. It contains the `client`, which can be used to make subsequent requests, and the raw `arguments` provided to the client.
+
 For interceptors that need to track state between request and response handlers, the context of each handler is shared and unique to each invocation.
 
 ```javascript
 interceptor = require('rest/interceptor');
 counter = 0;
 countLoggingInterceptor = interceptor({
-    request: function (request, config) {
+    request: function (request) {
         this.count = counter++;
         return request;
     },
-    response: function (response, config, client) {
+    response: function (response) {
         console.log('invocation count: ', this.count);
         return response;
     }

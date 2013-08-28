@@ -406,17 +406,42 @@
 					})
 				);
 			},
-			'should have access to the client in the response handlers for subsequent requests': function () {
+			'should have access to the client for subsequent requests': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor({
-					response: function (response, config, client) {
-						response.client = client;
+					request: function (request, config, meta) {
+						request.client = meta.client;
+						return request;
+					},
+					response: function (response, config, meta) {
+						response.client = meta.client;
 						return response;
 					}
 				});
 				client = theInterceptor(defaultClient);
 				return client().then(function (response) {
 					assert.same(client, response.client);
+					assert.same(client, response.request.client);
+					assert.same('default', response.id);
+				}).otherwise(fail);
+			},
+			'should have access to the invocation args': function () {
+				var theInterceptor, client;
+				theInterceptor = interceptor({
+					request: function (request, config, meta) {
+						request['arguments'] = meta['arguments'];
+						return request;
+					},
+					response: function (response, config, meta) {
+						response['arguments'] = meta['arguments'];
+						return response;
+					}
+				});
+				client = theInterceptor(defaultClient);
+				return client('foo', 'bar').then(function (response) {
+					assert.same('foo', response['arguments'][0]);
+					assert.same('bar', response['arguments'][1]);
+					assert.same(response['arguments'], response.request['arguments']);
 					assert.same('default', response.id);
 				}).otherwise(fail);
 			},

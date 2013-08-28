@@ -36,7 +36,7 @@
 				config.max = config.max || Infinity;
 				return config;
 			},
-			error: function (response, config, client) {
+			error: function (response, config, meta) {
 				var request;
 
 				request = response.request;
@@ -48,7 +48,7 @@
 						return when.reject({ request: request, error: 'precanceled' });
 					}
 					request.retry = Math.min(request.retry * config.multiplier, config.max);
-					return client(request);
+					return meta.client(request);
 				});
 			}
 		});
