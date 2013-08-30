@@ -15,10 +15,11 @@
 
 	define('rest/version-test', function (require) {
 
-		var bowerJson, packageJson;
+		var bowerJson, packageJson, componentJson;
 
 		bowerJson = require('rest/bower.json');
 		packageJson = require('rest/package.json');
+		componentJson = require('rest/component.json');
 
 		buster.testCase('rest/version', {
 			'should have the same name for package.json and bower.json': function () {
@@ -30,6 +31,9 @@
 			'should have the same depenencies for package.json and bpwer.json': function () {
 				// this may not always hold true, but it currently does
 				assert.equals(bowerJson.dependencies, packageJson.dependencies);
+			},
+			'should maintains backwards compatibility for bower pre-0.10': function () {
+				assert.equals(bowerJson, componentJson);
 			}
 		});
 
