@@ -230,11 +230,14 @@ Change Log
 
 .next
 - JSON HAL mime serializer for application/hal+json
-- CSRF protection interceptor
 - the third argument to the interceptor request/response callbacks is not an object instead of the client, the client is a property on that object
 - HATEOAS interceptor defaults to indexing relationships directly on the host entity instead of the '_links' child object.  A child object may still be configured.
 - HATEOAS interceptor returns same promise on multiple relationship property accesses
-- support bower 0.10+, older versions of bower will no longer work
+- drop support for bower  pre 1.0
+
+0.9.4
+- CSRF protection interceptor
+- support bower 0.10+, older versions of bower continue to work
 
 0.9.3
 - fixes issues with uglified JSONP client in IE 8
