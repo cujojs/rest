@@ -228,7 +228,7 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
-.next
+0.9.4
 - CSRF protection interceptor
 - support bower 0.10+, older versions of bower continue to work
 
