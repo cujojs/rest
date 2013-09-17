@@ -77,6 +77,16 @@
 				client = response.raw = new XMLHttpRequest();
 				client.open(method, url, true);
 
+				if (request.mixin) {
+					Object.keys(request.mixin).forEach(function (prop) {
+						// make sure the property already exists as
+						// IE 6 will blow up if we add a new prop
+						if (request.mixin.hasOwnProperty(prop) && prop in client) {
+							client[prop] = request.mixin[prop];
+						}
+					});
+				}
+
 				headers = request.headers;
 				for (headerName in headers) {
 					/*jshint forin:false */

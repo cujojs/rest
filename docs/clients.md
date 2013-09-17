@@ -57,6 +57,12 @@ The default client for browsers.  The XHR client utilizes the XMLHttpRequest obj
   <td>window.XMLHttpRequest</td>
   <td>The XMLHttpRequest instance to use</td>
 </tr>
+<tr>
+  <td>request.mixin</td>
+  <td>optional</td>
+  <td><em>none</em></td>
+  <td>Additional properties to mix into the XHR object</td>
+</tr>
 </table>
 
 **Know limitations**

@@ -96,6 +96,17 @@
 					refute(request.canceled);
 				}).otherwise(fail);
 			},
+			'should mixin additional properties': {
+				requiresSupportFor: { timeout: XMLHttpRequest && 'timeout' in new XMLHttpRequest() },
+				'': function () {
+					var request = { path: '/', mixin: { timeout: 1000, foo: 'bar' } };
+					return client(request).then(function (response) {
+						var xhr = response.raw;
+						assert.equals(xhr.timeout, 1000);
+						refute.equals(xhr.foo, 'bar');
+					}).otherwise(fail);
+				}
+			},
 			'//should abort the request if canceled': function (done) {
 				// TODO find an endpoint that takes a bit to respond, cached files may return synchronously
 				// this test misbehavies in IE6, the response is recieved before the request can cancel
