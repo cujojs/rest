@@ -16,9 +16,9 @@
 
 		beget = require('./util/beget');
 
-		urlRE = /([a-z][a-z0-9\+\-\.]*:)\/\/([^@]+@)?(([^:\/]+)(:([0-9]+))?)(\/[^?#]*)?(\?[^#]*)?(#\S*)?/i;
+		urlRE = /([a-z][a-z0-9\+\-\.]*:)\/\/([^@]+@)?(([^:\/]+)(:([0-9]+))?)?(\/[^?#]*)?(\?[^#]*)?(#\S*)?/i;
 		absoluteUrlRE = /^([a-z][a-z0-9\-\+\.]*:\/\/|\/)/i;
-		fullyQualifiedUrlRE = /([a-z][a-z0-9\+\-\.]*:)\/\/([^@]+@)?(([^:\/]+)(:([0-9]+))?)\//i;
+		fullyQualifiedUrlRE = /([a-z][a-z0-9\+\-\.]*:)\/\/([^@]+@)?(([^:\/]+)(:([0-9]+))?)?\//i;
 
 		/**
 		 * Apply params to the template to create a URL.
@@ -185,8 +185,8 @@
 				parts = {
 					href: url[0],
 					protocol: url[1],
-					host: url[3],
-					hostname: url[4],
+					host: url[3] || '',
+					hostname: url[4] || '',
 					port: url[6],
 					pathname: url[7] || '',
 					search: url[8] || '',

@@ -75,6 +75,9 @@
 				assert(new UrlBuilder('//foo').isAbsolute());
 				assert(new UrlBuilder('http://example.com').isAbsolute());
 				assert(new UrlBuilder('https://example.com').isAbsolute());
+				assert(new UrlBuilder('file:///').isAbsolute());
+				assert(new UrlBuilder('file:///home/example/index.html').isAbsolute());
+				assert(new UrlBuilder('file:///C:/Documents%20and%20Settings/example/index.html').isAbsolute());
 			},
 			'should indicate if the URL is fully qualified': function () {
 				refute(new UrlBuilder('').isFullyQualified());
@@ -84,6 +87,9 @@
 				refute(new UrlBuilder('https://example.com').isFullyQualified());
 				assert(new UrlBuilder('http://example.com/').isFullyQualified());
 				assert(new UrlBuilder('https://example.com/').isFullyQualified());
+				assert(new UrlBuilder('file:///').isFullyQualified());
+				assert(new UrlBuilder('file:///home/example/index.html').isFullyQualified());
+				assert(new UrlBuilder('file:///C:/Documents%20and%20Settings/example/index.html').isFullyQualified());
 			},
 			'should indicate if the URL is cross origin': {
 				requiresSupportFor: { location: location },
@@ -156,6 +162,30 @@
 					assert.same('/', parts.pathname);
 					assert.same('', parts.search);
 					assert.same('#main', parts.hash);
+				},
+				'for a Unix file URL': function () {
+					var parts = new UrlBuilder('file:///home/example/index.html').parts();
+					assert.same('file:///home/example/index.html', parts.href);
+					assert.same('file:', parts.protocol);
+					assert.same('', parts.host);
+					assert.same('', parts.hostname);
+					assert.same('', parts.port);
+					assert.same('file://', parts.origin);
+					assert.same('/home/example/index.html', parts.pathname);
+					assert.same('', parts.search);
+					assert.same('', parts.hash);
+				},
+				'for a Windows file URL': function () {
+					var parts = new UrlBuilder('file:///C:/Documents%20and%20Settings/example/index.html').parts();
+					assert.same('file:///C:/Documents%20and%20Settings/example/index.html', parts.href);
+					assert.same('file:', parts.protocol);
+					assert.same('', parts.host);
+					assert.same('', parts.hostname);
+					assert.same('', parts.port);
+					assert.same('file://', parts.origin);
+					assert.same('/C:/Documents%20and%20Settings/example/index.html', parts.pathname);
+					assert.same('', parts.search);
+					assert.same('', parts.hash);
 				}
 			},
 			'should be forgiving of non constructor calls': function () {
