@@ -234,6 +234,7 @@ Change Log
 - HATEOAS interceptor defaults to indexing relationships directly on the host entity instead of the '_links' child object.  A child object may still be configured.
 - HATEOAS interceptor returns same promise on multiple relationship property accesses
 - 'file:' scheme URL support in rest/UrlBuilder
+- bump when.js version to 2.x
 - drop support for bower  pre 1.0
 
 0.9.4

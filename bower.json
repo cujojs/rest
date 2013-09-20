@@ -3,7 +3,7 @@
 	"version": "0.10.0-pre",
 	"main": "./rest.js",
 	"dependencies": {
-		"when": ">1.8.0 <=3.0.0"
+		"when": "~2"
 	},
 	"ignore": [
 		"docs",
