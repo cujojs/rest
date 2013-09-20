@@ -228,7 +228,7 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
-.next
+1.0.0
 - JSON HAL mime serializer for application/hal+json
 - the third argument to the interceptor request/response callbacks is not an object instead of the client, the client is a property on that object
 - HATEOAS interceptor defaults to indexing relationships directly on the host entity instead of the '_links' child object.  A child object may still be configured.
