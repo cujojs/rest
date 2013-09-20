@@ -228,6 +228,9 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
+.next
+- nothing yet
+
 1.0.0
 - JSON HAL mime serializer for application/hal+json
 - the third argument to the interceptor request/response callbacks is not an object instead of the client, the client is a property on that object
