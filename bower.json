@@ -4,5 +4,9 @@
 	"main": "./rest.js",
 	"dependencies": {
 		"when": ">1.8.0 <=3.0.0"
-	}
+	},
+	"ignore": [
+		"docs",
+		"test"
+	]
 }
