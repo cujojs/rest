@@ -21,9 +21,9 @@ SOFTWARE.
 
 ---
 
-Code published by Scott Andrews or Jeremy Grelle is copyright VMware and
-licensed under the above terms.
+Code published by Scott Andrews or Jeremy Grelle prior to 2013-09-21 is
+copyright Pivotal and licensed under the above terms.
 
-VMware, Inc.
-3401 Hillview Avenue
-Palo Alto, CA 94304
+GoPivotal, Inc.
+1900 South Norfolk Street, Suite 125
+San Mateo, CA 94403
