@@ -211,8 +211,8 @@ Feature requests are also welcome.
 Contributors
 ------------
 
-- Scott Andrews <sandrews@gopivotal.com>
-- Jeremy Grelle <jgrelle@gopivotal.com>
+- Scott Andrews <scothis@gmail.com>
+- Jeremy Grelle <jeremy.grelle@gmail.com>
 
 Please see CONTRIBUTING.md for details on how to contribute to this project.
 
