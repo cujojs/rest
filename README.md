@@ -229,7 +229,7 @@ Change Log
 ----------
 
 .next
-- nothing yet
+- handle exceptions thrown from MIME converters
 
 1.0.0
 - JSON HAL mime serializer for application/hal+json

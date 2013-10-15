@@ -59,11 +59,17 @@
 				config.registry.lookup(mime).then(
 					function (serializer) {
 						var client = config.client || request.originator;
-						request.entity = serializer.write(request.entity, { client: client, request: request });
-						requestReady.resolve(request);
+						try {
+							request.entity = serializer.write(request.entity, { client: client, request: request });
+							requestReady.resolve(request);
+						}
+						catch (e) {
+							// TODO include cause of the error, see #45
+							requestReady.reject('mime-serialization');
+						}
 					},
 					function () {
-						requestReady.reject('unknown-mime');
+						requestReady.reject('mime-unknown');
 					}
 				);
 
@@ -82,8 +88,15 @@
 
 				config.registry.lookup(mime).otherwise(function () { return plainText; }).then(function (serializer) {
 					var client = config.client || response.request && response.request.originator;
-					response.entity = serializer.read(response.entity, { client: client, response: response });
-					responseReady.resolve(response);
+					try {
+						response.entity = serializer.read(response.entity, { client: client, response: response });
+						responseReady.resolve(response);
+					}
+					catch (e) {
+						response.error = 'mime-deserialization';
+						response.cause = e;
+						responseReady.reject(response);
+					}
 				});
 
 				return responseReady.promise;

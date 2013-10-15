@@ -90,7 +90,7 @@
 				return client(request).then(
 					fail,
 					failOnThrow(function (response) {
-						assert.same('unknown-mime', response.error);
+						assert.same('mime-unknown', response.error);
 						assert.same(request, response.request);
 					})
 				);
@@ -137,6 +137,58 @@
 					assert.calledWith(converter.read, 'response entity', { client: client, response: response });
 					assert.calledWith(converter.write, 'request entity', { client: client, request: response.request });
 				}).otherwise(fail);
+			},
+			'should reject the response if the serializer fails to write the request': function () {
+				var client, converter, customRegistry;
+
+				converter = {
+					read: function (str) {
+						throw str;
+					}
+				};
+
+				customRegistry = registry.child();
+				customRegistry.register('application/vnd.com.example', converter);
+
+				client = mime(
+					function (request) {
+						return { request: request };
+					},
+					{ mime: 'application/vnd.com.example', registry: customRegistry }
+				);
+
+				return client({ entity: 'request entity' }).then(
+					fail,
+					failOnThrow(function (response) {
+						assert.equals(response.error, 'mime-serialization');
+					})
+				);
+			},
+			'should reject the response if the serializer fails to read the response': function () {
+				var client, converter, customRegistry;
+
+				converter = {
+					write: function (obj) {
+						throw obj;
+					}
+				};
+
+				customRegistry = registry.child();
+				customRegistry.register('application/vnd.com.example', converter);
+
+				client = mime(
+					function (request) {
+						return { request: request, headers: { 'Content-Type': 'application/vnd.com.example' }, entity: 'response entity' };
+					},
+					{  registry: customRegistry }
+				);
+
+				return client({}).then(
+					fail,
+					failOnThrow(function (response) {
+						assert.equals(response.error, 'mime-deserialization');
+					})
+				);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, mime().skip());
