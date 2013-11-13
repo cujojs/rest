@@ -6,16 +6,16 @@
  * @author Scott Andrews
  */
 
-(function (define) {
+(function (define, envRequire) {
 	'use strict';
 
 	define(function (require) {
 
 		var parser, http, https, when, UrlBuilder, normalizeHeaderName, httpsExp;
 
-		parser = require('url');
-		http = require('http');
-		https = require('https');
+		parser = envRequire('url');
+		http = envRequire('http');
+		https = envRequire('https');
 		when = require('when');
 		UrlBuilder = require('../UrlBuilder');
 		normalizeHeaderName = require('../util/normalizeHeaderName');
@@ -142,6 +142,7 @@
 	});
 
 }(
-	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); },
+	typeof require === 'function' && require
 	// Boilerplate for AMD and Node
 ));
