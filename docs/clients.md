@@ -32,7 +32,11 @@ The provided clients are the root of the interceptor chain.  They are responsibl
 
 `rest` ([src](../rest.js))
 
-The default client is also the main module for the rest.js package.  It's not a client implementations, but an alias to the best client for a platform.  When running within a browser, the XHR client is used; when running within Node.js, the Node client is used.  As other JavaScript environments are supported, the default client will continue to map directly to the most appropriate client implementation.
+The default client is also the main module for the rest.js package.  It's not a client implementation, but an alias to the best client for a platform.  When running within a browser, the XHR client is used; when running within Node.js, the Node client is used.  As other JavaScript environments are supported, the default client will continue to map directly to the most appropriate client implementation.
+
+The default client is used internally when no custom client is configured.  There are times, when it's useful to change the default client; such as when the automatic environment sniffing is wrong, or you want to add support for a new environment that rest.js doesn't yet understand. In these cases, you can set, get and reset the default client using the `rest.setDefaultClient(client)`, `rest.getDefaultClient()` and `rest.resetDefaultClient()` methods respectively.
+
+While it may be tempting to change the default client for application level concerns, changing the default will impact all consumers.  In just about every case, using an [Interceptor](./interceptors.md) is preferred.
 
 
 <a name="module-rest/client/xhr"></a>

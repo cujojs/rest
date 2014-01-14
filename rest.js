@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -8,9 +8,9 @@
 (function (define, process) {
 	'use strict';
 
-	define(function (require) {
+	var undef;
 
-		var moduleId;
+	define(function (require) {
 
 		/**
 		 * Plain JS Object containing properties that represent an HTTP request.
@@ -56,13 +56,52 @@
 		 * @class Client
 		 */
 
-		if (process && process.versions && process.versions.node) {
-			// evade build tools
-			moduleId = './client/node';
-			return require(moduleId);
+		var client, platformDefault;
+
+		client = platformDefault = (function () {
+			if (process && process.versions && process.versions.node) {
+				// evade build tools
+				var moduleId = './client/node';
+				return require(moduleId);
+			}
+
+			return require('./client/xhr');
+		}());
+
+		/**
+		 * Make a request with the default client
+		 * @param {Request} the HTTP request
+		 * @returns {Promise<Response>} a promise the resolves to the HTTP response
+		 */
+		function defaultClient() {
+			return client.apply(undef, arguments);
 		}
 
-		return require('./client/xhr');
+		/**
+		 * Change the default client
+		 * @param {Client} client the new default client
+		 */
+		defaultClient.setDefaultClient = function setDefaultClient(c) {
+			client = c;
+		};
+
+		/**
+		 * Obtain a direct reference to the current default client
+		 * @returns {Client} the default client
+		 */
+		defaultClient.getDefaultClient = function getDefaultClient() {
+			return client;
+		};
+
+		/**
+		 * Reset the default client to the platform default
+		 */
+		defaultClient.resetDefaultClient = function resetDefaultClient() {
+			client = platformDefault;
+		};
+
+		return defaultClient;
+
 	});
 
 }(

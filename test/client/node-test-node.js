@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Jeremy Grelle
@@ -136,7 +136,8 @@
 				}).otherwise(fail);
 			},
 			'should be the default client': function () {
-				assert.same(client, rest);
+				rest.resetDefaultClient();
+				assert.same(client, rest.getDefaultClient());
 			},
 			'should support interceptor chaining': function () {
 				assert(typeof client.chain === 'function');

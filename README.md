@@ -220,7 +220,7 @@ Please see CONTRIBUTING.md for details on how to contribute to this project.
 Copyright
 ---------
 
-Copyright 2012-2013 the original author or authors
+Copyright 2012-2014 the original author or authors
 
 rest.js is made available under the MIT license.  See LICENSE.txt for details.
 
@@ -230,6 +230,7 @@ Change Log
 
 .next
 - handle exceptions thrown from MIME converters
+- allow overriding the default client
 
 1.0.0
 - JSON HAL mime serializer for application/hal+json

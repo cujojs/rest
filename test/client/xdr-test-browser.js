@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors
+ * Copyright 2013-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -109,7 +109,8 @@
 				}
 			},
 			'should not be the default client': function () {
-				refute.same(client, rest);
+				rest.resetDefaultClient();
+				refute.same(client, rest.getDefaultClient());
 			},
 			'should support interceptor chaining': function () {
 				assert(typeof client.chain === 'function');
