@@ -229,7 +229,7 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
-.next
+1.0.1
 - handle exceptions thrown from MIME converters
 - allow overriding the default client
 - allow AMD loaders to load node client. Useful when using an AMD loader with Node
