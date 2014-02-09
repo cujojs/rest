@@ -78,6 +78,18 @@
 		}
 
 		/**
+		 * Applies the interceptor behavior to the default client, resulting in
+		 * a new client
+		 * @param {Inteceptor} interceptor the interceptor behavior to apply to
+		 *   the default client
+		 * @param {*} [config] optional configuration for the interceptor
+		 * @returns {Client} the newly wrapped client
+		 */
+		defaultClient.chain = function chain(interceptor, config) {
+			return interceptor(defaultClient, config);
+		};
+
+		/**
 		 * Change the default client
 		 * @param {Client} client the new default client
 		 */

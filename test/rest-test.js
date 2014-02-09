@@ -15,25 +15,42 @@
 
 	define('rest-test', function (require) {
 
-		var rest = require('rest');
+		var rest = require('rest'),
+			interceptor = require('rest/interceptor');
 
-		function client(request) {
+		function stubClient(request) {
 			return { request: request };
 		}
 
+		var stubInterceptor = interceptor();
+
 		buster.testCase('rest', {
+			setUp: function () {
+				rest.resetDefaultClient();
+			},
+			tearDown: function () {
+				rest.resetDefaultClient();
+			},
 			'should return a client by default': function () {
 				assert.equals('function', typeof rest.getDefaultClient());
 			},
 			'should use the provided client as a default': function () {
-				rest.setDefaultClient(client);
-				assert.same(client, rest.getDefaultClient());
+				rest.setDefaultClient(stubClient);
+				assert.same(stubClient, rest.getDefaultClient());
 				assert.equals('request', rest('request').request);
 			},
 			'should restore the platform default client': function () {
-				rest.setDefaultClient(client);
-				rest.resetDefaultClient();
+				var client = rest.getDefaultClient();
+				rest.setDefaultClient(stubClient);
 				refute.same(client, rest.getDefaultClient());
+				rest.resetDefaultClient();
+				assert.same(client, rest.getDefaultClient());
+			},
+			'should chain off the default client, using the lastest default client': function () {
+				var client = rest.chain(stubInterceptor);
+				rest.setDefaultClient(stubClient);
+				refute.same(client, stubClient);
+				assert.equals('request', rest('request').request);
 			}
 		});
 

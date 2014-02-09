@@ -230,7 +230,7 @@ Change Log
 ----------
 
 .next
-- nothing yet
+- restore client.chain() to the default client
 
 1.0.1
 - handle exceptions thrown from MIME converters
