@@ -25,6 +25,10 @@
 		{
 			"name": "Jeremy Grelle",
 			"email": "jeremy.grelle@gmail.com"
+		},
+		{
+			"name": "John Hann",
+			"web": "http://unscriptable.com"
 		}
 	],
 	"dependencies": {

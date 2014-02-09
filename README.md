@@ -213,6 +213,7 @@ Contributors
 
 - Scott Andrews <scothis@gmail.com>
 - Jeremy Grelle <jeremy.grelle@gmail.com>
+- John Hann <john@unscriptable.com>
 
 Please see CONTRIBUTING.md for details on how to contribute to this project.
 
@@ -231,6 +232,7 @@ Change Log
 .next
 - handle exceptions thrown from MIME converters
 - allow overriding the default client
+- allow AMD loaders to load node client. Useful when using an AMD loader with Node
 
 1.0.0
 - JSON HAL mime serializer for application/hal+json
