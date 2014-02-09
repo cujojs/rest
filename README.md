@@ -229,6 +229,9 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
+.next
+- nothing yet
+
 1.0.2
 - restore client.chain() to the default client
 
