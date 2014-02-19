@@ -31,7 +31,7 @@
 				};
 				spec = {
 					client: { $ref: 'client!', client: client },
-					plugins: [{ module: 'rest/wire' }]
+					$plugins: [{ module: 'rest/wire' }]
 				};
 				return wire(spec, { require: require }).then(function (spec) {
 					return spec.client({}).then(function (response) {
@@ -46,7 +46,7 @@
 				};
 				spec = {
 					client: { $ref: 'client!path', client: client, accept: 'text/plain', entity: false },
-					plugins: [{ module: 'rest/wire' }]
+					$plugins: [{ module: 'rest/wire' }]
 				};
 				return wire(spec, { require: require }).then(function (spec) {
 					return spec.client({ path: 'to/somewhere' }).then(function (response) {
@@ -63,7 +63,7 @@
 				};
 				spec = {
 					client: { $ref: 'client!', client: client },
-					plugins: [{ module: 'rest/wire' }]
+					$plugins: [{ module: 'rest/wire' }]
 				};
 				return wire(spec, { require: require }).then(
 					function (spec) {
@@ -84,7 +84,7 @@
 				};
 				spec = {
 					client: { $ref: 'client!', client: client, errorCode: false },
-					plugins: [{ module: 'rest/wire' }]
+					$plugins: [{ module: 'rest/wire' }]
 				};
 				return wire(spec, { require: require }).then(function (spec) {
 					return spec.client({}).then(function (response) {
@@ -99,7 +99,7 @@
 				};
 				spec = {
 					client: { $ref: 'client!', client: client, mime: false },
-					plugins: [{ module: 'rest/wire' }]
+					$plugins: [{ module: 'rest/wire' }]
 				};
 				return wire(spec, { require: require }).then(function (spec) {
 					return spec.client({}).then(function (response) {
@@ -114,7 +114,7 @@
 				};
 				spec = {
 					client: { $ref: 'client!', client: client, entity: false },
-					plugins: [{ module: 'rest/wire' }]
+					$plugins: [{ module: 'rest/wire' }]
 				};
 				return wire(spec, { require: require }).then(function (spec) {
 					return spec.client({ method: 'post', entity: { bleep: 'bloop' } }).then(function (response) {
@@ -141,7 +141,7 @@
 								]
 							}
 						},
-						plugins: [{ module: 'rest/wire' }]
+						$plugins: [{ module: 'rest/wire' }]
 					};
 					return wire(spec, { require: require }).then(function (spec) {
 						assert.same(client, spec.client.skip().skip().skip());
@@ -173,7 +173,7 @@
 						mime: { module: 'rest/interceptor/mime' },
 						pathPrefix: { module: 'rest/interceptor/pathPrefix' },
 						errorCode: { module: 'rest/interceptor/errorCode' },
-						plugins: [{ module: 'rest/wire' }]
+						$plugins: [{ module: 'rest/wire' }]
 					};
 					return wire(spec, { require: require }).then(function (spec) {
 						assert.same(client, spec.client.skip().skip().skip());
@@ -200,7 +200,7 @@
 								]
 							}
 						},
-						plugins: [{ module: 'rest/wire' }]
+						$plugins: [{ module: 'rest/wire' }]
 					};
 					return wire(spec, { require: require }).then(function (spec) {
 						assert.same(client, spec.client.skip().skip().skip());
@@ -220,7 +220,7 @@
 								]
 							}
 						},
-						plugins: [{ module: 'rest/wire' }]
+						$plugins: [{ module: 'rest/wire' }]
 					};
 					return wire(spec, { require: require }).then(function (spec) {
 						assert.same(client, spec.client.skip());
@@ -237,7 +237,7 @@
 								'rest/interceptor/pathPrefix'
 							]
 						},
-						plugins: [{ module: 'rest/wire' }]
+						$plugins: [{ module: 'rest/wire' }]
 					};
 					return wire(spec, { require: require }).then(function (spec) {
 						assert.same(rest, spec.client.skip());
@@ -258,7 +258,7 @@
 							}
 						},
 						parentClient: client,
-						plugins: [{ module: 'rest/wire' }]
+						$plugins: [{ module: 'rest/wire' }]
 					};
 					return wire(spec, { require: require }).then(function (spec) {
 						assert.same(client, spec.client.skip());
@@ -281,7 +281,7 @@
 						basePath: {
 							literal: { prefix: 'dontUseThis' }
 						},
-						plugins: [{ module: 'rest/wire' }]
+						$plugins: [{ module: 'rest/wire' }]
 					};
 					return wire(spec, { require: require }).then(function (spec) {
 						assert.same(client, spec.client.skip());

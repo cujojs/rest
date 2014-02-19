@@ -102,7 +102,7 @@ Let's take the previous example and configure the client using a wire.js specifi
 			{ module: 'rest/interceptor/errorCode', config: { code: 500 } }
 		]
 	},
-	plugins: [{ module: 'rest/wire' }]
+	$plugins: [{ module: 'rest/wire' }]
 }
 ```
 

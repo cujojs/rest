@@ -33,7 +33,7 @@ client: {
     }
 },
 baseClient: { module: 'rest' },
-plugins: [{ module: 'rest/wire' }]
+$plugins: [{ module: 'rest/wire' }]
 ```
 
 If parent is not defined, or is not a function, the default client is used as the parent. In that case, the interceptors array can replace the whole factory object
@@ -47,7 +47,7 @@ client: {
         { module: 'rest/interceptor/hateoas', config: { target: '' } }
     ]
 },
-plugins: [{ module: 'rest/wire' }]
+$plugins: [{ module: 'rest/wire' }]
 ```
 
 If a configuration element isn't needed, a string can be provided to represent the module
@@ -61,7 +61,7 @@ client: {
         { module: 'rest/interceptor/hateoas', config: { target: '' } }
     ]
 },
-plugins: [{ module: 'rest/wire' }]
+$plugins: [{ module: 'rest/wire' }]
 ```
 
 An individual interceptors array entry can use any facility available within wire.js, including $ref.
@@ -77,7 +77,7 @@ client: {
 },
 mime: { module: 'rest/interceptor/mime' },
 hateoas: { module: 'rest/interceptor/hateoas' },
-plugins: [{ module: 'rest/wire' }]
+$plugins: [{ module: 'rest/wire' }]
 ```
 
 

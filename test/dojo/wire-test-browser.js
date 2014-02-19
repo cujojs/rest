@@ -39,7 +39,7 @@
 				var spec;
 				spec = {
 					store: { $ref: 'resource!', client: client },
-					plugins: [{ module: 'rest/dojo/wire' }]
+					$plugins: [{ module: 'rest/dojo/wire' }]
 				};
 				return wire(spec).then(function (spec) {
 					assert(spec.store instanceof RestStore);
@@ -49,7 +49,7 @@
 				var spec;
 				spec = {
 					resource: { $ref: 'resource!test/dojo', get: 'hello.json', entity: false, client: client },
-					plugins: [{ module: 'rest/dojo/wire' }]
+					$plugins: [{ module: 'rest/dojo/wire' }]
 				};
 				return wire(spec).then(function (spec) {
 					assert.equals('bar', spec.resource.entity.foo);
@@ -60,7 +60,7 @@
 				var spec;
 				spec = {
 					client: { $ref: 'client!', client: client },
-					plugins: [{ module: 'rest/dojo/wire' }]
+					$plugins: [{ module: 'rest/dojo/wire' }]
 				};
 				return wire(spec).then(function (spec) {
 					return spec.client({}).then(function (response) {
