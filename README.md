@@ -106,7 +106,7 @@ Let's take the previous example and configure the client using a wire.js specifi
 }
 ```
 
-There are a couple things to notice.  First is the 'plugins' section, by declaring the `rest/wire` module, the `rest` factory becomes available within the specification.  The second thing to notice is that we no longer need to individually `require()` interceptor modules; wire.js is smart enough to automatically fetch the modules.  The interceptors are then chained together in the order they are defined and provided with the corresponding config object, if it's defined.  The resulting client can then be injected into any other object using standard wire.js facilities.
+There are a couple things to notice.  First is the '$plugins' section, by declaring the `rest/wire` module, the `rest` factory becomes available within the specification.  The second thing to notice is that we no longer need to individually `require()` interceptor modules; wire.js is smart enough to automatically fetch the modules.  The interceptors are then chained together in the order they are defined and provided with the corresponding config object, if it's defined.  The resulting client can then be injected into any other object using standard wire.js facilities.
 
 
 ### Custom MIME Converters: ###
