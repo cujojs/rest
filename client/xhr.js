@@ -10,11 +10,13 @@
 
 	define(function (require) {
 
-		var when, UrlBuilder, normalizeHeaderName, headerSplitRE;
+		var when, UrlBuilder, normalizeHeaderName, stream, collectStream, headerSplitRE;
 
 		when = require('when');
 		UrlBuilder = require('../UrlBuilder');
 		normalizeHeaderName = require('../util/normalizeHeaderName');
+		stream = require('../util/stream');
+		collectStream = require('../util/collectStream');
 
 		// according to the spec, the line break is '\r\n', but doesn't hold true in practice
 		headerSplitRE = /[\r|\n]+/;
@@ -50,7 +52,7 @@
 		}
 
 		function xhr(request) {
-			var d, client, method, url, headers, entity, headerName, response, XMLHttpRequest;
+			var d, client, method, url, headers, headerName, response, XMLHttpRequest, readSoFar;
 
 			request = typeof request === 'string' ? { path: request } : request || {};
 			response = { request: request };
@@ -68,8 +70,7 @@
 				return d.promise;
 			}
 
-			entity = request.entity;
-			request.method = request.method || (entity ? 'POST' : 'GET');
+			request.method = request.method || (request.entity ? 'POST' : 'GET');
 			method = request.method;
 			url = new UrlBuilder(request.path || '', request.params).build();
 
@@ -102,18 +103,27 @@
 
 				client.onreadystatechange = function (/* e */) {
 					if (request.canceled) { return; }
-					if (client.readyState === (XMLHttpRequest.DONE || 4)) {
+					if (client.readyState === (XMLHttpRequest.HEADERS_RECEIVED || 2)) {
+						readSoFar = 0;
 						response.status = {
 							code: client.status,
 							text: client.statusText
 						};
 						response.headers = parseHeaders(client.getAllResponseHeaders());
-						response.entity = client.responseText;
+						response.entity = new stream.PassThrough();
 
 						if (response.status.code > 0) {
 							// check status code as readystatechange fires before error event
 							d.resolve(response);
 						}
+					}
+					else if (client.readyState === (XMLHttpRequest.LOADING || 3)) {
+						response.entity.push(client.responseText.slice(readSoFar));
+						readSoFar = client.responseText.length;
+					}
+					else if (client.readyState === (XMLHttpRequest.DONE || 4)) {
+						response.entity.push(client.responseText.slice(readSoFar));
+						response.entity.push(null);
 					}
 				};
 
@@ -127,7 +137,10 @@
 					// IE 6 will not support error handling
 				}
 
-				client.send(entity);
+				// convert a stream to soemthing xhr can send
+				collectStream(request.entity).then(function (entity) {
+					client.send(entity);
+				});
 			}
 			catch (e) {
 				response.error = 'loaderror';

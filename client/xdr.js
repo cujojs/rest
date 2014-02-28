@@ -10,13 +10,14 @@
 
 	define(function (require) {
 
-		var when, UrlBuilder;
+		var when, UrlBuilder, collectStream;
 
 		when = require('when');
 		UrlBuilder = require('../UrlBuilder');
+		collectStream = require('../util/collectStream');
 
 		function xdr(request) {
-			var d, client, method, url, entity, response;
+			var d, client, method, url, response;
 
 			request = typeof request === 'string' ? { path: request } : request || {};
 			response = { request: request };
@@ -30,8 +31,7 @@
 
 			client = response.raw = new XDomainRequest();
 
-			entity = request.entity;
-			request.method = request.method || (entity ? 'POST' : 'GET');
+			request.method = request.method || (request.entity ? 'POST' : 'GET');
 			method = request.method;
 			url = new UrlBuilder(request.path || '', request.params).build();
 
@@ -61,7 +61,9 @@
 				// onprogress must be defined
 				client.onprogress = function () {};
 
-				client.send(entity);
+				collectStream(request.entity).then(function (entity) {
+					client.send(entity);
+				});
 			}
 			catch (e) {
 				response.error = 'loaderror';

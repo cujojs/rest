@@ -32,7 +32,7 @@
 		 * @returns {Client}
 		 */
 		return interceptor({
-			request: function (request, config) {
+			requestStream: function (request, config) {
 				var path;
 
 				if (config.prefix && !(new UrlBuilder(request.path).isFullyQualified())) {

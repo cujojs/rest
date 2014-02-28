@@ -53,7 +53,7 @@
 		 * @returns {Client}
 		 */
 		return interceptor({
-			request: function handleRequest(request) {
+			requestStream: function handleRequest(request) {
 				request.engine = request.engine || XMLHttpRequest;
 				return request;
 			}

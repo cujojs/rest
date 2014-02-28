@@ -31,7 +31,7 @@
 				config.code = config.code || 400;
 				return config;
 			},
-			response: function (response, config) {
+			responseStream: function (response, config) {
 				if (response.status && response.status.code >= config.code) {
 					return when.reject(response);
 				}

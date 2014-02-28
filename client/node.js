@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Jeremy Grelle
@@ -11,48 +11,18 @@
 
 	define(function (require) {
 
-		var parser, http, https, when, UrlBuilder, normalizeHeaderName, httpsExp;
+		var parser, http, https, when, UrlBuilder, stream, buffer, normalizeHeaderName, httpsExp;
 
 		parser = envRequire('url');
 		http = envRequire('http');
 		https = envRequire('https');
 		when = require('when');
 		UrlBuilder = require('../UrlBuilder');
+		stream = require('../util/stream');
+		buffer = require('../util/buffer');
 		normalizeHeaderName = require('../util/normalizeHeaderName');
 
 		httpsExp = /^https/i;
-
-		// TODO remove once Node 0.6 is no longer supported
-		Buffer.concat = Buffer.concat || function (list, length) {
-			/*jshint plusplus:false, shadow:true */
-			// from https://github.com/joyent/node/blob/v0.8.21/lib/buffer.js
-			if (!Array.isArray(list)) {
-				throw new Error('Usage: Buffer.concat(list, [length])');
-			}
-
-			if (list.length === 0) {
-				return new Buffer(0);
-			} else if (list.length === 1) {
-				return list[0];
-			}
-
-			if (typeof length !== 'number') {
-				length = 0;
-				for (var i = 0; i < list.length; i++) {
-					var buf = list[i];
-					length += buf.length;
-				}
-			}
-
-			var buffer = new Buffer(length);
-			var pos = 0;
-			for (var i = 0; i < list.length; i++) {
-				var buf = list[i];
-				buf.copy(buffer, pos);
-				pos += buf.length;
-			}
-			return buffer;
-		};
 
 		function node(request) {
 
@@ -80,7 +50,7 @@
 				headers[normalizeHeaderName(name)] = request.headers[name];
 			});
 			if (!headers['Content-Length']) {
-				headers['Content-Length'] = entity ? Buffer.byteLength(entity, 'utf8') : 0;
+				headers['Content-Length'] = entity ? buffer.Buffer.byteLength(entity, 'utf8') : 0;
 			}
 
 			request.canceled = false;
@@ -90,9 +60,6 @@
 			};
 
 			clientRequest = client.request(options, function (clientResponse) {
-				// Array of Buffers to collect response chunks
-				var buffers = [];
-
 				response.raw = {
 					request: clientRequest,
 					response: clientResponse
@@ -106,18 +73,15 @@
 					response.headers[normalizeHeaderName(name)] = clientResponse.headers[name];
 				});
 
-				clientResponse.on('data', function (data) {
-					// Collect the next Buffer chunk
-					buffers.push(data);
-				});
+				response.entity = new stream.PassThrough();
+				if (clientResponse instanceof stream.Readable) {
+					clientResponse.pipe(response.entity);
+				}
+				else {
+					response.entity.end(clientResponse);
+				}
 
-				clientResponse.on('end', function () {
-					// Create the final response entity
-					response.entity = buffers.length > 0 ? Buffer.concat(buffers).toString() : '';
-					buffers = null;
-
-					d.resolve(response);
-				});
+				d.resolve(response);
 			});
 
 			clientRequest.on('error', function (e) {
@@ -126,9 +90,15 @@
 			});
 
 			if (entity) {
-				clientRequest.write(entity);
+				if (entity instanceof stream.Readable) {
+					entity.pipe(clientRequest);
+				} else {
+					clientRequest.end(entity);
+				}
 			}
-			clientRequest.end();
+			else {
+				clientRequest.end();
+			}
 
 			return d.promise;
 		}

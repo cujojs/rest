@@ -38,7 +38,7 @@
 				config.name = config.name || 'X-Csrf-Token';
 				return config;
 			},
-			request: function handleRequest(request, config) {
+			requestStream: function handleRequest(request, config) {
 				var headers, name, token;
 
 				headers = request.headers || (request.headers = {});

@@ -25,7 +25,7 @@
 		 * @returns {Client}
 		 */
 		return interceptor({
-			request: function handleRequest(request, config) {
+			requestStream: function handleRequest(request, config) {
 				var headers, username, password;
 
 				headers = request.headers || (request.headers = {});

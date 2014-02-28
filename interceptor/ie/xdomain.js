@@ -44,7 +44,7 @@
 		 * @returns {Client}
 		 */
 		return interceptor({
-			request: function handleRequest(request, config) {
+			requestStream: function handleRequest(request, config) {
 				if (hasXdr && !hasXhrCors && new UrlBuilder(request.path, request.params).isCrossOrigin()) {
 					return new interceptor.ComplexRequest({ request: request, client: config.xdrClient || xdrClient });
 				}

@@ -18,11 +18,15 @@
 
 	define('rest/client/node-test', function (require) {
 
-		var rest, client, http, server;
+		var rest, client, http, stream, when, buffer, collectStream, server;
 
 		rest = require('rest');
 		client = require('rest/client/node');
 		http = require('http');
+		stream = require('stream');
+		when = require('when');
+		buffer = require('rest/util/buffer');
+		collectStream = require('rest/util/collectStream');
 		server = http.createServer();
 
 		buster.testCase('rest/client/node', {
@@ -54,47 +58,59 @@
 			'should make a GET by default': function () {
 				var request = { path: 'http://localhost:8080/' };
 				return client(request).then(function (response) {
-					assert(response.raw.request instanceof http.ClientRequest);
-					// assert(response.raw.response instanceof http.ClientResponse);
-					assert(response.raw.response);
-					assert.same(request, response.request);
-					assert.equals(response.request.method, 'GET');
-					assert.equals(response.entity, 'hello world');
-					assert.equals(response.status.code, 200);
-					assert.equals('text/plain', response.headers['Content-Type']);
-					assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
-					refute(request.canceled);
+					return collectStream(response.entity).then(function (entity) {
+						assert(response.raw.request instanceof http.ClientRequest);
+						// assert(response.raw.response instanceof http.ClientResponse);
+						assert(response.raw.response);
+						assert.same(request, response.request);
+						assert.equals(response.request.method, 'GET');
+						assert(response.entity instanceof stream.Readable);
+						assert.equals(entity, 'hello world');
+						assert.equals(response.status.code, 200);
+						assert.equals('text/plain', response.headers['Content-Type']);
+						assert.equals(entity.length, parseInt(response.headers['Content-Length'], 10));
+						refute(request.canceled);
+					});
 				}).otherwise(fail);
 			},
 			'should make an explicit GET': function () {
 				var request = { path: 'http://localhost:8080/', method: 'GET' };
 				return client(request).then(function (response) {
-					assert.same(request, response.request);
-					assert.equals(response.request.method, 'GET');
-					assert.equals(response.entity, 'hello world');
-					assert.equals(response.status.code, 200);
-					refute(request.canceled);
+					return collectStream(response.entity).then(function (entity) {
+						assert.same(request, response.request);
+						assert.equals(response.request.method, 'GET');
+						assert(response.entity instanceof stream.Readable);
+						assert.equals(entity, 'hello world');
+						assert.equals(response.status.code, 200);
+						refute(request.canceled);
+					});
 				}).otherwise(fail);
 			},
 			'should make a POST with an entity': function () {
 				var request = { path: 'http://localhost:8080/', entity: 'echo' };
 				return client(request).then(function (response) {
-					assert.same(request, response.request);
-					assert.equals(response.request.method, 'POST');
-					assert.equals(response.entity, 'echo');
-					assert.equals(response.status.code, 200);
-					assert.equals('text/plain', response.headers['Content-Type']);
-					assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
-					refute(request.canceled);
+					return collectStream(response.entity).then(function (entity) {
+						assert.same(request, response.request);
+						assert.equals(response.request.method, 'POST');
+						assert(response.entity instanceof stream.Readable);
+						assert.equals(entity, 'echo');
+						assert.equals(response.status.code, 200);
+						assert.equals('text/plain', response.headers['Content-Type']);
+						assert.equals(entity.length, parseInt(response.headers['Content-Length'], 10));
+						refute(request.canceled);
+					});
 				}).otherwise(fail);
 			},
 			'should make an explicit POST with an entity': function () {
 				var request = { path: 'http://localhost:8080/', entity: 'echo', method: 'POST' };
 				return client(request).then(function (response) {
-					assert.same(request, response.request);
-					assert.equals(response.request.method, 'POST');
-					assert.equals(response.entity, 'echo');
-					refute(request.canceled);
+					return collectStream(response.entity).then(function (entity) {
+						assert.same(request, response.request);
+						assert.equals(response.request.method, 'POST');
+						assert(response.entity instanceof stream.Readable);
+						assert.equals(entity, 'echo');
+						refute(request.canceled);
+					});
 				}).otherwise(fail);
 			},
 			'should abort the request if canceled': function () {

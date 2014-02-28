@@ -36,7 +36,7 @@
 				config.max = config.max || Infinity;
 				return config;
 			},
-			error: function (response, config, meta) {
+			errorStream: function (response, config, meta) {
 				var request;
 
 				request = response.request;

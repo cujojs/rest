@@ -64,7 +64,7 @@
 		 * @returns {Client}
 		 */
 		return interceptor({
-			request: function handleRequest(request, config) {
+			requestStream: function handleRequest(request, config) {
 				return defaulter(request, config);
 			}
 		});

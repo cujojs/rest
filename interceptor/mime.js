@@ -75,7 +75,7 @@
 
 				return requestReady.promise;
 			},
-			response: function (response, config) {
+			response: function mimeResponse(response, config) {
 				if (!(response.headers && response.headers['Content-Type'] && response.entity)) {
 					return response;
 				}

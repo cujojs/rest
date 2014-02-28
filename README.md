@@ -141,7 +141,7 @@ Our goal is to work in every major JavaScript environment; Node.js and major bro
 If your preferred environment is not supported, please let us know. Some features may not be available in all environments.
 
 Tested environments:
-- Node.js (0.6, 0.8. 0.10)
+- Node.js (0.10)
 - Chrome (stable)
 - Firefox (stable, ESR, should work in earlier versions)
 - IE (6-10)
@@ -230,7 +230,8 @@ Change Log
 ----------
 
 .next
-- nothing yet
+- dropping support for Node.js 0.6 and 0.8
+- stream all the things, clients and interceptors support Node Streams (even on a browser)
 
 1.0.2
 - restore client.chain() to the default client

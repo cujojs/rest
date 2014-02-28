@@ -27,7 +27,7 @@
 		 * @returns {Client}
 		 */
 		return interceptor({
-			success: function (response, config, client) {
+			successStream: function (response, config, client) {
 				if (response.headers && response.headers.Location) {
 					return (config.client || (response.request && response.request.originator) || client.skip())({
 						method: 'GET',

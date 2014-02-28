@@ -10,11 +10,14 @@
 
 	define(function (require) {
 
-		var defaultClient, beget, mixin, when;
+		var defaultClient, beget, mixin, stream, buffer, collectStream, when;
 
 		defaultClient = require('./rest');
 		beget = require('./util/beget');
 		mixin = require('./util/mixin');
+		stream = require('./util/stream');
+		buffer = require('./util/buffer');
+		collectStream = require('./util/collectStream');
 		when = require('when');
 
 		/**
@@ -56,6 +59,46 @@
 			return d.promise;
 		}
 
+		function adaptBufferedHandler(handler) {
+			return function (resresp) {
+				var args, ctx, d;
+				args = arguments;
+				ctx = this;
+				d = when.defer();
+				if (resresp && resresp.entity instanceof stream.Readable) {
+					collectStream(resresp.entity).then(function (entity) {
+						resresp.entity = entity;
+						d.resolve(resresp);
+					}, function (err) {
+						resresp.error = err;
+						d.reject(resresp);
+					});
+				}
+				else {
+					d.resolve(resresp);
+				}
+
+				return d.promise.then(function () {
+					return handler.apply(ctx, args);
+				});
+			};
+		}
+
+		function adaptStreamHandler(handler) {
+			return function (resresp) {
+				var args, ctx, str;
+				args = arguments;
+				ctx = this;
+				if (resresp && 'entity' in resresp && (typeof resresp.entity === 'string' || resresp.entity instanceof buffer.Buffer)) {
+					str = new stream.Transform();
+					str.push(resresp.entity);
+					str.push(null);
+					resresp.entity = str;
+				}
+				return handler.apply(ctx, args);
+			};
+		}
+
 		/**
 		 * Alternate return type for the request handler that allows for more complex interactions.
 		 *
@@ -86,16 +129,25 @@
 		 */
 		function interceptor(handlers) {
 
-			var initHandler, requestHandler, successResponseHandler, errorResponseHandler;
+			var initHandler, requestHandler, responseHandler, successResponseHandler, errorResponseHandler;
 
 			handlers = handlers || {};
 
-			initHandler            = handlers.init    || defaultInitHandler;
-			requestHandler         = handlers.request || defaultRequestHandler;
-			successResponseHandler = handlers.success || handlers.response || defaultResponseHandler;
-			errorResponseHandler   = handlers.error   || function () {
+			initHandler            = handlers.init || defaultInitHandler;
+			requestHandler         = (handlers.requestStream && adaptStreamHandler(handlers.requestStream)) ||
+			                         (handlers.request && adaptBufferedHandler(handlers.request)) ||
+			                         defaultRequestHandler;
+			responseHandler        = (handlers.responseStream && adaptStreamHandler(handlers.responseStream)) ||
+			                         (handlers.response && adaptBufferedHandler(handlers.response)) ||
+			                         defaultResponseHandler;
+			successResponseHandler = (handlers.successStream && adaptStreamHandler(handlers.successStream)) ||
+			                         (handlers.success && adaptBufferedHandler(handlers.success)) ||
+			                         responseHandler;
+			errorResponseHandler   = (handlers.errorStream && adaptStreamHandler(handlers.errorStream)) ||
+			                         (handlers.error && adaptBufferedHandler(handlers.error)) ||
+			                         function defaultErrorHandler(/* response, config, meta */) {
 				// Propagate the rejection, with the result of the handler
-				return when((handlers.response || defaultResponseHandler).apply(this, arguments), when.reject, when.reject);
+				return when((responseHandler).apply(this, arguments), when.reject, when.reject);
 			};
 
 			return function (target, config) {

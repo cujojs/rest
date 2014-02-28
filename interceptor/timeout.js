@@ -29,7 +29,7 @@
 				config.timeout = config.timeout || 0;
 				return config;
 			},
-			request: function (request, config) {
+			requestStream: function (request, config) {
 				var timeout, abortTrigger;
 				timeout = 'timeout' in request ? request.timeout : config.timeout;
 				if (timeout <= 0) {
@@ -47,7 +47,7 @@
 				}, timeout);
 				return new interceptor.ComplexRequest({ request: request, abort: abortTrigger.promise });
 			},
-			response: function (response) {
+			responseStream: function (response) {
 				if (this.timeout) {
 					clearTimeout(this.timeout);
 					delete this.timeout;

@@ -42,7 +42,7 @@
 				config.callback = config.callback || {};
 				return config;
 			},
-			request: function (request, config) {
+			requestStream: function (request, config) {
 				request.callback = request.callback || {};
 				request.callback.param = request.callback.param || config.callback.param;
 				request.callback.prefix = request.callback.prefix || config.callback.prefix;

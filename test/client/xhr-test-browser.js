@@ -17,11 +17,12 @@
 
 	define('rest/client/xhr-test', function (require) {
 
-		var xhr, rest, xhrFallback, when, client;
+		var xhr, rest, xhrFallback, collectStream, when, client;
 
 		xhr = require('rest/client/xhr');
 		rest = require('rest');
 		xhrFallback = require('rest/interceptor/ie/xhr');
+		collectStream = require('rest/util/collectStream');
 		when = require('when');
 
 		// use xhrFallback when XHR is not native
@@ -31,69 +32,77 @@
 			'should make a GET by default': function () {
 				var request = { path: '/' };
 				return client(request).then(function (response) {
-					var xhr, name;
-					xhr = response.raw;
-					assert.same(request, response.request);
-					assert.equals(response.request.method, 'GET');
-					assert.equals(xhr.responseText, response.entity);
-					assert.equals(xhr.status, response.status.code);
-					assert.equals(xhr.statusText, response.status.text);
-					for (name in response.headers) {
-						/*jshint forin:false */
-						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
-					}
-					refute(request.canceled);
+					return collectStream(response.entity).then(function (entity) {
+						var xhr, name;
+						xhr = response.raw;
+						assert.same(request, response.request);
+						assert.equals(response.request.method, 'GET');
+						assert.equals(xhr.responseText, entity);
+						assert.equals(xhr.status, response.status.code);
+						assert.equals(xhr.statusText, response.status.text);
+						for (name in response.headers) {
+							/*jshint forin:false */
+							assert.equals(xhr.getResponseHeader(name), response.headers[name]);
+						}
+						refute(request.canceled);
+					});
 				}).otherwise(fail);
 			},
 			'should make an explicit GET': function () {
 				var request = { path: '/', method: 'GET' };
 				return client(request).then(function (response) {
-					var xhr, name;
-					xhr = response.raw;
-					assert.same(request, response.request);
-					assert.equals(response.request.method, 'GET');
-					assert.equals(xhr.responseText, response.entity);
-					assert.equals(xhr.status, response.status.code);
-					assert.equals(xhr.statusText, response.status.text);
-					for (name in response.headers) {
-						/*jshint forin:false */
-						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
-					}
-					refute(request.canceled);
+					return collectStream(response.entity).then(function (entity) {
+						var xhr, name;
+						xhr = response.raw;
+						assert.same(request, response.request);
+						assert.equals(response.request.method, 'GET');
+						assert.equals(xhr.responseText, entity);
+						assert.equals(xhr.status, response.status.code);
+						assert.equals(xhr.statusText, response.status.text);
+						for (name in response.headers) {
+							/*jshint forin:false */
+							assert.equals(xhr.getResponseHeader(name), response.headers[name]);
+						}
+						refute(request.canceled);
+					});
 				}).otherwise(fail);
 			},
 			'should make a POST with an entity': function () {
 				var request = { path: '/', entity: 'hello world' };
 				return client(request).then(function (response) {
-					var xhr, name;
-					xhr = response.raw;
-					assert.same(request, response.request);
-					assert.equals(response.request.method, 'POST');
-					assert.equals(xhr.responseText, response.entity);
-					assert.equals(xhr.status, response.status.code);
-					assert.equals(xhr.statusText, response.status.text);
-					for (name in response.headers) {
-						/*jshint forin:false */
-						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
-					}
-					refute(request.canceled);
+					return collectStream(response.entity).then(function (entity) {
+						var xhr, name;
+						xhr = response.raw;
+						assert.same(request, response.request);
+						assert.equals(response.request.method, 'POST');
+						assert.equals(xhr.responseText, entity);
+						assert.equals(xhr.status, response.status.code);
+						assert.equals(xhr.statusText, response.status.text);
+						for (name in response.headers) {
+							/*jshint forin:false */
+							assert.equals(xhr.getResponseHeader(name), response.headers[name]);
+						}
+						refute(request.canceled);
+					});
 				}).otherwise(fail);
 			},
 			'should make an explicit POST with an entity': function () {
 				var request = { path: '/', entity: 'hello world', method: 'POST' };
 				return client(request).then(function (response) {
-					var xhr, name;
-					xhr = response.raw;
-					assert.same(request, response.request);
-					assert.equals(response.request.method, 'POST');
-					assert.equals(xhr.responseText, response.entity);
-					assert.equals(xhr.status, response.status.code);
-					assert.equals(xhr.statusText, response.status.text);
-					for (name in response.headers) {
-						/*jshint forin:false */
-						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
-					}
-					refute(request.canceled);
+					return collectStream(response.entity).then(function (entity) {
+						var xhr, name;
+						xhr = response.raw;
+						assert.same(request, response.request);
+						assert.equals(response.request.method, 'POST');
+						assert.equals(xhr.responseText, entity);
+						assert.equals(xhr.status, response.status.code);
+						assert.equals(xhr.statusText, response.status.text);
+						for (name in response.headers) {
+							/*jshint forin:false */
+							assert.equals(xhr.getResponseHeader(name), response.headers[name]);
+						}
+						refute(request.canceled);
+					});
 				}).otherwise(fail);
 			},
 			'should mixin additional properties': {

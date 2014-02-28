@@ -107,7 +107,7 @@
 
 				return config;
 			},
-			request: function (request, config) {
+			requestStream: function (request, config) {
 				request.headers = request.headers || {};
 
 				if (config.token) {
@@ -121,7 +121,7 @@
 					});
 				}
 			},
-			response: function (response, config, client) {
+			responseStream: function (response, config, client) {
 				if (response.status.code === 401) {
 					// token probably expired, reauthorize
 					return authorize(config).then(function (authorization) {
