@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Jeremy Grelle
@@ -42,7 +42,7 @@
 				request = response.request;
 				request.retry = request.retry || config.initial;
 
-				return delay(request, request.retry).then(function (request) {
+				return delay(request.retry, request).then(function (request) {
 					if (request.canceled) {
 						// cancel here in case client doesn't check canceled flag
 						return when.reject({ request: request, error: 'precanceled' });

@@ -134,7 +134,7 @@
 						refute(request.canceled);
 						request.cancel();
 					})
-				]).always(done);
+				]).then(done, done);
 			},
 			'//should propogate request errors': function () {
 				// TODO follow up with Sauce Labs

@@ -1,12 +1,12 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Jeremy Grelle
  * @author Scott Andrews
  */
 
-(function (buster, define) {
+(function (buster, define, nextTick) {
 	'use strict';
 
 	var assert, fail, failOnThrow;
@@ -17,24 +17,13 @@
 
 	define('rest/interceptor/retry-test', function (require) {
 
-		var interceptor, retry, rest, when, delay, clock, nextTick;
+		var interceptor, retry, rest, when, delay, clock;
 
 		interceptor = require('rest/interceptor');
 		retry = require('rest/interceptor/retry');
 		rest = require('rest');
 		when = require('when');
 		delay = require('when/delay');
-
-		// retain access to the native setTimeout function
-		nextTick = (function (setTimeout) {
-			return process && process.nextTick ?
-				function (work) {
-					process.nextTick(work);
-				} :
-				function (work) {
-					setTimeout(work, 0);
-				};
-		}(setTimeout));
 
 		buster.testCase('rest/interceptor/retry', {
 			'should retry until successful': function () {
@@ -126,6 +115,16 @@
 		factory(function (moduleId) {
 			return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId);
 		});
-	}
+	},
+	// retain access to the native setTimeout function
+	(function (setTimeout) {
+		return typeof process !== 'undefined' && process.nextTick ?
+			function (work) {
+				process.nextTick(work);
+			} :
+			function (work) {
+				setTimeout(work, 0);
+			};
+	}(setTimeout))
 	// Boilerplate for AMD and Node
 ));

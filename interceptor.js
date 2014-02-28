@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -95,7 +95,7 @@
 			successResponseHandler = handlers.success || handlers.response || defaultResponseHandler;
 			errorResponseHandler   = handlers.error   || function () {
 				// Propagate the rejection, with the result of the handler
-				return when.reject((handlers.response || defaultResponseHandler).apply(this, arguments));
+				return when((handlers.response || defaultResponseHandler).apply(this, arguments), when.reject, when.reject);
 			};
 
 			return function (target, config) {
