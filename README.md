@@ -229,8 +229,9 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
-.next
-- nothing yet
+1.0.3
+- add moduleType for bower (node and amd). Thanks @briancavalier
+- doc polish. Thanks @gogamoga
 
 1.0.2
 - restore client.chain() to the default client
@@ -238,7 +239,7 @@ Change Log
 1.0.1
 - handle exceptions thrown from MIME converters
 - allow overriding the default client
-- allow AMD loaders to load node client. Useful when using an AMD loader with Node
+- allow AMD loaders to load node client. Useful when using an AMD loader with Node. Thanks @unscriptable
 
 1.0.0
 - JSON HAL mime serializer for application/hal+json
