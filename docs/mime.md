@@ -33,7 +33,7 @@ Serveral common MIME types are supported out of the box including:
 - text/plain
 - application/hal+json
 - application/json
-- application/x-form-www-urlencoded
+- application/x-www-form-urlencoded
 
 These converters are loaded lazily and are located under `rest/mime/type/*`. So 'text/plain' is resolved to `rest/mime/type/text/plain`. The main MIME registry knows how to fetch these converters. Child registries extend from the main registry hierarchically and thus also get access to these provided converters.
 
