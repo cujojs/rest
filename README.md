@@ -231,6 +231,7 @@ Change Log
 
 .next
 - bump when.js version to ~3.0, 2.x is no longer supported
+- add HTTP specific methods to the promises returned from clients: .entity(), .status(), .headers(), .header(name)
 
 1.0.3
 - add moduleType for bower (node and amd). Thanks @briancavalier

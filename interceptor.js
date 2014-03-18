@@ -10,11 +10,12 @@
 
 	define(function (require) {
 
-		var defaultClient, beget, mixin, when;
+		var defaultClient, beget, mixin, responsePromise, when;
 
 		defaultClient = require('./rest');
 		beget = require('./util/beget');
 		mixin = require('./util/mixin');
+		responsePromise = require('./util/responsePromise');
 		when = require('when');
 
 		/**
@@ -116,7 +117,7 @@
 					meta = { 'arguments': Array.prototype.slice.call(arguments), client: client };
 					request = typeof request === 'string' ? { path: request } : request || {};
 					request.originator = request.originator || client;
-					return when(
+					return responsePromise(when(
 						requestHandler.call(context, request, config, meta),
 						function (request) {
 							var response, abort, next;
@@ -145,7 +146,7 @@
 						function (error) {
 							return when.reject({ request: request, error: error });
 						}
-					);
+					));
 				};
 
 				/**

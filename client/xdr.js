@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors
+ * Copyright 2013-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -10,10 +10,11 @@
 
 	define(function (require) {
 
-		var when, UrlBuilder;
+		var when, UrlBuilder, responsePromise;
 
 		when = require('when');
 		UrlBuilder = require('../UrlBuilder');
+		responsePromise = require('../util/responsePromise');
 
 		function xdr(request) {
 			var d, client, method, url, entity, response;
@@ -68,7 +69,7 @@
 				d.resolver.reject(response);
 			}
 
-			return d.promise;
+			return responsePromise(d.promise);
 		}
 
 		xdr.chain = function (interceptor, config) {

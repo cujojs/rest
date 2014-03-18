@@ -17,11 +17,12 @@
 
 	define('rest/client/xhr-test', function (require) {
 
-		var xhr, rest, xhrFallback, when, client;
+		var xhr, rest, xhrFallback, responsePromise, when, client;
 
 		xhr = require('rest/client/xhr');
 		rest = require('rest');
 		xhrFallback = require('rest/interceptor/ie/xhr');
+		responsePromise = require('rest/util/responsePromise');
 		when = require('when');
 
 		// use xhrFallback when XHR is not native
@@ -182,6 +183,9 @@
 			},
 			'should support interceptor chaining': function () {
 				assert(typeof xhr.chain === 'function');
+			},
+			'should return a ResponsePromise': function () {
+				assert(client() instanceof responsePromise.ResponsePromise);
 			}
 		});
 		// TODO spy XmlHttpRequest

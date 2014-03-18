@@ -136,6 +136,47 @@ Interceptors and clients may define additional properties.
 </table>
 
 
+<a name="interave-responsepromise"></a>
+## Response Promise Methods
+
+Clients return a promise for a response. In addition to the standard methods for a promise, and the supplimental methods when.js provides, rest.js adds additional methods for easy asynchronous access to parts of the response.
+
+These methods assume a standard response object. If an interceptor or client returns an alternate response object, the behavior of these methods will be unpredictable.
+
+<table>
+<tr>
+  <th>Method</th>
+  <th>Arguments</th>
+  <th>Return</th>
+  <th>Description</th>
+</tr>
+<tr>
+  <td>entity</td>
+  <td><em>none</em></td>
+  <td>Promise&lt;*&gt;</td>
+  <td>Promise for the HTTP response entity</td>
+</tr>
+<tr>
+  <td>status</td>
+  <td><em>none</em></td>
+  <td>Promise&lt;number&gt;</td>
+  <td>Promise for the HTTP response status code</td>
+</tr>
+<tr>
+  <td>headers</td>
+  <td><em>none</em></td>
+  <td>Promise&lt;Headers&gt;</td>
+  <td>Promise for the HTTP response headers map</td>
+</tr>
+<tr>
+  <td>header</td>
+  <td>headerName</td>
+  <td>Promise&lt;Header&gt;</td>
+  <td>Promise for a specific HTTP response headers. A Header may be a string or an array of strings depending on the number of the header name occurances in the response</td>
+</tr>
+</table>
+
+
 <a name="interface-interceptor"></a>
 ## Interceptor Methods
 

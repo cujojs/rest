@@ -17,11 +17,12 @@
 
 	define('rest/client/jsonp-test', function (require) {
 
-		var client, jsonpInterceptor, rest;
+		var client, jsonpInterceptor, rest, responsePromise;
 
 		client = require('rest/client/jsonp');
 		jsonpInterceptor = require('rest/interceptor/jsonp');
 		rest = require('rest');
+		responsePromise = require('rest/util/responsePromise');
 
 		buster.testCase('rest/client/jsonp', {
 			'should make a cross origin request': function () {
@@ -107,6 +108,9 @@
 			},
 			'should support interceptor chaining': function () {
 				assert(typeof client.chain === 'function');
+			},
+			'should return a ResponsePromise': function () {
+				assert(client() instanceof responsePromise.ResponsePromise);
 			}
 		});
 

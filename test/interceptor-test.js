@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors
+ * Copyright 2013-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -17,12 +17,13 @@
 
 	define('rest/interceptor-test', function (require) {
 
-		var interceptor, rest, when, delay;
+		var interceptor, rest, when, delay, responsePromise;
 
 		interceptor = require('rest/interceptor');
 		rest = require('rest');
 		when = require('when');
 		delay = require('when/delay');
+		responsePromise = require('rest/util/responsePromise');
 
 		function defaultClient(request) {
 			return { request: request, id: 'default' };
@@ -492,6 +493,12 @@
 			'should support interceptor chaining': function () {
 				var theInterceptor = interceptor();
 				assert(typeof theInterceptor().chain === 'function');
+			},
+			'should return a ResponsePromise from intercepted clients': function () {
+				var theInterceptor, client;
+				theInterceptor = interceptor();
+				client = theInterceptor(defaultClient);
+				assert(client() instanceof responsePromise.ResponsePromise);
 			}
 		});
 

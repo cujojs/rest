@@ -18,15 +18,16 @@
 
 	define('rest/client/node-test', function (require) {
 
-		var rest, client, http, server;
+		var rest, client, responsePromise, http, server;
 
 		rest = require('rest');
 		client = require('rest/client/node');
+		responsePromise = require('rest/util/responsePromise');
 		http = require('http');
-		server = http.createServer();
 
 		buster.testCase('rest/client/node', {
 			setUp: function () {
+				server = http.createServer();
 				server.on('request', function (request, response) {
 					var requestBody = '';
 					request.on('data', function (chunk) {
@@ -141,6 +142,9 @@
 			},
 			'should support interceptor chaining': function () {
 				assert(typeof client.chain === 'function');
+			},
+			'should return a ResponsePromise': function () {
+				assert(client() instanceof responsePromise.ResponsePromise);
 			}
 		});
 

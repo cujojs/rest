@@ -51,10 +51,22 @@
 		 * @field {function} chain wraps this client with a new interceptor returning the wrapped client
 		 *
 		 * @param {Request} the HTTP request
-		 * @returns {Promise<Response>} a promise the resolves to the HTTP response
+		 * @returns {ResponsePromise<Response>} a promise the resolves to the HTTP response
 		 *
 		 * @class Client
 		 */
+
+		 /**
+		  * Extended when.js Promises/A+ promise with HTTP specific helpers
+		  *
+		  * @method entity promise for the HTTP entity
+		  * @method status promise for the HTTP status code
+		  * @method headers promise for the HTTP response headers
+		  * @method header promise for a specific HTTP response header
+		  *
+		  * @class ResponsePromise
+		  * @extends Promise
+		  */
 
 		var client, platformDefault;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -12,10 +12,11 @@
 
 	define(function (require) {
 
-		var when, UrlBuilder;
+		var when, UrlBuilder, responsePromise;
 
 		when = require('when');
 		UrlBuilder = require('../UrlBuilder');
+		responsePromise = require('../util/responsePromise');
 
 		// consider abstracting this into a util module
 		function clearProperty(scope, propertyName) {
@@ -128,7 +129,7 @@
 			firstScript = document.getElementsByTagName('script')[0];
 			firstScript.parentNode.insertBefore(script, firstScript);
 
-			return d.promise;
+			return responsePromise(d.promise);
 		}
 
 		jsonp.chain = function (interceptor, config) {

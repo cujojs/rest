@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -10,11 +10,12 @@
 
 	define(function (require) {
 
-		var when, UrlBuilder, normalizeHeaderName, headerSplitRE;
+		var when, UrlBuilder, normalizeHeaderName, responsePromise, headerSplitRE;
 
 		when = require('when');
 		UrlBuilder = require('../UrlBuilder');
 		normalizeHeaderName = require('../util/normalizeHeaderName');
+		responsePromise = require('../util/responsePromise');
 
 		// according to the spec, the line break is '\r\n', but doesn't hold true in practice
 		headerSplitRE = /[\r|\n]+/;
@@ -134,7 +135,7 @@
 				d.resolver.reject(response);
 			}
 
-			return d.promise;
+			return responsePromise(d.promise);
 		}
 
 		xhr.chain = function (interceptor, config) {

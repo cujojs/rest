@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Jeremy Grelle
@@ -11,7 +11,7 @@
 
 	define(function (require) {
 
-		var parser, http, https, when, UrlBuilder, normalizeHeaderName, httpsExp;
+		var parser, http, https, when, UrlBuilder, normalizeHeaderName, responsePromise, httpsExp;
 
 		parser = envRequire('url');
 		http = envRequire('http');
@@ -19,6 +19,7 @@
 		when = require('when');
 		UrlBuilder = require('../UrlBuilder');
 		normalizeHeaderName = require('../util/normalizeHeaderName');
+		responsePromise = require('../util/responsePromise');
 
 		httpsExp = /^https/i;
 
@@ -130,7 +131,7 @@
 			}
 			clientRequest.end();
 
-			return d.promise;
+			return responsePromise(d.promise);
 		}
 
 		node.chain = function (interceptor, config) {
