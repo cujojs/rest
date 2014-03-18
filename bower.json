@@ -4,7 +4,7 @@
 	"main": "./rest.js",
 	"moduleType": ["amd", "node"],
 	"dependencies": {
-		"when": "~2"
+		"when": "~3.0"
 	},
 	"ignore": [
 		"docs",

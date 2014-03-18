@@ -230,7 +230,7 @@ Change Log
 ----------
 
 .next
-- nothing yet
+- bump when.js version to ~3.0, 2.x is no longer supported
 
 1.0.3
 - add moduleType for bower (node and amd). Thanks @briancavalier
