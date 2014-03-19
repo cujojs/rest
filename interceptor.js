@@ -10,10 +10,9 @@
 
 	define(function (require) {
 
-		var defaultClient, beget, mixin, responsePromise, when;
+		var defaultClient, mixin, responsePromise, when;
 
 		defaultClient = require('./rest');
-		beget = require('./util/beget');
 		mixin = require('./util/mixin');
 		responsePromise = require('./util/responsePromise');
 		when = require('when');
@@ -110,7 +109,7 @@
 					target = handlers.client || defaultClient;
 				}
 
-				config = initHandler(beget(config));
+				config = initHandler(Object.create(config || {}));
 
 				client = function (request) {
 					var context, meta;

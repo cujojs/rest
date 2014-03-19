@@ -12,9 +12,9 @@
 
 	define(function (require) {
 
-		var beget, origin, urlRE, absoluteUrlRE, fullyQualifiedUrlRE;
+		var mixin, origin, urlRE, absoluteUrlRE, fullyQualifiedUrlRE;
 
-		beget = require('./util/beget');
+		mixin = require('./util/mixin');
 
 		urlRE = /([a-z][a-z0-9\+\-\.]*:)\/\/([^@]+@)?(([^:\/]+)(:([0-9]+))?)?(\/[^?#]*)?(\?[^#]*)?(#\S*)?/i;
 		absoluteUrlRE = /^([a-z][a-z0-9\-\+\.]*:\/\/|\/)/i;
@@ -79,11 +79,11 @@
 
 			if (template instanceof UrlBuilder) {
 				this._template = template.template;
-				this._params = beget(this._params, params);
+				this._params = mixin({}, this._params, params);
 			}
 			else {
 				this._template = (template || '').toString();
-				this._params = params;
+				this._params = params || {};
 			}
 		}
 
@@ -99,7 +99,7 @@
 			 */
 			append: function (template,  params) {
 				// TODO consider query strings and fragments
-				return new UrlBuilder(this._template + template, beget(this._params, params));
+				return new UrlBuilder(this._template + template, mixin({}, this._params, params));
 			},
 
 			/**
@@ -204,7 +204,7 @@
 			 * @return {string} the expanded URL
 			 */
 			build: function (params) {
-				return buildUrl(this._template, beget(this._params, params));
+				return buildUrl(this._template, mixin({}, this._params, params));
 			},
 
 			/**
