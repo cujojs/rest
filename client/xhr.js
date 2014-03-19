@@ -51,91 +51,92 @@
 		}
 
 		function xhr(request) {
-			var d, client, method, url, headers, entity, headerName, response, XMLHttpRequest;
+			return new responsePromise.ResponsePromise(function (resolve, reject) {
 
-			request = typeof request === 'string' ? { path: request } : request || {};
-			response = { request: request };
+				var client, method, url, headers, entity, headerName, response, XMLHttpRequest;
 
-			if (request.canceled) {
-				response.error = 'precanceled';
-				return when.reject(response);
-			}
+				request = typeof request === 'string' ? { path: request } : request || {};
+				response = { request: request };
 
-			d = when.defer();
-
-			XMLHttpRequest = request.engine || global.XMLHttpRequest;
-			if (!XMLHttpRequest) {
-				d.reject({ request: request, error: 'xhr-not-available' });
-				return d.promise;
-			}
-
-			entity = request.entity;
-			request.method = request.method || (entity ? 'POST' : 'GET');
-			method = request.method;
-			url = new UrlBuilder(request.path || '', request.params).build();
-
-			try {
-				client = response.raw = new XMLHttpRequest();
-				client.open(method, url, true);
-
-				if (request.mixin) {
-					Object.keys(request.mixin).forEach(function (prop) {
-						// make sure the property already exists as
-						// IE 6 will blow up if we add a new prop
-						if (request.mixin.hasOwnProperty(prop) && prop in client) {
-							client[prop] = request.mixin[prop];
-						}
-					});
+				if (request.canceled) {
+					response.error = 'precanceled';
+					reject(response);
+					return;
 				}
 
-				headers = request.headers;
-				for (headerName in headers) {
-					/*jshint forin:false */
-					client.setRequestHeader(headerName, headers[headerName]);
+				XMLHttpRequest = request.engine || global.XMLHttpRequest;
+				if (!XMLHttpRequest) {
+					reject({ request: request, error: 'xhr-not-available' });
+					return;
 				}
 
-				request.canceled = false;
-				request.cancel = function cancel() {
-					request.canceled = true;
-					client.abort();
-					d.reject(response);
-				};
-
-				client.onreadystatechange = function (/* e */) {
-					if (request.canceled) { return; }
-					if (client.readyState === (XMLHttpRequest.DONE || 4)) {
-						response.status = {
-							code: client.status,
-							text: client.statusText
-						};
-						response.headers = parseHeaders(client.getAllResponseHeaders());
-						response.entity = client.responseText;
-
-						if (response.status.code > 0) {
-							// check status code as readystatechange fires before error event
-							d.resolve(response);
-						}
-					}
-				};
+				entity = request.entity;
+				request.method = request.method || (entity ? 'POST' : 'GET');
+				method = request.method;
+				url = new UrlBuilder(request.path || '', request.params).build();
 
 				try {
-					client.onerror = function (/* e */) {
-						response.error = 'loaderror';
-						d.reject(response);
+					client = response.raw = new XMLHttpRequest();
+					client.open(method, url, true);
+
+					if (request.mixin) {
+						Object.keys(request.mixin).forEach(function (prop) {
+							// make sure the property already exists as
+							// IE 6 will blow up if we add a new prop
+							if (request.mixin.hasOwnProperty(prop) && prop in client) {
+								client[prop] = request.mixin[prop];
+							}
+						});
+					}
+
+					headers = request.headers;
+					for (headerName in headers) {
+						/*jshint forin:false */
+						client.setRequestHeader(headerName, headers[headerName]);
+					}
+
+					request.canceled = false;
+					request.cancel = function cancel() {
+						request.canceled = true;
+						client.abort();
+						reject(response);
 					};
+
+					client.onreadystatechange = function (/* e */) {
+						if (request.canceled) { return; }
+						if (client.readyState === (XMLHttpRequest.DONE || 4)) {
+							response.status = {
+								code: client.status,
+								text: client.statusText
+							};
+							response.headers = parseHeaders(client.getAllResponseHeaders());
+							response.entity = client.responseText;
+
+							if (response.status.code > 0) {
+								// check status code as readystatechange fires before error event
+								resolve(response);
+							}
+						}
+					};
+
+					try {
+						client.onerror = function (/* e */) {
+							response.error = 'loaderror';
+							reject(response);
+						};
+					}
+					catch (e) {
+						// IE 6 will not support error handling
+					}
+
+					client.send(entity);
 				}
 				catch (e) {
-					// IE 6 will not support error handling
+					response.error = 'loaderror';
+					reject(response);
 				}
 
-				client.send(entity);
-			}
-			catch (e) {
-				response.error = 'loaderror';
-				d.resolver.reject(response);
-			}
-
-			return responsePromise(d.promise);
+			});
 		}
 
 		xhr.chain = function (interceptor, config) {

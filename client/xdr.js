@@ -17,59 +17,60 @@
 		responsePromise = require('../util/responsePromise');
 
 		function xdr(request) {
-			var d, client, method, url, entity, response;
+			return new responsePromise.ResponsePromise(function (resolve, reject) {
 
-			request = typeof request === 'string' ? { path: request } : request || {};
-			response = { request: request };
+				var client, method, url, entity, response;
 
-			if (request.canceled) {
-				response.error = 'precanceled';
-				return when.reject(response);
-			}
+				request = typeof request === 'string' ? { path: request } : request || {};
+				response = { request: request };
 
-			d = when.defer();
+				if (request.canceled) {
+					response.error = 'precanceled';
+					reject(response);
+					return;
+				}
 
-			client = response.raw = new XDomainRequest();
+				client = response.raw = new XDomainRequest();
 
-			entity = request.entity;
-			request.method = request.method || (entity ? 'POST' : 'GET');
-			method = request.method;
-			url = new UrlBuilder(request.path || '', request.params).build();
+				entity = request.entity;
+				request.method = request.method || (entity ? 'POST' : 'GET');
+				method = request.method;
+				url = new UrlBuilder(request.path || '', request.params).build();
 
-			try {
-				client.open(method, url);
+				try {
+					client.open(method, url);
 
-				request.canceled = false;
-				request.cancel = function cancel() {
-					request.canceled = true;
-					client.abort();
-					d.reject(response);
-				};
+					request.canceled = false;
+					request.cancel = function cancel() {
+						request.canceled = true;
+						client.abort();
+						reject(response);
+					};
 
-				client.onload = function () {
-					if (request.canceled) { return; }
-					// this is all we have access to on the XDR object :(
-					response.headers = { 'Content-Type': client.contentType };
-					response.entity = client.responseText;
-					d.resolver.resolve(response);
-				};
+					client.onload = function () {
+						if (request.canceled) { return; }
+						// this is all we have access to on the XDR object :(
+						response.headers = { 'Content-Type': client.contentType };
+						response.entity = client.responseText;
+						resolve(response);
+					};
 
-				client.onerror = function () {
+					client.onerror = function () {
+						response.error = 'loaderror';
+						reject(response);
+					};
+
+					// onprogress must be defined
+					client.onprogress = function () {};
+
+					client.send(entity);
+				}
+				catch (e) {
 					response.error = 'loaderror';
-					d.reject(response);
-				};
+					reject(response);
+				}
 
-				// onprogress must be defined
-				client.onprogress = function () {};
-
-				client.send(entity);
-			}
-			catch (e) {
-				response.error = 'loaderror';
-				d.resolver.reject(response);
-			}
-
-			return responsePromise(d.promise);
+			});
 		}
 
 		xdr.chain = function (interceptor, config) {

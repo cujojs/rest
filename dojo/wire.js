@@ -43,7 +43,7 @@
 					client = when.defer();
 					plugin.resolvers.client(client.resolver, name, refObj, wire);
 
-					when(client.promise, function (client) {
+					client.promise.then(function (client) {
 						var args, store;
 
 						args = { client: client };

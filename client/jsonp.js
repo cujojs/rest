@@ -41,7 +41,7 @@
 			}
 		}
 
-		function registerCallback(prefix, resolver, response, name) {
+		function registerCallback(prefix, resolve, response, name) {
 			if (!name) {
 				do {
 					name = prefix + Math.floor(new Date().getTime() * Math.random());
@@ -54,7 +54,7 @@
 				clearProperty(global, name);
 				cleanupScriptNode(response);
 				if (!response.request.canceled) {
-					resolver.resolve(response);
+					resolve(response);
 				}
 			};
 
@@ -78,58 +78,60 @@
 		 * @returns {Promise<Response>}
 		 */
 		function jsonp(request) {
-			var d, callbackName, callbackParams, script, firstScript, response;
+			return new responsePromise.ResponsePromise(function (resolve, reject) {
 
-			request = typeof request === 'string' ? { path: request } : request || {};
-			response = { request: request };
+				var callbackName, callbackParams, script, firstScript, response;
 
-			if (request.canceled) {
-				response.error = 'precanceled';
-				return when.reject(response);
-			}
+				request = typeof request === 'string' ? { path: request } : request || {};
+				response = { request: request };
 
-			d = when.defer();
-			request.callback = request.callback || {};
-			callbackName = registerCallback(request.callback.prefix || 'jsonp', d.resolver, response, request.callback.name);
-			callbackParams = {};
-			callbackParams[request.callback.param || 'callback'] = callbackName;
+				if (request.canceled) {
+					response.error = 'precanceled';
+					reject(response);
+					return;
+				}
 
-			request.canceled = false;
-			request.cancel = function cancel() {
-				request.canceled = true;
-				cleanupScriptNode(response);
-				d.reject(response);
-			};
+				request.callback = request.callback || {};
+				callbackName = registerCallback(request.callback.prefix || 'jsonp', resolve, response, request.callback.name);
+				callbackParams = {};
+				callbackParams[request.callback.param || 'callback'] = callbackName;
 
-			script = document.createElement('script');
-			script.type = 'text/javascript';
-			script.async = true;
-			script.src = new UrlBuilder(request.path, request.params).build(callbackParams);
-
-			function handlePossibleError() {
-				if (typeof global[callbackName] === 'function') {
-					response.error = 'loaderror';
-					clearProperty(global, callbackName);
+				request.canceled = false;
+				request.cancel = function cancel() {
+					request.canceled = true;
 					cleanupScriptNode(response);
-					d.reject(response);
+					reject(response);
+				};
+
+				script = document.createElement('script');
+				script.type = 'text/javascript';
+				script.async = true;
+				script.src = new UrlBuilder(request.path, request.params).build(callbackParams);
+
+				function handlePossibleError() {
+					if (typeof global[callbackName] === 'function') {
+						response.error = 'loaderror';
+						clearProperty(global, callbackName);
+						cleanupScriptNode(response);
+						reject(response);
+					}
 				}
-			}
-			script.onerror = function () {
-				handlePossibleError();
-			};
-			script.onload = script.onreadystatechange = function (e) {
-				// script tag load callbacks are completely non-standard
-				// handle case where onreadystatechange is fired for an error instead of onerror
-				if ((e && (e.type === 'load' || e.type === 'error')) || script.readyState === 'loaded') {
+				script.onerror = function () {
 					handlePossibleError();
-				}
-			};
+				};
+				script.onload = script.onreadystatechange = function (e) {
+					// script tag load callbacks are completely non-standard
+					// handle case where onreadystatechange is fired for an error instead of onerror
+					if ((e && (e.type === 'load' || e.type === 'error')) || script.readyState === 'loaded') {
+						handlePossibleError();
+					}
+				};
 
-			response.raw = script;
-			firstScript = document.getElementsByTagName('script')[0];
-			firstScript.parentNode.insertBefore(script, firstScript);
+				response.raw = script;
+				firstScript = document.getElementsByTagName('script')[0];
+				firstScript.parentNode.insertBefore(script, firstScript);
 
-			return responsePromise(d.promise);
+			});
 		}
 
 		jsonp.chain = function (interceptor, config) {

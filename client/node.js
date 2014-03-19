@@ -56,82 +56,82 @@
 		};
 
 		function node(request) {
+			return new responsePromise.ResponsePromise(function (resolve, reject) {
 
-			var d, options, clientRequest, client, url, headers, entity, response;
+				var options, clientRequest, client, url, headers, entity, response;
 
-			request = typeof request === 'string' ? { path: request } : request || {};
-			response = { request: request };
+				request = typeof request === 'string' ? { path: request } : request || {};
+				response = { request: request };
 
-			if (request.canceled) {
-				response.error = 'precanceled';
-				return when.reject(response);
-			}
+				if (request.canceled) {
+					response.error = 'precanceled';
+					reject(response);
+					return;
+				}
 
-			d = when.defer();
+				url = new UrlBuilder(request.path || '', request.params).build();
+				client = url.match(httpsExp) ? https : http;
 
-			url = new UrlBuilder(request.path || '', request.params).build();
-			client = url.match(httpsExp) ? https : http;
+				options = parser.parse(url);
+				entity = request.entity;
+				request.method = request.method || (entity ? 'POST' : 'GET');
+				options.method = request.method;
+				headers = options.headers = {};
+				Object.keys(request.headers || {}).forEach(function (name) {
+					headers[normalizeHeaderName(name)] = request.headers[name];
+				});
+				if (!headers['Content-Length']) {
+					headers['Content-Length'] = entity ? Buffer.byteLength(entity, 'utf8') : 0;
+				}
 
-			options = parser.parse(url);
-			entity = request.entity;
-			request.method = request.method || (entity ? 'POST' : 'GET');
-			options.method = request.method;
-			headers = options.headers = {};
-			Object.keys(request.headers || {}).forEach(function (name) {
-				headers[normalizeHeaderName(name)] = request.headers[name];
-			});
-			if (!headers['Content-Length']) {
-				headers['Content-Length'] = entity ? Buffer.byteLength(entity, 'utf8') : 0;
-			}
-
-			request.canceled = false;
-			request.cancel = function cancel() {
-				request.canceled = true;
-				clientRequest.abort();
-			};
-
-			clientRequest = client.request(options, function (clientResponse) {
-				// Array of Buffers to collect response chunks
-				var buffers = [];
-
-				response.raw = {
-					request: clientRequest,
-					response: clientResponse
+				request.canceled = false;
+				request.cancel = function cancel() {
+					request.canceled = true;
+					clientRequest.abort();
 				};
-				response.status = {
-					code: clientResponse.statusCode
-					// node doesn't provide access to the status text
-				};
-				response.headers = {};
-				Object.keys(clientResponse.headers).forEach(function (name) {
-					response.headers[normalizeHeaderName(name)] = clientResponse.headers[name];
+
+				clientRequest = client.request(options, function (clientResponse) {
+					// Array of Buffers to collect response chunks
+					var buffers = [];
+
+					response.raw = {
+						request: clientRequest,
+						response: clientResponse
+					};
+					response.status = {
+						code: clientResponse.statusCode
+						// node doesn't provide access to the status text
+					};
+					response.headers = {};
+					Object.keys(clientResponse.headers).forEach(function (name) {
+						response.headers[normalizeHeaderName(name)] = clientResponse.headers[name];
+					});
+
+					clientResponse.on('data', function (data) {
+						// Collect the next Buffer chunk
+						buffers.push(data);
+					});
+
+					clientResponse.on('end', function () {
+						// Create the final response entity
+						response.entity = buffers.length > 0 ? Buffer.concat(buffers).toString() : '';
+						buffers = null;
+
+						resolve(response);
+					});
 				});
 
-				clientResponse.on('data', function (data) {
-					// Collect the next Buffer chunk
-					buffers.push(data);
+				clientRequest.on('error', function (e) {
+					response.error = e;
+					reject(response);
 				});
 
-				clientResponse.on('end', function () {
-					// Create the final response entity
-					response.entity = buffers.length > 0 ? Buffer.concat(buffers).toString() : '';
-					buffers = null;
+				if (entity) {
+					clientRequest.write(entity);
+				}
+				clientRequest.end();
 
-					d.resolve(response);
-				});
 			});
-
-			clientRequest.on('error', function (e) {
-				response.error = e;
-				d.reject(response);
-			});
-
-			if (entity) {
-				clientRequest.write(entity);
-			}
-			clientRequest.end();
-
-			return responsePromise(d.promise);
 		}
 
 		node.chain = function (interceptor, config) {

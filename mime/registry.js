@@ -76,38 +76,30 @@
 		};
 
 		function loadAMD(mime) {
-			var d, timeout;
+			var timeout;
 
-			function reject(ex) {
+			return when.promise(function (resolve, reject) {
+
+				// HOPE reject on a local require would be nice
+				timeout = setTimeout(reject, 1000);
+				require(['./type/' + mime], resolve, reject);
+
+			}).otherwise(function (ex) {
+				return when.reject(ex || new Error('Timeout while loading mime module: ' + mime));
+			}).ensure(function () {
 				clearTimeout(timeout);
-				d.reject(ex || new Error('Timeout while loading mime module: ' + mime));
-			}
-
-			function resolve(m) {
-				clearTimeout(timeout);
-				d.resolve(m);
-			}
-
-			d = when.defer();
-			// HOPE reject on a local require would be nice
-			timeout = setTimeout(reject, 1000);
-
-			require(['./type/' + mime], resolve, reject);
-
-			return d.promise;
+			});
 		}
 
 		function loadNode(mime) {
-			var d = when.defer();
-
-			try {
-				d.resolve(require('./type/' + mime));
-			}
-			catch (e) {
-				d.reject(e);
-			}
-
-			return d.promise;
+			return when.promise(function (resolve, reject) {
+				try {
+					resolve(require('./type/' + mime));
+				}
+				catch (e) {
+					reject(e);
+				}
+			});
 		}
 
 		registry = new Registry(typeof define === 'function' && define.amd ? loadAMD : loadNode);

@@ -42,26 +42,27 @@
 		}
 
 		function authorize(config) {
-			var d, state, url, dismissWindow;
+			var state, url, dismissWindow;
 
-			d = when.defer();
-			state = Math.random() * new Date().getTime();
-			url = new UrlBuilder(config.authorizationUrlBase).build({
-				'response_type': 'token',
-				'redirect_uri': config.redirectUrl,
-				'client_id': config.clientId,
-				'scope': config.scope,
-				'state': state
+			return when.promise(function (resolve) {
+
+				state = Math.random() * new Date().getTime();
+				url = new UrlBuilder(config.authorizationUrlBase).build({
+					'response_type': 'token',
+					'redirect_uri': config.redirectUrl,
+					'client_id': config.clientId,
+					'scope': config.scope,
+					'state': state
+				});
+
+				dismissWindow = config.windowStrategy(url);
+
+				pubsub.subscribe(state, function (authorization) {
+					dismissWindow();
+					resolve(authorization);
+				});
+
 			});
-
-			dismissWindow = config.windowStrategy(url);
-
-			pubsub.subscribe(state, function (authorization) {
-				dismissWindow();
-				d.resolve(authorization);
-			});
-
-			return d.promise;
 		}
 
 		/**

@@ -44,7 +44,7 @@
 				return config;
 			},
 			request: function (request, config) {
-				var mime, headers, requestReady;
+				var mime, headers;
 
 				headers = request.headers || (request.headers = {});
 				mime = headers['Content-Type'] = headers['Content-Type'] || config.mime || 'text/plain';
@@ -54,52 +54,50 @@
 					return request;
 				}
 
-				requestReady = when.defer();
+				return when.promise(function (resolve, reject) {
 
-				config.registry.lookup(mime).then(
-					function (serializer) {
-						var client = config.client || request.originator;
-						try {
-							request.entity = serializer.write(request.entity, { client: client, request: request });
-							requestReady.resolve(request);
+					config.registry.lookup(mime).then(
+						function (serializer) {
+							var client = config.client || request.originator;
+							try {
+								request.entity = serializer.write(request.entity, { client: client, request: request });
+								resolve(request);
+							}
+							catch (e) {
+								// TODO include cause of the error, see #45
+								reject('mime-serialization');
+							}
+						},
+						function () {
+							reject('mime-unknown');
 						}
-						catch (e) {
-							// TODO include cause of the error, see #45
-							requestReady.reject('mime-serialization');
-						}
-					},
-					function () {
-						requestReady.reject('mime-unknown');
-					}
-				);
+					);
 
-				return requestReady.promise;
+				});
 			},
 			response: function (response, config) {
 				if (!(response.headers && response.headers['Content-Type'] && response.entity)) {
 					return response;
 				}
 
-				var mime, responseReady;
+				var mime = response.headers['Content-Type'];
 
-				mime = response.headers['Content-Type'];
+				return when.promise(function (resolve, reject) {
 
-				responseReady = when.defer();
+					config.registry.lookup(mime).otherwise(function () { return plainText; }).then(function (serializer) {
+						var client = config.client || response.request && response.request.originator;
+						try {
+							response.entity = serializer.read(response.entity, { client: client, response: response });
+							resolve(response);
+						}
+						catch (e) {
+							response.error = 'mime-deserialization';
+							response.cause = e;
+							reject(response);
+						}
+					});
 
-				config.registry.lookup(mime).otherwise(function () { return plainText; }).then(function (serializer) {
-					var client = config.client || response.request && response.request.originator;
-					try {
-						response.entity = serializer.read(response.entity, { client: client, response: response });
-						responseReady.resolve(response);
-					}
-					catch (e) {
-						response.error = 'mime-deserialization';
-						response.cause = e;
-						responseReady.reject(response);
-					}
 				});
-
-				return responseReady.promise;
 			}
 		});
 

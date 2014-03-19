@@ -50,11 +50,12 @@
 		}
 
 		function race(promisesOrValues) {
-			var d = when.defer();
-			promisesOrValues.forEach(function (promiseOrValue) {
-				when(promiseOrValue, d.resolve, d.reject);
+			// this function is different than when.any as the first to reject also wins
+			return when.promise(function (resolve, reject) {
+				promisesOrValues.forEach(function (promiseOrValue) {
+					when(promiseOrValue, resolve, reject);
+				});
 			});
-			return d.promise;
 		}
 
 		/**
