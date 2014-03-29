@@ -22,7 +22,7 @@ The return value from a client is a promise that is resolved with the response w
 
 The core client behavior can be augmented with [interceptors](docs/interceptors.md#interceptor-principals).  An interceptor wraps the client and transforms the request and response.  For example: an interceptor may authenticate a request, or reject the promise if an error is encountered.  Interceptors may be combined to create a client with the desired behavior.  A configured interceptor acts just like a client.  The core clients are basic, they only know the low level mechanics of making a request and parsing the response.  All other behavior is applied and configurated with interceptors.
 
-Interceptors are applied to a client by chaining.  To chain a client with an interceptor, call the `chain` function on the client providing the interceptor and optionally a configuration object.  A new client is returned containing the interceptor's behavior applied to the parent client.  It's important to note that the behavior of the original client is not modified, in order to use the new behavior, you must use the returned client.
+Interceptors are applied to a client by wrapping.  To wrap a client with an interceptor, call the `wrap` method on the client providing the interceptor and optionally a configuration object.  A new client is returned containing the interceptor's behavior applied to the parent client.  It's important to note that the behavior of the original client is not modified, in order to use the new behavior, you must use the returned client.
 
 
 ### Making a basic request: ###
@@ -50,7 +50,7 @@ var rest, mime, client;
 rest = require('rest'),
 mime = require('rest/interceptor/mime');
 
-client = rest.chain(mime);
+client = rest.wrap(mime);
 client({ path: '/data.json' }).then(function(response) {
     console.log('response: ', response);
 });
@@ -68,8 +68,8 @@ rest = require('rest'),
 mime = require('rest/interceptor/mime');
 errorCode = require('rest/interceptor/errorCode');
 
-client = rest.chain(mime)
-             .chain(errorCode, { code: 500 });
+client = rest.wrap(mime)
+             .wrap(errorCode, { code: 500 });
 client({ path: '/data.json' }).then(
     function(response) {
         console.log('response: ', response);
@@ -106,7 +106,7 @@ Let's take the previous example and configure the client using a wire.js specifi
 }
 ```
 
-There are a couple things to notice.  First is the '$plugins' section, by declaring the `rest/wire` module, the `rest` factory becomes available within the specification.  The second thing to notice is that we no longer need to individually `require()` interceptor modules; wire.js is smart enough to automatically fetch the modules.  The interceptors are then chained together in the order they are defined and provided with the corresponding config object, if it's defined.  The resulting client can then be injected into any other object using standard wire.js facilities.
+There are a couple things to notice.  First is the '$plugins' section, by declaring the `rest/wire` module, the `rest` factory becomes available within the specification.  The second thing to notice is that we no longer need to individually `require()` interceptor modules; wire.js is smart enough to automatically fetch the modules.  The interceptors are then wrapped in the order they are defined and provided with the corresponding config object, if it's defined.  The resulting client can then be injected into any other object using standard wire.js facilities.
 
 
 ### Custom MIME Converters: ###
@@ -231,6 +231,7 @@ Change Log
 
 .next
 - bump when.js version to ~3.0, 2.x is no longer supported
+- perfer `client.wrap()` to `client.chain()`, `chain` is now deprecated
 - add HTTP specific methods to the promises returned from clients: .entity(), .status(), .headers(), .header(name)
 - removed 'rest/util/beget' favor Object.create
 

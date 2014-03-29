@@ -116,8 +116,8 @@
 				rest.resetDefaultClient();
 				refute.same(client, rest.getDefaultClient());
 			},
-			'should support interceptor chaining': function () {
-				assert(typeof client.chain === 'function');
+			'should support interceptor wrapping': function () {
+				assert(typeof client.wrap === 'function');
 			}
 		});
 

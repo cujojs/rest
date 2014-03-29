@@ -12,14 +12,14 @@
 
 A rest.js [client](interfaces.md#interface-client) is simply a function that accepts an argument as the [request](interfaces.md#interface-request) and returns a promise for the [response](interfaces.md#interface-response).
 
-Clients are typically extended by chaining interceptors that wrap the client core behavior providing additional functionality and returning an enriched client.
+Clients are typically extended by wrapping interceptors that wrap the client core behavior providing additional functionality and returning an enriched client.
 
 ```javascript
-client = rest.chain(interceptor);
+client = rest.wrap(interceptor);
 assert.same(rest, client.skip());
 ```
 
-See the [interceptor docs](interceptors.md) for more information on interceptors and chaining.
+See the [interceptor docs](interceptors.md) for more information on interceptors and wrapping.
 
 
 ## Provided Clients

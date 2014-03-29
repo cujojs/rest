@@ -46,7 +46,7 @@
 			'should set the originator client on the request for the, but do not overwrite': function () {
 				var theInterceptor, client;
 				theInterceptor = interceptor();
-				client = theInterceptor(defaultClient).chain(theInterceptor);
+				client = theInterceptor(defaultClient).wrap(theInterceptor);
 				return client().then(function (response) {
 					assert.same('default', response.id);
 					assert.same(client, response.request.originator);
@@ -490,9 +490,9 @@
 				var theInterceptor = interceptor();
 				assert.same(rest, theInterceptor().skip());
 			},
-			'should support interceptor chaining': function () {
+			'should support interceptor wrapping': function () {
 				var theInterceptor = interceptor();
-				assert(typeof theInterceptor().chain === 'function');
+				assert(typeof theInterceptor().wrap === 'function');
 			},
 			'should return a ResponsePromise from intercepted clients': function () {
 				var theInterceptor, client;

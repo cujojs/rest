@@ -11,7 +11,7 @@
 
 	define(function (require) {
 
-		var parser, http, https, when, UrlBuilder, normalizeHeaderName, responsePromise, httpsExp;
+		var parser, http, https, when, UrlBuilder, normalizeHeaderName, responsePromise, client, httpsExp;
 
 		parser = envRequire('url');
 		http = envRequire('http');
@@ -20,6 +20,7 @@
 		UrlBuilder = require('../UrlBuilder');
 		normalizeHeaderName = require('../util/normalizeHeaderName');
 		responsePromise = require('../util/responsePromise');
+		client = require('../client');
 
 		httpsExp = /^https/i;
 
@@ -55,7 +56,7 @@
 			return buffer;
 		};
 
-		function node(request) {
+		return client(function node(request) {
 			return new responsePromise.ResponsePromise(function (resolve, reject) {
 
 				var options, clientRequest, client, url, headers, entity, response;
@@ -132,13 +133,7 @@
 				clientRequest.end();
 
 			});
-		}
-
-		node.chain = function (interceptor, config) {
-			return interceptor(node, config);
-		};
-
-		return node;
+		});
 
 	});
 

@@ -48,7 +48,7 @@
 		/**
 		 * HTTP client particularly suited for RESTful operations.
 		 *
-		 * @field {function} chain wraps this client with a new interceptor returning the wrapped client
+		 * @field {function} wrap wraps this client with a new interceptor returning the wrapped client
 		 *
 		 * @param {Request} the HTTP request
 		 * @returns {ResponsePromise<Response>} a promise the resolves to the HTTP response
@@ -58,7 +58,7 @@
 
 		 /**
 		  * Extended when.js Promises/A+ promise with HTTP specific helpers
-		  *
+		  *q
 		  * @method entity promise for the HTTP entity
 		  * @method status promise for the HTTP status code
 		  * @method headers promise for the HTTP response headers
@@ -68,9 +68,11 @@
 		  * @extends Promise
 		  */
 
-		var client, platformDefault;
+		var client, target, platformDefault;
 
-		client = platformDefault = (function () {
+		client = require('./client');
+
+		target = platformDefault = (function () {
 			if (process && process.versions && process.versions.node) {
 				// evade build tools
 				var moduleId = './client/node';
@@ -86,27 +88,15 @@
 		 * @returns {Promise<Response>} a promise the resolves to the HTTP response
 		 */
 		function defaultClient() {
-			return client.apply(undef, arguments);
+			return target.apply(undef, arguments);
 		}
-
-		/**
-		 * Applies the interceptor behavior to the default client, resulting in
-		 * a new client
-		 * @param {Inteceptor} interceptor the interceptor behavior to apply to
-		 *   the default client
-		 * @param {*} [config] optional configuration for the interceptor
-		 * @returns {Client} the newly wrapped client
-		 */
-		defaultClient.chain = function chain(interceptor, config) {
-			return interceptor(defaultClient, config);
-		};
 
 		/**
 		 * Change the default client
 		 * @param {Client} client the new default client
 		 */
-		defaultClient.setDefaultClient = function setDefaultClient(c) {
-			client = c;
+		defaultClient.setDefaultClient = function setDefaultClient(client) {
+			target = client;
 		};
 
 		/**
@@ -114,17 +104,17 @@
 		 * @returns {Client} the default client
 		 */
 		defaultClient.getDefaultClient = function getDefaultClient() {
-			return client;
+			return target;
 		};
 
 		/**
 		 * Reset the default client to the platform default
 		 */
 		defaultClient.resetDefaultClient = function resetDefaultClient() {
-			client = platformDefault;
+			target = platformDefault;
 		};
 
-		return defaultClient;
+		return client(defaultClient);
 
 	});
 

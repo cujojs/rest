@@ -46,8 +46,8 @@
 				rest.resetDefaultClient();
 				assert.same(client, rest.getDefaultClient());
 			},
-			'should chain off the default client, using the lastest default client': function () {
-				var client = rest.chain(stubInterceptor);
+			'should wrap off the default client, using the lastest default client': function () {
+				var client = rest.wrap(stubInterceptor);
 				rest.setDefaultClient(stubClient);
 				refute.same(client, stubClient);
 				assert.equals('request', rest('request').request);

@@ -26,7 +26,7 @@
 		when = require('when');
 
 		// use xhrFallback when XHR is not native
-		client = !XMLHttpRequest ? xhr.chain(xhrFallback) : xhr;
+		client = !XMLHttpRequest ? xhr.wrap(xhrFallback) : xhr;
 
 		buster.testCase('rest/client/xhr', {
 			'should make a GET by default': function () {
@@ -181,8 +181,8 @@
 				rest.resetDefaultClient();
 				assert.same(xhr, rest.getDefaultClient());
 			},
-			'should support interceptor chaining': function () {
-				assert(typeof xhr.chain === 'function');
+			'should support interceptor wrapping': function () {
+				assert(typeof xhr.wrap === 'function');
 			},
 			'should return a ResponsePromise': function () {
 				assert(client() instanceof responsePromise.ResponsePromise);

@@ -61,7 +61,7 @@ A request may be represented by either a string or an object.  Strings are coerc
   <td>originator</td>
   <td>provided</td>
   <td><em>n/a</em></td>
-  <td>the first client to handle this request in the interceptor chain, defined by the interceptor chain</td>
+  <td>the first client to handle this request in the interceptor chain, often the outter most wrapped client</td>
 </tr>
 </table>
 
@@ -128,7 +128,7 @@ Interceptors and clients may define additional properties.
   <td>returns the parent client. Not available for the root client, a client may also elect to not be skipable.</td>
 </tr>
 <tr>
-  <td>chain</td>
+  <td>wrap</td>
   <td>interceptor, config (optional)</td>
   <td>Client</td>
   <td>wraps the client with an interceptor returning the resulting client</td>
@@ -193,7 +193,7 @@ These methods assume a standard response object. If an interceptor or client ret
   <td><em>self</em></td>
   <td>parent Client (optional), config (optional)</td>
   <td>Client</td>
-  <td>creates a new client chaining off of the parent client with the provided configuration.</td>
+  <td>creates a new client wrapping the parent client with the interceptor and provided configuration.</td>
 </tr>
 </table>
 

@@ -10,12 +10,13 @@
 
 	define(function (require) {
 
-		var when, UrlBuilder, normalizeHeaderName, responsePromise, headerSplitRE;
+		var when, UrlBuilder, normalizeHeaderName, responsePromise, client, headerSplitRE;
 
 		when = require('when');
 		UrlBuilder = require('../UrlBuilder');
 		normalizeHeaderName = require('../util/normalizeHeaderName');
 		responsePromise = require('../util/responsePromise');
+		client = require('../client');
 
 		// according to the spec, the line break is '\r\n', but doesn't hold true in practice
 		headerSplitRE = /[\r|\n]+/;
@@ -50,7 +51,7 @@
 			return headers;
 		}
 
-		function xhr(request) {
+		return client(function xhr(request) {
 			return new responsePromise.ResponsePromise(function (resolve, reject) {
 
 				var client, method, url, headers, entity, headerName, response, XMLHttpRequest;
@@ -137,13 +138,7 @@
 				}
 
 			});
-		}
-
-		xhr.chain = function (interceptor, config) {
-			return interceptor(xhr, config);
-		};
-
-		return xhr;
+		});
 
 	});
 

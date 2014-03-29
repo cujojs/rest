@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors
+ * Copyright 2013-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -50,8 +50,8 @@
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, xhr().skip());
 			},
-			'should support interceptor chaining': function () {
-				assert(typeof xhr().chain === 'function');
+			'should support interceptor wrapping': function () {
+				assert(typeof xhr().wrap === 'function');
 			}
 		});
 

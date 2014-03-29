@@ -100,8 +100,8 @@
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, retry().skip());
 			},
-			'should support interceptor chaining': function () {
-				assert(typeof retry().chain === 'function');
+			'should support interceptor wrapping': function () {
+				assert(typeof retry().wrap === 'function');
 			}
 		});
 

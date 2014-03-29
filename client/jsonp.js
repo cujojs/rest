@@ -12,11 +12,12 @@
 
 	define(function (require) {
 
-		var when, UrlBuilder, responsePromise;
+		var when, UrlBuilder, responsePromise, client;
 
 		when = require('when');
 		UrlBuilder = require('../UrlBuilder');
 		responsePromise = require('../util/responsePromise');
+		client = require('../client');
 
 		// consider abstracting this into a util module
 		function clearProperty(scope, propertyName) {
@@ -77,7 +78,7 @@
 		 *
 		 * @returns {Promise<Response>}
 		 */
-		function jsonp(request) {
+		return client(function jsonp(request) {
 			return new responsePromise.ResponsePromise(function (resolve, reject) {
 
 				var callbackName, callbackParams, script, firstScript, response;
@@ -132,13 +133,7 @@
 				firstScript.parentNode.insertBefore(script, firstScript);
 
 			});
-		}
-
-		jsonp.chain = function (interceptor, config) {
-			return interceptor(jsonp, config);
-		};
-
-		return jsonp;
+		});
 
 	});
 

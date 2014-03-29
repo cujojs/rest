@@ -10,13 +10,14 @@
 
 	define(function (require) {
 
-		var when, UrlBuilder, responsePromise;
+		var when, UrlBuilder, responsePromise, client;
 
 		when = require('when');
 		UrlBuilder = require('../UrlBuilder');
 		responsePromise = require('../util/responsePromise');
+		client = require('../client');
 
-		function xdr(request) {
+		return client(function xdr(request) {
 			return new responsePromise.ResponsePromise(function (resolve, reject) {
 
 				var client, method, url, entity, response;
@@ -71,13 +72,7 @@
 				}
 
 			});
-		}
-
-		xdr.chain = function (interceptor, config) {
-			return interceptor(xdr, config);
-		};
-
-		return xdr;
+		});
 
 	});
 

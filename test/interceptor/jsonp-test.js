@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -50,8 +50,8 @@
 				refute.same(rest, jsonp().skip());
 				assert.same(jsonpClient, jsonp().skip());
 			},
-			'should support interceptor chaining': function () {
-				assert(typeof jsonp().chain === 'function');
+			'should support interceptor wrapping': function () {
+				assert(typeof jsonp().wrap === 'function');
 			}
 		});
 

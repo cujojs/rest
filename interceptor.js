@@ -10,17 +10,18 @@
 
 	define(function (require) {
 
-		var defaultClient, mixin, responsePromise, when;
+		var defaultClient, mixin, responsePromise, client, when;
 
 		defaultClient = require('./rest');
 		mixin = require('./util/mixin');
 		responsePromise = require('./util/responsePromise');
+		client = require('./client');
 		when = require('when');
 
 		/**
 		 * Interceptors have the ability to intercept the request and/org response
 		 * objects.  They may augment, prune, transform or replace the
-		 * request/response as needed.  Clients may be composed by chaining
+		 * request/response as needed.  Clients may be composed by wrapping
 		 * together multiple interceptors.
 		 *
 		 * Configured interceptors are functional in nature.  Wrapping a client in
@@ -62,7 +63,7 @@
 		 *
 		 * @param properties.request the traditional request return object
 		 * @param {Promise} [properties.abort] promise that resolves if/when the request is aborted
-		 * @param {Client} [properties.client] override the defined client chain with an alternate client
+		 * @param {Client} [properties.client] override the defined client with an alternate client
 		 * @param [properties.response] response for the request, short circuit the request
 		 */
 		function ComplexRequest(properties) {
@@ -100,7 +101,6 @@
 			};
 
 			return function (target, config) {
-				var client;
 
 				if (typeof target === 'object') {
 					config = target;
@@ -111,12 +111,12 @@
 
 				config = initHandler(Object.create(config || {}));
 
-				client = function (request) {
+				function interceptedClient(request) {
 					var context, meta;
 					context = {};
-					meta = { 'arguments': Array.prototype.slice.call(arguments), client: client };
+					meta = { 'arguments': Array.prototype.slice.call(arguments), client: interceptedClient };
 					request = typeof request === 'string' ? { path: request } : request || {};
-					request.originator = request.originator || client;
+					request.originator = request.originator || interceptedClient;
 					return responsePromise(when(
 						requestHandler.call(context, request, config, meta),
 						function (request) {
@@ -147,25 +147,9 @@
 							return when.reject({ request: request, error: error });
 						}
 					));
-				};
+				}
 
-				/**
-				 * @returns {Client} the target client
-				 */
-				client.skip = function () {
-					return target;
-				};
-
-				/**
-				 * @param {Interceptor} interceptor the interceptor to wrap this client with
-				 * @param [config] configuration for the interceptor
-				 * @returns {Client} the newly wrapped client
-				 */
-				client.chain = function (interceptor, config) {
-					return interceptor(client, config);
-				};
-
-				return client;
+				return client(interceptedClient, target);
 			};
 		}
 

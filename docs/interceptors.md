@@ -75,9 +75,9 @@ pathPrefix = require('rest/interceptor/pathPrefix');
 errorCode = require('rest/interceptor/errorCode');
 mime = require('rest/interceptor/mime');
 
-client = rest.chain(mime)
-             .chain(errorCode, { code: 500 })
-             .chain(pathPrefix, { prefix: 'http://example.com' });
+client = rest.wrap(mime)
+             .wrap(errorCode, { code: 500 })
+             .wrap(pathPrefix, { prefix: 'http://example.com' });
 ```
 
 In this last example, we're no longer redefining the `client` var, there's no confusion about what the `client` does and we can't forget to pass it along.  It's clearly the combination of the default client, and the mime, errorCode and pathPrefix interceptors.  The configuration for each interceptor is still directly linked with the interceptor.
@@ -150,7 +150,7 @@ Provide default values for the request object.  Default values can be provided f
 **Example**
 
 ```javascript
-client = rest.chain(defaultRequest, { method: 'PUT', entity: 'defaulted' });
+client = rest.wrap(defaultRequest, { method: 'PUT', entity: 'defaulted' });
 
 client({});
 // resulting request { method: 'PUT', entity: 'defaulted' }
@@ -160,7 +160,7 @@ client({ entity: 'custom' });
 ```
 
 ```javascript
-client = rest.chain(defaultRequest, { headers: { 'X-Requested-With': 'rest.js' } });
+client = rest.wrap(defaultRequest, { headers: { 'X-Requested-With': 'rest.js' } });
 
 client({});
 // resulting request { headers: { 'X-Requested-With': 'rest.js' } }
@@ -191,7 +191,7 @@ Replaces the response with just the entity returned from the server.  After this
 **Example**
 
 ```javascript
-client = rest.chain(entity);
+client = rest.wrap(entity);
 
 // for a response { status: { code: 200 } }, entity: 'hello world', headers: { ... }, ... }
 client().then(function (response) {
@@ -259,7 +259,7 @@ The entire response object graph will be inspected looking for an Array property
 
 ```javascript
 // assuming a native ES5 environment
-client = rest.chain(mime).chain(hateoas);
+client = rest.warp(mime).wrap(hateoas);
 client({ path: '/people/scott' }).then(function (response) {
     // assuming response for /people/scott: { entity: '{ "name": "Scott", "links": [ { "rel": "father", "href": "/peopele/ron" } ], ...  }', ... }
     // assuming response for /people/ron: { entity: '{ "name": "Ron", ... }', ... }
@@ -273,7 +273,7 @@ client({ path: '/people/scott' }).then(function (response) {
 
 ```javascript
 // fallback for non-native ES5 environments
-client = rest.chain(mime).chain(hateoas);
+client = rest.wrap(mime).wrap(hateoas);
 client({ path: '/people/scott' }).then(function (response) {
     // assuming response for /people/scott: { entity: '{ "name": "Scott", "links": [ { "rel": "father", "href": "/peopele/ron" } ], ...  }', ... }
     // assuming response for /people/ron: { entity: '{ "name": "Ron", ... }', ... }
@@ -319,7 +319,7 @@ Subsequent redirects can be automatically followed by including this interceptor
 **Example**
 
 ```javascript
-client = rest.chain(location);
+client = rest.wrap(location);
 client({ method: 'POST', path: 'http://example.com/messages', entity: 'hello world' }).then(function (response) {
     // assuming response for POST: { status: { code: 201 }, headers: { Location: 'http://example.com/messages/1' } }
     // assuming response for GET: { status: { code: 200 }, entity: 'hello world', ... }
@@ -377,7 +377,7 @@ See the docs for the MIME registry for more information on available converters 
 **Example**
 
 ```javascript
-client = rest.chain(mime);
+client = rest.wrap(mime);
 client({ path: 'data.json' }).then(function (response) {
     // for the response: { entity: '{ "key": "value" }', headers: { 'Content-Type': 'application/json', ... } }
     assert.same('value', response.entity.key);
@@ -385,7 +385,7 @@ client({ path: 'data.json' }).then(function (response) {
 ```
 
 ```javascript
-client = rest.chain(mime, { mime: 'application/json' );
+client = rest.wrap(mime, { mime: 'application/json' );
 client({ method: 'POST', entity: { key: 'value' } }).then(function (response) {
     assert.same('{ "key": "value" }', response.request.entity);
     assert.same('application/json, application/json;q=0.8, text/plain;q=0.5, */*;q=0.2', response.request.headers['Content-Type']);
@@ -424,7 +424,7 @@ The path prefix interceptor prepends its value to the path provided in the reque
 **Example**
 
 ```javascript
-client = rest.chain(pathPrefix, { prefix: 'http://example.com/messages' });
+client = rest.wrap(pathPrefix, { prefix: 'http://example.com/messages' });
 client({ path: '1' }).then(function (response) {
     assert.same('http://example.com/messages/1', response.request.path);
 });
@@ -472,7 +472,7 @@ Apply HTTP Basic Authentication to the request.  The username and password can e
 **Example**
 
 ```javascript
-client = rest.chain(basicAuth, { username: 'admin', password: 'letmein' });
+client = rest.wrap(basicAuth, { username: 'admin', password: 'letmein' });
 // interceptor config
 client({}).then(function (response) {
     assert.same('Basic YWRtaW46bGV0bWVpbg==', response.request.headers.Authorization);
@@ -480,7 +480,7 @@ client({}).then(function (response) {
 ```
 
 ```javascript
-client = rest.chain(basicAuth);
+client = rest.wrap(basicAuth);
 // request config
 client({ username: 'admin', password: 'letmein' }).then(function (reponse) {
     assert.same('Basic YWRtaW46bGV0bWVpbg==', response.request.headers.Authorization);
@@ -566,7 +566,7 @@ Support for the OAuth implicit flow.  In a separate window users are redirected 
 **Example**
 
 ```javascript
-client = rest.chain(oAuth, {
+client = rest.wrap(oAuth, {
     clientId: 'assignedByAuthServer',
     scope: 'read, write, openid',
     authorizationUrl: 'http://authserver.example.com/oauth',
@@ -617,7 +617,7 @@ CSRF protection helps a server verify that a request came from a trusted client 
 **Example**
 
 ```javascript
-client = rest.chain(csrf, { token: 'abc123xyz789' });
+client = rest.wrap(csrf, { token: 'abc123xyz789' });
 // interceptor config
 client({}).then(function (response) {
     assert.same('abc123xyz789', response.request.headers['X-Csrf-Token']);
@@ -625,7 +625,7 @@ client({}).then(function (response) {
 ```
 
 ```javascript
-client = rest.chain(csrf);
+client = rest.wrap(csrf);
 // request config
 client({ csrfToken: 'abc123xyz789' }).then(function (reponse) {
     assert.same('abc123xyz789', response.request.headers['X-Csrf-Token']);
@@ -668,7 +668,7 @@ Marks a response as an error based on the status code.  According to the HTTP sp
 **Example**
 
 ```javascript
-client = rest.chain(errorCode);
+client = rest.wrap(errorCode);
 client({}).then(
     function (response) {
         // not called
@@ -723,7 +723,7 @@ Reattempts an errored request after a delay.  Attempts are scheduled after a fai
 **Example**
 
 ```javascript
-client = rest.chain(retry, { initial: 1e3, max: 10e3 });
+client = rest.wrap(retry, { initial: 1e3, max: 10e3 });
 client({}).then(function (response) {
     // assuming it takes a minute from the first request to a successful response
     // requests occur at 0s, 1s, 3s, 7s, 15s, 25s, 35s, 45s, 55s, 65s
@@ -733,7 +733,7 @@ client({}).then(function (response) {
 Commonly combined with the timeout interceptor to define a max period to wait
 
 ```javascript
-client = rest.chain(retry, { initial: 1e3, max: 10e3 }).chain(timeout, { timeout 120e3 });
+client = rest.wrap(retry, { initial: 1e3, max: 10e3 }).wrap(timeout, { timeout 120e3 });
 client({}).then(
     function (response) {
         // called once a request succeeds
@@ -777,7 +777,7 @@ Rejects a request that takes longer than the timeout.  If a request is in-flight
 **Example**
 
 ```javascript
-client = rest.chain(timeout, { timeout: 10e3 });
+client = rest.wrap(timeout, { timeout: 10e3 });
 client({}).then(
     function (response) {
         // called if the response took less then 10 seconds
@@ -836,7 +836,7 @@ Configures a request to use the [JSONP client](clients.md#module-rest/client/jso
 **Example**
 
 ```javascript
-client = rest.chain(jsonp);
+client = rest.wrap(jsonp);
 client({ path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'javascript' } }).then(function (response) {
     // results from google
 });
@@ -863,8 +863,8 @@ This interceptor should be installed as close to the root of the interceptor cha
 **Example**
 
 ```javascript
-client = rest.chain(xdomain)
-    .chain(defaultRequest, { params: { api_key: '95f41bfa4faa0f43bf7c24795eabbed4', format: 'rest' } });
+client = rest.wrap(xdomain)
+    .wrap(defaultRequest, { params: { api_key: '95f41bfa4faa0f43bf7c24795eabbed4', format: 'rest' } });
 client({ params: { method: 'flickr.test.echo' } }).then(function (response) {
     // response from flickr
 });
@@ -888,7 +888,7 @@ Attempts to use an ActiveX XHR replacement if a native XMLHttpRequest object is 
 **Example**
 
 ```javascript
-client = rest.chain(xhr);
+client = rest.wrap(xhr);
 client({}).then(function (response) {
     // normal XHR response, even in IE without XHR
 });

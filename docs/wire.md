@@ -18,7 +18,7 @@ There are two aspects to the wire plugin the `rest` factory, and the `client!` r
 
 The `rest` factory provides a declarative way to define a client with an interceptor chain that is nearly identical in capability to imperative JavaScript. The factory access two main config properties, a parent client, and an array of interceptors. Each entry in the interceptor array contains a reference to the interceptor module, and the configuration for that interceptor. The array of interceptors is chained off the client in order returning the resulting client as the wire.js component.
 
-In it's basic form, the array of interceptors is processed in order, chaining off the parent client.
+In it's basic form, the array of interceptors is processed in order, wrapping the parent client.
 
 ```javascript
 client: {
@@ -136,10 +136,10 @@ client: {
 Is equivlent to:
 
 ```javascript
-client = rest.chain(errorCode, { code: 400 })
-             .chain(mime, { mime: 'application/x-www-form-urlencoded' })
-             .chain(entity)
-             .chain(pathPrefix, { prefix: '' });
+client = rest.wrap(errorCode, { code: 400 })
+             .wrap(mime, { mime: 'application/x-www-form-urlencoded' })
+             .wrap(entity)
+             .wrap(pathPrefix, { prefix: '' });
 ```
 
 To disable interceptors, provide a boolean false for the config value
@@ -153,7 +153,7 @@ client: {
 Is equivlent to:
 
 ```javascript
-client = rest.chain(pathPrefix, { prefix: '' });
+client = rest.wrap(pathPrefix, { prefix: '' });
 ```
 
 A custom client can be used instead of the default client
@@ -167,10 +167,10 @@ client: {
 Is equivlent to:
 
 ```javascript
-client = someOtherClient.chain(errorCode, { code: 400 })
-                        .chain(mime, { mime: 'application/x-www-form-urlencoded' })
-                        .chain(entity)
-                        .chain(pathPrefix, { prefix: '' });
+client = someOtherClient.wrap(errorCode, { code: 400 })
+                        .wrap(mime, { mime: 'application/x-www-form-urlencoded' })
+                        .wrap(entity)
+                        .wrap(pathPrefix, { prefix: '' });
 ```
 
 A [Dojo Store](dojo.md#dojo-stores) variant of the `client!` reference resolver is available as `resource!` from [`rest/dojo/wire`](dojo.md#module-rest/dojo/wire).
