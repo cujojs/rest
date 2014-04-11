@@ -230,7 +230,7 @@ Change Log
 ----------
 
 .next
-- bump when.js version to ~3.0, 2.x is no longer supported
+- bump when.js version to ~3, 2.x is no longer supported
 - perfer `client.wrap()` to `client.chain()`, `chain` is now deprecated
 - add HTTP specific methods to the promises returned from clients: .entity(), .status(), .headers(), .header(name)
 - removed 'rest/util/beget' favor Object.create
