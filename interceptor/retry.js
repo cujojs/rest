@@ -11,11 +11,10 @@
 
 	define(function (require) {
 
-		var interceptor, when, delay;
+		var interceptor, when;
 
 		interceptor = require('../interceptor');
 		when = require('when');
-		delay = require('when/delay');
 
 		/**
 		 * Retries a rejected request using an exponential backoff.
@@ -42,7 +41,7 @@
 				request = response.request;
 				request.retry = request.retry || config.initial;
 
-				return delay(request.retry, request).then(function (request) {
+				return when(request).delay(request.retry).then(function (request) {
 					if (request.canceled) {
 						// cancel here in case client doesn't check canceled flag
 						return when.reject({ request: request, error: 'precanceled' });

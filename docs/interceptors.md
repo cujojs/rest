@@ -965,10 +965,10 @@ Promisses representing the request/response may be returned.
 
 ```javascript
 interceptor = require('rest/interceptor');
-delay = require('when/delay');
+when = require('when');
 delayRequestInterceptor = interceptor({
     request: function (request, config) {
-        return delay(config.delay || 0, request);
+        return when(request).delay(config.delay || 0);
     }
 });
 ```

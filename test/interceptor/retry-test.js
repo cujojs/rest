@@ -17,13 +17,12 @@
 
 	define('rest/interceptor/retry-test', function (require) {
 
-		var interceptor, retry, rest, when, delay, clock;
+		var interceptor, retry, rest, when, clock;
 
 		interceptor = require('rest/interceptor');
 		retry = require('rest/interceptor/retry');
 		rest = require('rest');
 		when = require('when');
-		delay = require('when/delay');
 
 		buster.testCase('rest/interceptor/retry', {
 			'should retry until successful': function () {

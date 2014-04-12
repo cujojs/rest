@@ -18,12 +18,11 @@
 
 	define('rest/interceptor/timeout-test', function (require) {
 
-		var timeout, rest, when, delay;
+		var timeout, rest, when;
 
 		timeout = require('rest/interceptor/timeout');
 		rest = require('rest');
 		when = require('when');
-		delay = require('when/delay');
 
 		function hangClient(/* request */) {
 			return when.defer().promise;
@@ -34,13 +33,7 @@
 		}
 
 		function delayedClient(request) {
-			var d, response;
-			response = { request: request };
-			d = when.defer();
-			delay(50).then(function () {
-				d.resolver.resolve(response);
-			});
-			return d.promise;
+			return when({ request: request }).delay(50);
 		}
 
 		function cancelableClient(request) {
@@ -61,7 +54,7 @@
 				return client(request).then(function (response) {
 					assert.same(request, response.request);
 					refute(response.error);
-					return delay(40).then(function () {
+					return when().delay(40).then(function () {
 						// delay to make sure timeout has fired, but not rejected the response
 						refute(request.canceled);
 					});

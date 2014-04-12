@@ -10,10 +10,9 @@
 
 	define(function (require) {
 
-		var when, whenFn;
+		var when;
 
 		when = require('when');
-		whenFn = require('when/function');
 
 		/**
 		 * Create a promise whose work is started only when a handler is registered.
@@ -38,7 +37,7 @@
 			promise.then = function () {
 				if (!started) {
 					started = true;
-					whenFn.apply(work).then(resolver.resolve, resolver.reject);
+					when.attempt(work).then(resolver.resolve, resolver.reject);
 				}
 				return then.apply(promise, arguments);
 			};

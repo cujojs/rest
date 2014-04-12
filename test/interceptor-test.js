@@ -17,12 +17,11 @@
 
 	define('rest/interceptor-test', function (require) {
 
-		var interceptor, rest, when, delay, responsePromise;
+		var interceptor, rest, when, responsePromise;
 
 		interceptor = require('rest/interceptor');
 		rest = require('rest');
 		when = require('when');
-		delay = require('when/delay');
 		responsePromise = require('rest/util/responsePromise');
 
 		function defaultClient(request) {
@@ -91,7 +90,7 @@
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					request: function (request) {
-						return delay(5).then(function () {
+						return when().delay(5).then(function () {
 							request.phase = 'request';
 							return request;
 						});
@@ -139,7 +138,7 @@
 				var theInterceptor, client;
 				theInterceptor = interceptor({
 					response: function (response) {
-						return delay(5).then(function () {
+						return when().delay(5).then(function () {
 							response.phase = 'response';
 							return response;
 						});
@@ -233,7 +232,7 @@
 				theInterceptor = interceptor({
 					response: fail,
 					success: function (response) {
-						return delay(5).then(function () {
+						return when().delay(5).then(function () {
 							response.phase = 'success';
 							return response;
 						});
