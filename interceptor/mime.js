@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -54,25 +54,19 @@
 					return request;
 				}
 
-				return when.promise(function (resolve, reject) {
+				return config.registry.lookup(mime).then(function (serializer) {
+					var client = config.client || request.originator;
 
-					config.registry.lookup(mime).then(
-						function (serializer) {
-							var client = config.client || request.originator;
-							try {
-								request.entity = serializer.write(request.entity, { client: client, request: request });
-								resolve(request);
-							}
-							catch (e) {
-								// TODO include cause of the error, see #45
-								reject('mime-serialization');
-							}
-						},
-						function () {
-							reject('mime-unknown');
-						}
-					);
-
+					return when.attempt(serializer.write, request.entity, { client: client, request: request })
+						.otherwise(function() {
+							throw 'mime-serialization';
+						})
+						.then(function(entity) {
+							request.entity = entity;
+							return request;
+						});
+				}, function () {
+					throw 'mime-unknown';
 				});
 			},
 			response: function (response, config) {
@@ -82,21 +76,19 @@
 
 				var mime = response.headers['Content-Type'];
 
-				return when.promise(function (resolve, reject) {
+				return config.registry.lookup(mime).otherwise(function () { return plainText; }).then(function (serializer) {
+					var client = config.client || response.request && response.request.originator;
 
-					config.registry.lookup(mime).otherwise(function () { return plainText; }).then(function (serializer) {
-						var client = config.client || response.request && response.request.originator;
-						try {
-							response.entity = serializer.read(response.entity, { client: client, response: response });
-							resolve(response);
-						}
-						catch (e) {
+					return when.attempt(serializer.read, response.entity, { client: client, response: response })
+						.otherwise(function (e) {
 							response.error = 'mime-deserialization';
 							response.cause = e;
-							reject(response);
-						}
-					});
-
+							throw response;
+						})
+						.then(function (entity) {
+							response.entity = entity;
+							return response;
+						});
 				});
 			}
 		});
