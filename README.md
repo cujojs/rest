@@ -229,7 +229,7 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
-.next
+1.1.0
 - bump when.js version to ~3, 2.x is no longer supported
 - perfer `client.wrap()` to `client.chain()`, `chain` is now deprecated
 - add HTTP specific methods to the promises returned from clients: .entity(), .status(), .headers(), .header(name)
