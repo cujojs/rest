@@ -17,11 +17,12 @@
 
 	define('rest/interceptor/mime-test', function (require) {
 
-		var mime, registry, rest;
+		var mime, registry, rest, when;
 
 		mime = require('rest/interceptor/mime');
 		registry = require('rest/mime/registry');
 		rest = require('rest');
+		when = require('when');
 
 		buster.testCase('rest/interceptor/mime', {
 			'should return the response entity decoded': function () {
@@ -184,6 +185,105 @@
 				);
 
 				return client({}).then(
+					fail,
+					failOnThrow(function (response) {
+						assert.equals(response.error, 'mime-deserialization');
+					})
+				);
+			},
+			'should reject the response if serializer rejects promise while reading response entity': function () {
+				var client, converter, customRegistry;
+
+				converter = {
+					read: function (obj) {
+						return when.reject(obj);
+					}
+				};
+
+				customRegistry = registry.child();
+				customRegistry.register('application/vnd.com.example', converter);
+
+				client = mime(
+					function (request) {
+						return { request: request, headers: { 'Content-Type': 'application/vnd.com.example' }, entity: 'response entity' };
+					},
+					{  registry: customRegistry }
+				);
+
+				return client({}).then(
+					fail,
+					failOnThrow(function (response) {
+						assert.equals(response.error, 'mime-deserialization');
+					})
+				);
+			},
+			'should wait for entity to resolve before returning when serializer returns a promise while reading response entity': function () {
+				var client, converter, customRegistry;
+
+				converter = {
+					read: function (obj) {
+						return when(obj);
+					}
+				};
+
+				customRegistry = registry.child();
+				customRegistry.register('application/vnd.com.example', converter);
+
+				client = mime(
+					function (request) {
+						return { request: request, headers: { 'Content-Type': 'application/vnd.com.example' }, entity: 'response entity' };
+					},
+					{  registry: customRegistry }
+				);
+
+				return client({}).then(function (response) {
+					assert.equals('response entity', response.entity);
+				}).otherwise(fail);
+			},
+			'should wait for entity to resolve before returning when serializer returns a promise while writing request entity': function () {
+				var client, converter, customRegistry, entityToPromise;
+
+				entityToPromise = function(obj) { return when(obj); };
+
+				converter = {
+					write: entityToPromise,
+					read: entityToPromise
+				};
+
+				customRegistry = registry.child();
+				customRegistry.register('application/vnd.com.example', converter);
+
+				client = mime(
+					function (request) {
+						return { request: request, headers: { 'Content-Type': 'application/vnd.com.example' }, entity: 'response entity' };
+					},
+					{ registry: customRegistry }
+				);
+
+				return client({ entity: 'request entity' }).then(function (response) {
+					assert.equals('request entity', response.request.entity);
+				}).otherwise(fail);
+			},
+			'should reject the response if serializer rejects promise while writing request entity': function () {
+				var client, converter, customRegistry;
+
+				converter = {
+					write: function (obj) {
+						return when.reject(obj);
+					}
+				};
+
+				customRegistry = registry.child();
+				customRegistry.register('application/vnd.com.example', converter);
+
+				client = mime(
+					function (request) {
+						return { request: request, headers: { 'Content-Type': 'application/vnd.com.example' }, entity: 'response entity' };
+					},
+					{  registry: customRegistry }
+				);
+
+				return client({ entity: 'request entity' }).then(
 					fail,
 					failOnThrow(function (response) {
 						assert.equals(response.error, 'mime-deserialization');
