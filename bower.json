@@ -1,6 +1,6 @@
 {
 	"name": "rest",
-	"version": "1.1.0",
+	"version": "1.1.0-next",
 	"main": "./rest.js",
 	"moduleType": ["amd", "node"],
 	"dependencies": {
