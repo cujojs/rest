@@ -215,13 +215,13 @@ Both the parent and config arguments are typically optional. The default client 
 <tr>
   <td>read</td>
   <td>string</td>
-  <td><em>any</em></td>
+  <td><em>any</em> | Promise&lt;*&gt;</td>
   <td>reads a response entity as a string converting it into any other type</td>
 </tr>
 <tr>
   <td>write</td>
   <td><em>any</em></td>
-  <td>string</td>
+  <td>string | Promise&lt;string&gt;</td>
   <td>writes a request entity as a string converting it from any other type</td>
 </tr>
 </table>

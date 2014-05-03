@@ -233,6 +233,7 @@ Change Log
 - bump when.js version to ~3, 2.x is no longer supported
 - perfer `client.wrap()` to `client.chain()`, `chain` is now deprecated
 - add HTTP specific methods to the promises returned from clients: .entity(), .status(), .headers(), .header(name)
+- mime converters may return a promise. Thanks @phillipj
 - removed 'rest/util/beget' favor Object.create
 
 1.0.3

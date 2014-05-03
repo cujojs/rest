@@ -43,7 +43,7 @@ These converters are loaded lazily and are located under `rest/mime/type/*`. So 
 
 A converter is fundamentally a object with two methods: `read` and `write`. The read method accepts the entity as a string and returns an object. The write method accepts the entity as an object and returns a string. While not strictly required, the read and write methods are typically reflexive. A convert may implement either the read or write methods, but that limits the converters ability to handle response or request entities, respectively.
 
-The `read` and `write` methods may additionaly accept an `opts` argument. Common opts include the `request` or `response`, and a `client` to make further requests if needed.
+The `read` and `write` methods may additionaly accept an `opts` argument. Common opts include the `request` or `response`, and a `client` to make further requests if needed. Either a raw value or a promise may be returned.
 
 ```javascript
 numberConverter = {
