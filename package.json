@@ -44,7 +44,7 @@
 	"main": "./rest",
 	"scripts": {
 		"test": "jshint . && buster test --node",
-		"ci": "npm test && sauceme",
+		"ci": "npm test && sauceme -b test/browsers.json",
 		"start": "buster static -e browser",
 		"tunnel": "sauceme -m"
 	}
