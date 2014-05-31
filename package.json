@@ -46,6 +46,10 @@
 	},
 	"main": "./node",
 	"browser": "./browser",
+	"jspm": {
+		"registry": "npm",
+		"main": "./browser"
+	},
 	"scripts": {
 		"test": "npm run-script lint && npm run-script buster",
 		"start": "buster static -e browser",

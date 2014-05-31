@@ -20,7 +20,7 @@ Using rest.js is easy.  The core clients provide limited functionality around th
 
 The return value from a client is a promise that is resolved with the response when the remote request finishes.
 
-The core client behavior can be augmented with [interceptors](docs/interceptors.md#interceptor-principals).  An interceptor wraps the client and transforms the request and response.  For example: an interceptor may authenticate a request, or reject the promise if an error is encountered.  Interceptors may be combined to create a client with the desired behavior.  A configured interceptor acts just like a client.  The core clients are basic, they only know the low level mechanics of making a request and parsing the response.  All other behavior is applied and configurated with interceptors.
+The core client behavior can be augmented with [interceptors](docs/interceptors.md#interceptor-principals).  An interceptor wraps the client and transforms the request and response.  For example: an interceptor may authenticate a request, or reject the promise if an error is encountered.  Interceptors may be combined to create a client with the desired behavior.  A configured interceptor acts just like a client.  The core clients are basic, they only know the low level mechanics of making a request and parsing the response.  All other behavior is applied and configured with interceptors.
 
 Interceptors are applied to a client by wrapping.  To wrap a client with an interceptor, call the `wrap` method on the client providing the interceptor and optionally a configuration object.  A new client is returned containing the interceptor's behavior applied to the parent client.  It's important to note that the behavior of the original client is not modified, in order to use the new behavior, you must use the returned client.
 
@@ -155,15 +155,19 @@ Specific browser test are provided by [Travis CI](https://travis-ci.org/cujojs/r
 Getting Started
 ---------------
 
-rest.js can be installed via [npm](https://npmjs.org/), [Bower](http://twitter.github.com/bower/), or from source.
+rest.js can be installed via [npm](https://npmjs.org/), [Bower](http://bower.io/), [jspm](http://jspm.io/), or from source.
 
 To install without source:
 
-    $ npm install rest
+    $ npm install --save rest
 
 or
 
-    $ bower install rest
+    $ bower install --save rest
+
+or
+
+    $ jspm install rest
 
 From source:
 
@@ -234,6 +238,7 @@ Change Log
 .next
 - response.follow() for easy traversal of hypermedia APIs
 - best fit MIME type resolution, including by suffix (i.e. '+json'). Parsed MIME type provided to converters
+- installation via jspm and loader support for System.js
 - support for Android 4.0-5.0 (no code changes required, now actively testing)
 - support for Safari 8, iOS 8.0 and 8.1 (no code changes required, now actively testing)
 - request.mixin properties attempt setting before before and after opening the request. Some browsers (IE) are sensitive to when the properties are set.
