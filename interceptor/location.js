@@ -14,6 +14,11 @@
 
 		interceptor = require('../interceptor');
 
+		function isRedirect(response, config) {
+			var matchesRedirectCode = config.code === 0 || (response.status && response.status.code >= config.code);
+			return response.headers && response.headers.Location && matchesRedirectCode;
+		}
+
 		/**
 		 * Follows the Location header in a response, if present. The response
 		 * returned is for the subsequent request.
@@ -27,13 +32,23 @@
 		 * @returns {Client}
 		 */
 		return interceptor({
+			init: function (config) {
+				config.code = config.code || 0;
+				return config;
+			},
 			success: function (response, config, client) {
-				if (response.headers && response.headers.Location) {
-					return (config.client || (response.request && response.request.originator) || client.skip())({
+				var request;
+
+				if (isRedirect(response, config)) {
+					request = response.request || {};
+					client = (config.client || request.originator || client.skip());
+
+					return client({
 						method: 'GET',
 						path: response.headers.Location
 					});
 				}
+
 				return response;
 			}
 		});

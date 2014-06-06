@@ -44,6 +44,27 @@
 					refute(spy.returnValues[2].headers.Location);
 				}).otherwise(fail);
 			},
+			'should follow the location header when status code is greater or equal to configured status code': function () {
+				var client, spy;
+				spy = this.spy(function (request) {
+					var statusCode = 300;
+					var response = {
+						request: request,
+						headers: {  },
+						status: { code: statusCode }
+					};
+					if (spy.callCount === 1) {
+						response.headers.Location = '/foo';
+					}
+					statusCode = statusCode - 1;
+					return response;
+				});
+				client = location(spy, { code: 300 });
+				return client({}).then(function () {
+					assert.same(2, spy.callCount);
+					assert.same(spy.args[1][0].path, '/foo');
+				}).otherwise(fail);
+			},
 			'should return the response if there is no location header': function () {
 				var client, spy;
 				spy = this.spy(function () { return { status: { code: 200 } }; });

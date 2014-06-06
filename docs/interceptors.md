@@ -269,7 +269,7 @@ client({ path: '/people/scott' }).then(function (response) {
 
 `rest/interceptor/location` ([src](../interceptor/location.js))
 
-Follows the `Location` header, returning the response of the subsequent request.  Browsers will typically automatically follow the location header for redirect in the 300s range, however, they will not follow the Location for a response in the 200s range.  Other clients may not follow 300s redirects.  This interceptor will always follow a redirect for the original request.
+Follows the `Location` header, returning the response of the subsequent request.  Browsers will typically automatically follow the location header for redirect in the 300s range, however, they will not follow the Location for a response in the 200s range.  Other clients may not follow 300s redirects.  This interceptor will always follow a redirect for the original request by default. If configured with `code` the response status code has to be equal or greater than `code` the be treated as a redirect.
 
 Subsequent redirects can be automatically followed by including this interceptor twice in the client chain.  However, in this situation, redirect loops will not be detected.
 
@@ -291,6 +291,12 @@ Subsequent redirects can be automatically followed by including this interceptor
   <td>optional</td>
   <td><em>parent client</em></td>
   <td>client to use for subsequent requests</td>
+</tr>
+<tr>
+  <td>code</td>
+  <td>optional</td>
+  <td>0</td>
+  <td>status code if equal or greater indicates a redirect</td>
 </tr>
 </table>
 
