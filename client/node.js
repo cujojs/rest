@@ -71,9 +71,17 @@
 				}
 
 				url = new UrlBuilder(request.path || '', request.params).build();
-				client = url.match(httpsExp) ? https : http;
+				var isHttps = url.match(httpsExp);
+				client = isHttps ? https : http;
 
 				options = parser.parse(url);
+
+				if (isHttps && request.httpsOptions) {
+					Object.keys(request.httpsOptions).forEach(function (option) {
+						options[option] = request.httpsOptions[option];
+					});
+				}
+
 				entity = request.entity;
 				request.method = request.method || (entity ? 'POST' : 'GET');
 				options.method = request.method;
