@@ -5,7 +5,7 @@
  * @author Scott Andrews
  */
 
-(function (define) {
+(function (define, global) {
 	'use strict';
 
 	define(function (require) {
@@ -16,8 +16,8 @@
 		xdrClient = require('../../client/xdr');
 		UrlBuilder = require('../../UrlBuilder');
 
-		hasXdr = 'XDomainRequest' in window;
-		hasXhrCors = window.XMLHttpRequest && 'withCredentials' in new window.XMLHttpRequest();
+		hasXdr = 'XDomainRequest' in global;
+		hasXhrCors = global.XMLHttpRequest && 'withCredentials' in new global.XMLHttpRequest();
 
 		/**
 		 * Apply IE 8 and 9's cross domain support if needed and available.
@@ -55,6 +55,7 @@
 	});
 
 }(
-	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
+	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); },
+	typeof window !== 'undefined' ? window : void 0
 	// Boilerplate for AMD and Node
 ));

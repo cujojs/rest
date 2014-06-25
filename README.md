@@ -232,6 +232,7 @@ Change Log
 .next
 - support for IE 11, Safari 7 and iOS 7 (no code changes required, now actively testing)
 - Node specific configuration options via request.mixin. Particularly useful for https clients. Thanks @wwwdata
+- basic support for Browserify. Note: Browserify is not yet a tested environment
 
 1.1.0
 - bump when.js version to ~3, 2.x is no longer supported

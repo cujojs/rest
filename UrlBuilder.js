@@ -223,6 +223,6 @@
 
 }(
 	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); },
-	this.location
+	typeof window !== 'undefined' ? window.location : void 0
 	// Boilerplate for AMD and Node
 ));
