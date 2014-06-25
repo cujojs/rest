@@ -18,17 +18,24 @@
 
 	define('rest/client/node-test', function (require) {
 
-		var rest, client, responsePromise, http, server;
+		var rest, client, responsePromise, http, https, fs, serverHttp, serverHttps;
 
 		rest = require('rest');
 		client = require('rest/client/node');
 		responsePromise = require('rest/util/responsePromise');
 		http = require('http');
+		https = require('https');
+		fs = require('fs');
 
 		buster.testCase('rest/client/node', {
 			setUp: function () {
-				server = http.createServer();
-				server.on('request', function (request, response) {
+				serverHttp = http.createServer();
+				serverHttps = https.createServer({
+					key: fs.readFileSync(__dirname + '/node-ssl.key'),
+					cert: fs.readFileSync(__dirname + '/node-ssl.crt')
+				});
+
+				function handle(request, response) {
 					var requestBody = '';
 					request.on('data', function (chunk) {
 						requestBody += chunk;
@@ -43,13 +50,18 @@
 						response.end();
 					});
 					request.on('error', function () { console.log('server error'); });
-				});
+				}
+
+				serverHttp.on('request', handle);
+				serverHttps.on('request', handle);
 
 				// TODO handle port conflicts
-				server.listen(8080);
+				serverHttp.listen(8080);
+				serverHttps.listen(8443);
 			},
 			tearDown: function () {
-				server.close();
+				serverHttp.close();
+				serverHttps.close();
 			},
 
 			'should make a GET by default': function () {
@@ -95,6 +107,24 @@
 					assert.same(request, response.request);
 					assert.equals(response.request.method, 'POST');
 					assert.equals(response.entity, 'echo');
+					refute(request.canceled);
+				}).otherwise(fail);
+			},
+			'should make an https request': function () {
+				var request = {
+					path: 'https://localhost:8443/',
+					mixin: { rejectUnauthorized: false }
+				};
+				return client(request).then(function (response) {
+					assert(response.raw.request instanceof http.ClientRequest);
+					// assert(response.raw.response instanceof http.ClientResponse);
+					assert(response.raw.response);
+					assert.same(request, response.request);
+					assert.equals(response.request.method, 'GET');
+					assert.equals(response.entity, 'hello world');
+					assert.equals(response.status.code, 200);
+					assert.equals('text/plain', response.headers['Content-Type']);
+					assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
 					refute(request.canceled);
 				}).otherwise(fail);
 			},

@@ -81,6 +81,25 @@ The XHR client has the same security restrictions as the traditional XMLHttpRequ
 
 The default client for Node.js.  The Node client uses the 'http' and 'https' modules.
 
+Node specific settings may be modified via the `mixin` request property. Adding new certificate authorities to trust or changing the agent pool are rare, but sometimes necessary. See the [Node docs](http://nodejs.org/api/https.html#https_https_request_options_callback) for details about supported properties.
+
+**Special Properties**
+
+<table>
+<tr>
+  <th>Property</th>
+  <th>Required?</th>
+  <th>Default</th>
+  <th>Description</th>
+</tr>
+<tr>
+  <td>request.mixin</td>
+  <td>optional</td>
+  <td><em>empty</em></td>
+  <td>Additional Node.js only parameters</td>
+</tr>
+</table>
+
 
 <a name="module-rest/client/jsonp"></a>
 ### JSONP Client
