@@ -229,6 +229,9 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
+.next
+- nothing yet
+
 1.1.1
 - support for IE 11, Safari 7 and iOS 7 (no code changes required, now actively testing)
 - Node specific configuration options via request.mixin. Particularly useful for https clients. Thanks @wwwdata
