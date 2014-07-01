@@ -76,30 +76,14 @@
 		};
 
 		function loadAMD(mime) {
-			var timeout;
-
 			return when.promise(function (resolve, reject) {
-
 				// HOPE reject on a local require would be nice
-				timeout = setTimeout(reject, 1000);
 				require(['./type/' + mime], resolve, reject);
-
-			}).otherwise(function (ex) {
-				return when.reject(ex || new Error('Timeout while loading mime module: ' + mime));
-			}).ensure(function () {
-				clearTimeout(timeout);
-			});
+			}).timeout(1000);
 		}
 
 		function loadNode(mime) {
-			return when.promise(function (resolve, reject) {
-				try {
-					resolve(require('./type/' + mime));
-				}
-				catch (e) {
-					reject(e);
-				}
-			});
+			return when.attempt(require, './type/' + mime);
 		}
 
 		registry = new Registry(typeof define === 'function' && define.amd ? loadAMD : loadNode);
