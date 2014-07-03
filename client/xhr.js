@@ -93,6 +93,12 @@
 					headers = request.headers;
 					for (headerName in headers) {
 						/*jshint forin:false */
+						if (headerName === 'Content-Type' && headers[headerName] === 'multipart/form-data') {
+							// XMLHttpRequest generates its own Content-Type header with the
+							// appropriate multipart boundary when sending multipart/form-data.
+							continue;
+						}
+
 						client.setRequestHeader(headerName, headers[headerName]);
 					}
 
