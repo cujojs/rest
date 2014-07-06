@@ -29,6 +29,10 @@
 		{
 			"name": "John Hann",
 			"web": "http://unscriptable.com"
+		},
+		{
+			"name": "Michael Jackson",
+			"web": "https://github.com/mjackson"
 		}
 	],
 	"dependencies": {

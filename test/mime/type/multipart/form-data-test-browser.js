@@ -18,24 +18,22 @@
 		var encoder = require('rest/mime/type/multipart/form-data');
 
 		buster.testCase('rest/mime/type/multipart/form-data', {
-			'': {
-				requiresSupportFor: { FormData: 'FormData' in window },
-				'should pass a FormData object through unmodified': function () {
-					var data = new FormData();
-					assert.same(encoder.write(data), data);
-				},
-				'should encode a <form> element as FormData': function () {
-					var form = document.createElement('form');
-					assert.hasPrototype(encoder.write(form), FormData.prototype);
-				},
-				'should encode a plain object as FormData': function () {
-					assert.hasPrototype(encoder.write({ a: 'string', b: 5 }), FormData.prototype);
-				},
-				'should throw when given a non-object': function () {
-					assert.exception(function () {
-						encoder.write('hello world');
-					}, 'Error');
-				}
+			requiresSupportFor: { FormData: 'FormData' in window },
+			'should pass a FormData object through unmodified': function () {
+				var data = new FormData();
+				assert.same(encoder.write(data), data);
+			},
+			'should encode a form element as FormData': function () {
+				var form = document.createElement('form');
+				assert.hasPrototype(encoder.write(form), FormData.prototype);
+			},
+			'should encode a plain object as FormData': function () {
+				assert.hasPrototype(encoder.write({ a: 'string', b: 5 }), FormData.prototype);
+			},
+			'should throw when given a non-object': function () {
+				assert.exception(function () {
+					encoder.write('hello world');
+				}, 'Error');
 			}
 		});
 

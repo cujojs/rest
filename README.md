@@ -214,6 +214,7 @@ Contributors
 - Scott Andrews <scothis@gmail.com>
 - Jeremy Grelle <jeremy.grelle@gmail.com>
 - John Hann <john@unscriptable.com>
+- Michael Jackson <mjijackson@gmail.com>
 
 Please see CONTRIBUTING.md for details on how to contribute to this project.
 
@@ -230,7 +231,7 @@ Change Log
 ----------
 
 .next
-- nothing yet
+- Multipart requests for browsers that support FormData (sorry IE 6-9). Thanks @mjackson
 
 1.1.1
 - support for IE 11, Safari 7 and iOS 7 (no code changes required, now actively testing)

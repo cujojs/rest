@@ -34,9 +34,11 @@ Serveral common MIME types are supported out of the box including:
 - application/hal+json
 - application/json
 - application/x-www-form-urlencoded
+- multipart/form-data *
 
 These converters are loaded lazily and are located under `rest/mime/type/*`. So 'text/plain' is resolved to `rest/mime/type/text/plain`. The main MIME registry knows how to fetch these converters. Child registries extend from the main registry hierarchically and thus also get access to these provided converters.
 
+* Multipart support is only available for requests from browsers that has implemented XMLHttpRequest 2. This includes most modern browsers with the exception of IE <=9.
 
 <a name="mime-converters-custom"></a>
 ### Custom Converters

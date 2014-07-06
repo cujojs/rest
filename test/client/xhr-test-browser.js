@@ -204,11 +204,9 @@
 
 				return client({
 					engine: XMLHttpRequestSpy,
-					method: 'POST',
-					headers: { 'Content-Type': 'multipart/form-data' },
-					path: '/'
+					headers: { 'Content-Type': 'multipart/form-data' }
 				}).then(function (response) {
-					assert(!('Content-Type' in response.raw.requestHeaders));
+					refute('Content-Type' in response.raw.requestHeaders);
 				});
 			}
 		});
