@@ -105,7 +105,9 @@
 						var xhr = response.raw;
 						assert.equals(xhr.timeout, 1000);
 						refute.equals(xhr.foo, 'bar');
-					}).otherwise(fail);
+					}).otherwise(function (err) {
+						fail(JSON.stringify(err));
+					});
 				}
 			},
 			'//should abort the request if canceled': function (done) {

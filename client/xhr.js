@@ -51,6 +51,23 @@
 			return headers;
 		}
 
+		function safeMixin(target, source) {
+			Object.keys(source || {}).forEach(function (prop) {
+				// make sure the property already exists as
+				// IE 6 will blow up if we add a new prop
+				if (source.hasOwnProperty(prop) && prop in target) {
+					try {
+						target[prop] = source[prop];
+					}
+					catch (e) {
+						// ignore, expected for some properties at some points in the request lifecycle
+					}
+				}
+			});
+
+			return target;
+		}
+
 		return client(function xhr(request) {
 			return new responsePromise.ResponsePromise(function (resolve, reject) {
 				/*jshint maxcomplexity:20 */
@@ -79,17 +96,11 @@
 
 				try {
 					client = response.raw = new XMLHttpRequest();
-					client.open(method, url, true);
 
-					if (request.mixin) {
-						Object.keys(request.mixin).forEach(function (prop) {
-							// make sure the property already exists as
-							// IE 6 will blow up if we add a new prop
-							if (request.mixin.hasOwnProperty(prop) && prop in client) {
-								client[prop] = request.mixin[prop];
-							}
-						});
-					}
+					// mixin extra request properties before and after opening the request as some properties require being set at different phases of the request
+					safeMixin(client, request.mixin);
+					client.open(method, url, true);
+					safeMixin(client, request.mixin);
 
 					headers = request.headers;
 					for (headerName in headers) {
