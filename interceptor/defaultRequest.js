@@ -34,7 +34,8 @@
 				path: copy,
 				params: mixin,
 				headers: mixin,
-				entity: copy
+				entity: copy,
+				mixin: mixin
 			};
 
 			return function (target, defaults) {
@@ -51,15 +52,16 @@
 		 * Provide default values for a request. These values will be applied to the
 		 * request if the request object does not already contain an explicit value.
 		 *
-		 * For 'params' and 'headers' individual values are mixed in with the
+		 * For 'params', 'headers', and 'mixin', individual values are mixed in with the
 		 * request's values. The result is a new object representiing the combined
 		 * request and config values. Neither input object is mutated.
 		 *
 		 * @param {Client} [client] client to wrap
 		 * @param {string} [config.method] the default method
 		 * @param {string} [config.path] the default path
-		 * @param {Object} [config.params] the default params, mixed with the request's exsisting params
-		 * @param {Object} [config.headers] the default headers, mixed with the request's exsisting headers
+		 * @param {Object} [config.params] the default params, mixed with the request's existing params
+		 * @param {Object} [config.headers] the default headers, mixed with the request's existing headers
+		 * @param {Object} [config.mixin] the default "mixins" (http/https options), mixed with the request's existing "mixins"
 		 *
 		 * @returns {Client}
 		 */
