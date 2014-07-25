@@ -100,7 +100,7 @@ Clients may be [declaratively configured using wire.js](wire.md).
 
 `rest/interceptor/defaultRequest` ([src](../interceptor/defaultRequest.js))
 
-Provide default values for the request object.  Default values can be provided for the `method`, `path`, `params`, `headers` and/or `entity`.  If the value does not exist in the request already, then the default value is utilized.  The `method`, `path` and `entity` values are direct copies, while the `params` and `headers` values are mixed into the request.  In no case will the interceptor overwrite a value in the request.
+Provide default values for the request object.  Default values can be provided for the `method`, `path`, `params`, `headers`, `entity`, and/or `mixin`.  If the value does not exist in the request already, then the default value is utilized.  The `method`, `path` and `entity` values are direct copies, while the `params`, `headers`, and `mixin` values are mixed into the request.  In no case will the interceptor overwrite a value in the request.
 
 **Phases**
 
@@ -144,6 +144,12 @@ Provide default values for the request object.  Default values can be provided f
   <td>optional</td>
   <td><em>none</em></td>
   <td>default entity</td>
+</tr>
+<tr>
+  <td>mixin</td>
+  <td>optional</td>
+  <td><em>none</em></td>
+  <td>default extra parameters for the <a href="clients.md#module-rest/client/xhr">XHR object</a> or <a href="clients.md#module-rest/client/node">Node.js</a>.
 </tr>
 </table>
 
