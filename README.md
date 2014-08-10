@@ -233,6 +233,7 @@ Change Log
 .next
 - Multipart requests for browsers that support FormData (sorry IE 6-9). Thanks @mjackson
 - mixin property support in defaultRequest interceptor. Thanks @jiangtyd
+- better support for file:// URL via the XHR client
 
 1.1.1
 - support for IE 11, Safari 7 and iOS 7 (no code changes required, now actively testing)

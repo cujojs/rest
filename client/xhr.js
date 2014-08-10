@@ -123,6 +123,13 @@
 								// check status code as readystatechange fires before error event
 								resolve(response);
 							}
+							else {
+								// give the error callback a chance to fire before resolving
+								// requests for file:// URLs do not have a status code
+								setTimeout(function () {
+									resolve(response);
+								}, 0);
+							}
 						}
 					};
 
