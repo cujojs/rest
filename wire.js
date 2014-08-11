@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -12,7 +12,7 @@
 
 		var client, errorCode, mime, entity, pathPrefix, when, pipeline, plugin;
 
-		client = require('../rest');
+		client = require('./client/default');
 		errorCode = require('./interceptor/errorCode');
 		mime = require('./interceptor/mime');
 		entity = require('./interceptor/entity');

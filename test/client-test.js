@@ -20,7 +20,7 @@
 		var client, rest, interceptor, defaultClient, skippableClient, defaultInterceptor;
 
 		client = require('rest/client');
-		rest = require('rest');
+		rest = require('rest/client/default');
 		interceptor = require('rest/interceptor');
 
 		buster.testCase('rest/client', {

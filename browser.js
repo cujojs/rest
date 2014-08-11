@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -10,11 +10,12 @@
 
 	define(function (require) {
 
-		if (console) {
-			(console.warn || console.log).call(console, 'rest.js: The main module has moved, please switch your configuration to use \'rest/browser\' as the main module for browser applications.');
-		}
+		var rest = require('./client/default'),
+		    browser = require('./client/xhr');
 
-		return require('./browser');
+		rest.setPlatformDefaultClient(browser);
+
+		return rest;
 
 	});
 

@@ -45,7 +45,8 @@
 		"curl": "https://github.com/cujojs/curl/tarball/0.7.3",
 		"poly": "https://github.com/cujojs/poly/tarball/0.5.1"
 	},
-	"main": "./rest",
+	"main": "./node",
+	"browser": "./browser",
 	"scripts": {
 		"test": "npm run-script lint && npm run-script buster",
 		"start": "buster static -e browser",

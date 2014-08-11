@@ -1,7 +1,7 @@
 {
 	"name": "rest",
 	"version": "1.1.1-next",
-	"main": "./rest.js",
+	"main": "./browser.js",
 	"moduleType": ["amd", "node"],
 	"dependencies": {
 		"when": "~3"

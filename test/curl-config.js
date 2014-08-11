@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -10,7 +10,7 @@
 
 	global.curl = {
 		packages: [
-			{ name: 'rest', location: './', main: 'rest' },
+			{ name: 'rest', location: './', main: 'browser' },
 			{ name: 'curl', location: 'node_modules/curl/src/curl', main: 'curl' },
 			{ name: 'dojo', location: 'node_modules/dojo', main: 'dojo' },
 			{ name: 'poly', location: 'node_modules/poly', main: 'poly' },

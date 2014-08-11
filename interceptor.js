@@ -12,7 +12,7 @@
 
 		var defaultClient, mixin, responsePromise, client, when;
 
-		defaultClient = require('./rest');
+		defaultClient = require('./client/default');
 		mixin = require('./util/mixin');
 		responsePromise = require('./util/responsePromise');
 		client = require('./client');
