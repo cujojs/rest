@@ -187,30 +187,44 @@
 			'should return a ResponsePromise': function () {
 				assert(client() instanceof responsePromise.ResponsePromise);
 			},
-			'should ignore a "Content-Type: multipart/form-data" header': function () {
-				function XMLHttpRequestSpy() {
-					var xhr = new XMLHttpRequest();
+			'should ignore a "Content-Type: multipart/form-data" header': {
+				requiresSupportFor: {
+					spyxhr: (function () {
+						// some browsers (IE6) won't allow the XHR to be spied
+						try {
+							var xhr = new XMLHttpRequest();
+							xhr.setRequestHeader = function () {};
+							return true;
+						}
+						catch (e) {
+							return false;
+						}
+					}())
+				},
+				'': function () {
+					function XMLHttpRequestSpy() {
+						var xhr = new XMLHttpRequest();
+						xhr.requestHeaders = {};
 
-					xhr.requestHeaders = {};
+						var setRequestHeader = xhr.setRequestHeader;
+						xhr.setRequestHeader = function (header, value) {
+							xhr.requestHeaders[header] = value;
+							return setRequestHeader.apply(xhr, arguments);
+						};
 
-					var setRequestHeader = xhr.setRequestHeader;
-					xhr.setRequestHeader = function (header, value) {
-						xhr.requestHeaders[header] = value;
-						return setRequestHeader.apply(xhr, arguments);
-					};
+						return xhr;
+					}
 
-					return xhr;
+					return client({
+						engine: XMLHttpRequestSpy,
+						path: '/',
+						headers: { 'Content-Type': 'multipart/form-data' }
+					}).then(function (response) {
+						refute('Content-Type' in response.raw.requestHeaders);
+					});
 				}
-
-				return client({
-					engine: XMLHttpRequestSpy,
-					headers: { 'Content-Type': 'multipart/form-data' }
-				}).then(function (response) {
-					refute('Content-Type' in response.raw.requestHeaders);
-				});
 			}
 		});
-		// TODO spy XmlHttpRequest
 
 	});
 
