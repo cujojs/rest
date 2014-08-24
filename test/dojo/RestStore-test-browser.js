@@ -32,12 +32,12 @@
 			'should use "id" as the default idProperty': function () {
 				var store = new RestStore();
 				assert.equals('id', store.idProperty);
-				assert.equals(42, store.getIdentity({ id: 42 }));
+				assert.equals('42', store.getIdentity({ id: '42' }));
 			},
 			'should work with custom idProperty': function () {
 				var store = new RestStore({ idProperty: 'key'});
 				assert.equals('key', store.idProperty);
-				assert.equals(42, store.getIdentity({ key: 42 }));
+				assert.equals('42', store.getIdentity({ key: '42' }));
 			},
 			'should apply query params to the query string': function () {
 				var store = new RestStore({ client: client });
@@ -47,14 +47,14 @@
 			},
 			'should get based on the id': function () {
 				var store = new RestStore({ client: client });
-				return store.get(42).then(function (response) {
+				return store.get('42').then(function (response) {
 					assert.equals('42', response.request.path);
 					refute(response.request.method);
 				}).otherwise(fail);
 			},
 			'should remove based on the id': function () {
 				var store = new RestStore({ client: client });
-				return store.remove(42).then(function (response) {
+				return store.remove('42').then(function (response) {
 					assert.equals('42', response.request.path);
 					assert.equals('delete', response.request.method);
 				}).otherwise(fail);
@@ -70,7 +70,7 @@
 			},
 			'should add a record with an explicit ID': function () {
 				var store = new RestStore({ client: client });
-				return store.add({ foo: 'bar' }, { id: 42 }).then(function (response) {
+				return store.add({ foo: 'bar' }, { id: '42' }).then(function (response) {
 					assert.equals('42', response.request.path);
 					assert.equals('put', response.request.method);
 					assert.equals('*', response.request.headers['If-None-Match']);
@@ -80,7 +80,7 @@
 			},
 			'should add a record with an implicit ID': function () {
 				var store = new RestStore({ client: client });
-				return store.add({ foo: 'bar', id: 42 }).then(function (response) {
+				return store.add({ foo: 'bar', id: '42' }).then(function (response) {
 					assert.equals('42', response.request.path);
 					assert.equals('put', response.request.method);
 					assert.equals('*', response.request.headers['If-None-Match']);
@@ -90,7 +90,7 @@
 			},
 			'should add a record ignoring the ID': function () {
 				var store = new RestStore({ client: client, ignoreId: true });
-				return store.add({ foo: 'bar', id: 42 }).then(function (response) {
+				return store.add({ foo: 'bar', id: '42' }).then(function (response) {
 					assert.equals('', response.request.path);
 					assert.equals('post', response.request.method);
 					assert.equals('*', response.request.headers['If-None-Match']);
@@ -100,7 +100,7 @@
 			},
 			'should put overwriting target': function () {
 				var store = new RestStore({ client: client });
-				return store.put({ foo: 'bar', id: 42 }, { overwrite: true }).then(function (response) {
+				return store.put({ foo: 'bar', id: '42' }, { overwrite: true }).then(function (response) {
 					assert.equals('42', response.request.path);
 					assert.equals('put', response.request.method);
 					assert.equals('*', response.request.headers['If-Match']);
@@ -108,7 +108,7 @@
 			},
 			'should put without overwriting target': function () {
 				var store = new RestStore({ client: client });
-				return store.put({ foo: 'bar', id: 42 }, { overwrite: false }).then(function (response) {
+				return store.put({ foo: 'bar', id: '42' }, { overwrite: false }).then(function (response) {
 					assert.equals('42', response.request.path);
 					assert.equals('put', response.request.method);
 					assert.equals('*', response.request.headers['If-None-Match']);
@@ -116,7 +116,7 @@
 			},
 			'should put with default config': function () {
 				var store = new RestStore({ client: client });
-				return store.put({ foo: 'bar', id: 42 }).then(function (response) {
+				return store.put({ foo: 'bar', id: '42' }).then(function (response) {
 					assert.equals('42', response.request.path);
 					assert.equals('put', response.request.method);
 					refute(response.request.headers['If-None-Match']);

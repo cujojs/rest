@@ -180,6 +180,7 @@
 			 * @returns {Object} a 'window.location'-like object
 			 */
 			parts: function () {
+				/*jshint maxcomplexity:20 */
 				var url, parts;
 				url = this.fullyQualify().build().match(urlRE);
 				parts = {
