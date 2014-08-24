@@ -4,7 +4,6 @@
 - [Provided Interceptors](#interceptor-provided)
     - [Common Interceptors](#interceptor-provided-common)
         - [Default Request Interceptor](#module-rest/interceptor/defaultRequest)
-        - [Entity Interceptor](#module-rest/interceptor/entity)
         - [Hypermedia As The Engine Of Application State (HATEOAS) Interceptor](#module-rest/interceptor/hateoas)
         - [Location Interceptor](#module-rest/interceptor/location)
         - [MIME Interceptor](#module-rest/interceptor/mime)
@@ -176,33 +175,6 @@ client({ headers: { 'Some-Other-Header': 'still here' } });
 
 client({ headers: { 'X-Requested-With': 'it a secret' } });
 // resulting request { headers: { 'X-Requested-With': 'it a secret' } }
-```
-
-
-<a name="module-rest/interceptor/entity"></a>
-#### Entity Interceptor
-
-`rest/interceptor/entity` ([src](../interceptor/entity.js))
-
-Replaces the response with just the entity returned from the server.  After this interceptor, the other response properties will no longer be accessible.  It's best to install this interceptor as late in the chain as possible as many interceptors need access to the full response.
-
-**Phases**
-
-- response
-
-**Configuration**
-
-*none*
-
-**Example**
-
-```javascript
-client = rest.wrap(entity);
-
-// for a response { status: { code: 200 } }, entity: 'hello world', headers: { ... }, ... }
-client().then(function (response) {
-    assert.same('hello world', response);
-});
 ```
 
 

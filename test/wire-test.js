@@ -35,7 +35,7 @@
 				};
 				return wire(spec, { require: require }).then(function (spec) {
 					return spec.client({}).then(function (response) {
-						assert.equals('bar', response.foo);
+						assert.equals('bar', response.entity.foo);
 					});
 				}).otherwise(fail);
 			},
@@ -45,7 +45,7 @@
 					return { request: request, status: { code: 200 }, headers: { 'Content-Type': 'application/json' }, entity: '{"foo":"bar"}' };
 				};
 				spec = {
-					client: { $ref: 'client!path', client: client, accept: 'text/plain', entity: false },
+					client: { $ref: 'client!path', client: client, accept: 'text/plain' },
 					$plugins: [{ module: 'rest/wire' }]
 				};
 				return wire(spec, { require: require }).then(function (spec) {
@@ -70,7 +70,7 @@
 						return spec.client({}).then(
 							fail,
 							failOnThrow(function (response) {
-								assert.equals('bar', response.foo);
+								assert.equals('bar', response.entity.foo);
 							})
 						);
 					},
@@ -88,7 +88,7 @@
 				};
 				return wire(spec, { require: require }).then(function (spec) {
 					return spec.client({}).then(function (response) {
-						assert.equals('bar', response.foo);
+						assert.equals('bar', response.entity.foo);
 					});
 				}).otherwise(fail);
 			},
@@ -103,7 +103,7 @@
 				};
 				return wire(spec, { require: require }).then(function (spec) {
 					return spec.client({}).then(function (response) {
-						assert.isString(response);
+						assert.isString(response.entity);
 					});
 				}).otherwise(fail);
 			},
@@ -113,7 +113,7 @@
 					return { request: request, status: { code: 200 }, headers: { 'Content-Type': 'application/json' }, entity: '{"foo":"bar"}' };
 				};
 				spec = {
-					client: { $ref: 'client!', client: client, entity: false },
+					client: { $ref: 'client!', client: client },
 					$plugins: [{ module: 'rest/wire' }]
 				};
 				return wire(spec, { require: require }).then(function (spec) {

@@ -10,24 +10,26 @@
 
 	define(function (require) {
 
-		var client, errorCode, mime, entity, pathPrefix, when, pipeline, plugin;
+		var client, errorCode, mime, pathPrefix, when, pipeline, plugin;
 
 		client = require('./client/default');
 		errorCode = require('./interceptor/errorCode');
 		mime = require('./interceptor/mime');
-		entity = require('./interceptor/entity');
 		pathPrefix = require('./interceptor/pathPrefix');
 		when = require('when');
 		pipeline = require('when/pipeline');
 
 
 		function parseConfig(name, refObj) {
+			if (console && refObj.entity) {
+				(console.warn || console.log).call(console, 'rest.js: The entity interceptor is no longer included, please use response.entity() instead.');
+			}
+
 			return {
 				prefix: name,
 				mime: refObj.mime,
 				accept: refObj.accept,
-				errorCode: refObj.errorCode,
-				entity: refObj.entity
+				errorCode: refObj.errorCode
 			};
 		}
 
@@ -44,9 +46,6 @@
 				}
 				if (config.mime !== false) {
 					client = mime(client, { mime: config.mime || 'application/x-www-form-urlencoded', accept: config.accept });
-				}
-				if (config.entity !== false) {
-					client = entity(client);
 				}
 				client = pathPrefix(client, { prefix: config.prefix });
 				return client;

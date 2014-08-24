@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 the original author or authors
+ * Copyright 2012-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -14,7 +14,13 @@
 
 		interceptor = require('../interceptor');
 
+		if (console) {
+			(console.warn || console.log).call(console, 'rest.js: rest/interceptor/entity is deprecated, please use response.entity() instead');
+		}
+
 		/**
+		 * @deprecated use response.entity() instead
+		 *
 		 * Returns the response entity as the response, discarding other response
 		 * properties.
 		 *
