@@ -145,7 +145,9 @@
 					var client, body;
 
 					body = { links: [ { rel: 'self', href: '/resource' } ]};
-					client = hateoas(function () { return { entity: body }; });
+					client = hateoas(function (request) {
+						return request.path ? { entity: body } : { entity: {} };
+					});
 
 					return client().then(function (response) {
 						assert.same(response.entity.self, response.entity.self);

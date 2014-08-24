@@ -174,7 +174,9 @@
 				assert(typeof client.wrap === 'function');
 			},
 			'should return a ResponsePromise': function () {
-				assert(client() instanceof responsePromise.ResponsePromise);
+				var response = client();
+				response.catch(function () {});
+				assert(response instanceof responsePromise.ResponsePromise);
 			}
 		});
 
