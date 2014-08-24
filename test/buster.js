@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -25,13 +25,11 @@ config['rest:browser'] = {
 		//'**', ** is busted in buster
 		'*.js',
 		'client/**/*.js',
-		'dojo/**/*.js',
 		'interceptor/**/*.js',
 		'mime/**/*.js',
 		'parsers/**/*.js',
 		'util/**/*.js',
 		'node_modules/curl/**/*.js',
-		'node_modules/dojo/**/*.js',
 		'node_modules/poly/**/*.js',
 		'node_modules/when/**/*.js',
 		'node_modules/wire/**/*.js',

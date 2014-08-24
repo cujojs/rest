@@ -28,8 +28,3 @@ Support for serializing/deserializing objects to/from HTTP requests/responses.
 [wire.js](wire.md)
 
 Declarative client configuration with wire.js.
-
-
-[Dojo Toolkit](dojo.md)
-
-Support for the Dojo Toolkit Store APIs
