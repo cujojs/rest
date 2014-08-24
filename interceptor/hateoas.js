@@ -117,7 +117,7 @@
 					apply(response.links, parseLinkHeaders(response.headers.Link));
 				}
 
-				find.findProperties(response, 'links', function (obj, host) {
+				find.findProperties(response.entity, 'links', function (obj, host) {
 					var target;
 
 					if (Array.isArray(host.links)) {
