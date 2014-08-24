@@ -25,11 +25,3 @@ Please see the [Dojo Store API docs](http://dojotoolkit.org/reference-guide/1.8/
 `rest/dojo/RestStore` ([src](../dojo/RestStore.js))
 
 Extends `SimpleRestStore` providing enhanced support for queries via [Dojo's QueryResults](http://dojotoolkit.org/reference-guide/1.8/dojo/store/util/QueryResults.html#dojo-store-util-queryresults) `dojo/store/util/QueryResults`. This introduces a hard dependency on Dojo that many users may want to avoid unless they need the enhanced behavior, or already have Dojo loaded in their application.
-
-
-<a name="module-rest/dojo/wire"></a>
-### wire.js
-
-`rest/dojo/wire` ([src](../dojo/wire.js))
-
-Contains the functionality of [`rest/wire`](wire.md) adding an additional reference resolver for 'resource!' modeled after `wire/dojo/store`.  'resource!' supports the same configuration properties as ['client!'](wire.md#wire-client-resolver).

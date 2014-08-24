@@ -8,8 +8,6 @@
 
 `rest/wire` ([src](../wire.js))
 
-There are two aspects to the wire plugin the `rest` factory, and the `client!` reference resolver.
-
 **TIP:** In each of these examples, `{ module: 'rest/wire' }` is loaded as it provides the 'rest' factory to the wire.js spec.  Without this module being loaded into the spec, the facilities below will silently fail.
 
 
@@ -79,98 +77,3 @@ mime: { module: 'rest/interceptor/mime' },
 hateoas: { module: 'rest/interceptor/hateoas' },
 $plugins: [{ module: 'rest/wire' }]
 ```
-
-
-<a name="wire-client-resolver"></a>
-### 'client!' Reference Resolver
-
-The client! reference resolver installs several commonly used interceptors, wrapping the default client. In order, the interceptors installed are the \'errorCode', \'mime', \'entity' and \'pathPrefix'. Basic options are configurable. It is intended as a quick and dirty way to get a functional client quickly. In most cases, the \'rest' factory will be more useful.
-
-<table>
-<tr>
-  <th>Property</th>
-  <th>Required?</th>
-  <th>Default</th>
-  <th>Description</th>
-</tr>
-<tr>
-  <td>client</td>
-  <td>optional</td>
-  <td><em>default client</em></td>
-  <td>client to wrap with the configured interceptors
-</tr>
-<tr>
-  <td>errorCode</td>
-  <td>optional</td>
-  <td>400</td>
-  <td>response status code above which to make the response in error, provided a boolean false to block installing the <code>errorCode</code> interceptor</td>
-</tr>
-<tr>
-  <td>mime</td>
-  <td>optional</td>
-  <td>'application/x-www-form-urlencoded'</td>
-  <td>mime type for request entities, provided a boolean false to block installing the <code>mime</code> interceptor</td>
-</tr>
-<tr>
-  <td>accept</td>
-  <td>optional</td>
-  <td><em>mime value</em></td>
-  <td>accept header for the request</td>
-</tr>
-<tr>
-  <td>entity</td>
-  <td>optional</td>
-  <td><em>none</em></td>
-  <td>provided a boolean false to block installing the <code>entity</code> interceptor</td>
-</tr>
-</table>
-
-The pathPrefix interceptor is not configured via a property, but the string after the '!'.
-
-```javascript
-client: {
-	{ $ref: 'client!' }
-}
-```
-
-Is equivlent to:
-
-```javascript
-client = rest.wrap(errorCode, { code: 400 })
-             .wrap(mime, { mime: 'application/x-www-form-urlencoded' })
-             .wrap(entity)
-             .wrap(pathPrefix, { prefix: '' });
-```
-
-To disable interceptors, provide a boolean false for the config value
-
-```javascript
-client: {
-	{ $ref: 'client!', errorCode: false, mime: false, entity: false }
-}
-```
-
-Is equivlent to:
-
-```javascript
-client = rest.wrap(pathPrefix, { prefix: '' });
-```
-
-A custom client can be used instead of the default client
-
-```javascript
-client: {
-	{ $ref: 'client!', client: { ref: 'someOtherClient' } }
-}
-```
-
-Is equivlent to:
-
-```javascript
-client = someOtherClient.wrap(errorCode, { code: 400 })
-                        .wrap(mime, { mime: 'application/x-www-form-urlencoded' })
-                        .wrap(entity)
-                        .wrap(pathPrefix, { prefix: '' });
-```
-
-A [Dojo Store](dojo.md#dojo-stores) variant of the `client!` reference resolver is available as `resource!` from [`rest/dojo/wire`](dojo.md#module-rest/dojo/wire).
