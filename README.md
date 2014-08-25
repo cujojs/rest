@@ -230,6 +230,9 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
+.next
+- nothing yet
+
 1.2.0
 - deprecated rest/interceptor/entity: instead use response.entity()
 - deprecated and removed wire.js reference resolves 'client!' and 'resource!', instead use the 'rest/wire' factory 
