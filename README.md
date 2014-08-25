@@ -237,6 +237,7 @@ Change Log
 - separate browser and node main modules, browser consumers should switch their main module from 'rest/rest' to 'rest/browser'. This allows tools such as browerify and webpack to more intelligently reason about the module structure.
 - Multipart requests for browsers that support FormData (sorry IE 6-9). Thanks @mjackson
 - mixin property support in defaultRequest interceptor. Thanks @jiangtyd
+- allow location interceptor to be applied based on the status code. Thanks @phillipj
 - better support for file:// URL via the XHR client
 
 1.1.1
