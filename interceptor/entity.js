@@ -14,8 +14,8 @@
 
 		interceptor = require('../interceptor');
 
-		if (console) {
-			(console.warn || console.log).call(console, 'rest.js: rest/interceptor/entity is deprecated, please use response.entity() instead');
+		if (typeof console !== 'undefined') {
+			console.log('rest.js: rest/interceptor/entity is deprecated, please use response.entity() instead');
 		}
 
 		/**

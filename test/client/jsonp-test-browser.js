@@ -111,7 +111,7 @@
 			},
 			'should return a ResponsePromise': function () {
 				var response = client();
-				response.catch(function () {});
+				response.otherwise(function () {});
 				assert(response instanceof responsePromise.ResponsePromise);
 			}
 		});

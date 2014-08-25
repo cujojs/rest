@@ -45,9 +45,10 @@
 			 * @deprecated
 			 */
 			impl.chain = function chain() {
-				if (console) {
-					(console.warn || console.log).call(console, 'rest.js: client.chain() is deprecated, use client.wrap() instead');
+				if (typeof console !== 'undefined') {
+					console.log('rest.js: client.chain() is deprecated, use client.wrap() instead');
 				}
+
 				return impl.wrap.apply(this, arguments);
 			};
 
