@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -22,19 +22,6 @@
 		function Registry(parent) {
 			var mimes = {};
 
-			if (typeof parent === 'function') {
-				// coerce a lookup function into the registry API
-				parent = (function (lookup) {
-					return {
-						lookup: function (mime) {
-							// cache to avoid duplicate lookups
-							mimes[mime] = lookup(mime);
-							return mimes[mime];
-						}
-					};
-				}(parent));
-			}
-
 			/**
 			 * Lookup the converter for a MIME type
 			 *
@@ -43,7 +30,13 @@
 			 */
 			this.lookup = function lookup(mime) {
 				mime = normalizeMime(mime);
-				return mime in mimes ? mimes[mime] : parent.lookup(mime);
+				if (mime in mimes) {
+					return  mimes[mime];
+				}
+				else if (parent) {
+					return parent.lookup(mime);
+				}
+				return when.reject(new Error('Unable to locate converter for mime "' + mime + '"'));
 			};
 
 			/**
@@ -55,7 +48,7 @@
 			 */
 			this.register = function register(mime, converter) {
 				mime = normalizeMime(mime);
-				mimes[mime] = when.resolve(converter);
+				mimes[mime] = when(converter);
 				return mimes[mime];
 			};
 
@@ -75,22 +68,14 @@
 
 		};
 
-		function loadAMD(mime) {
-			return when.promise(function (resolve, reject) {
-				// HOPE reject on a local require would be nice
-				require(['./type/' + mime], resolve, reject);
-			}).timeout(1000);
-		}
+		registry = new Registry();
 
-		function loadNode(mime) {
-			return when.attempt(require, './type/' + mime);
-		}
-
-		registry = new Registry(typeof define === 'function' && define.amd ? loadAMD : loadNode);
-
-		// include text/plain and application/json by default
-		registry.register('text/plain', require('./type/text/plain'));
+		// include provided serializers
+		registry.register('application/hal', require('./type/application/hal'));
 		registry.register('application/json', require('./type/application/json'));
+		registry.register('application/x-www-form-urlencoded', require('./type/application/x-www-form-urlencoded'));
+		registry.register('multipart/form-data', require('./type/multipart/form-data'));
+		registry.register('text/plain', require('./type/text/plain'));
 
 		return registry;
 
