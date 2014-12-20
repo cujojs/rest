@@ -145,7 +145,8 @@ Tested environments:
 - Chrome (stable)
 - Firefox (stable, ESR, should work in earlier versions)
 - IE (6-11)
-- Safari (5-7, iOS 4-7.1, should work in earlier versions)
+- Safari (5-8, iOS 4-8.1, should work in earlier versions)
+- Android (4.0-5.0, should work in earlier versions)
 - Opera (11, 12, should work in earlier versions)
 
 Specific browser test are provided by [Travis CI](https://travis-ci.org/cujojs/rest) and [Sauce Labs' Open Sauce Plan](https://saucelabs.com/opensource). You can see [specific browser test results](https://saucelabs.com/u/cujojs-rest), although odds are they do not reference this specific release/branch/commit.
@@ -231,11 +232,12 @@ Change Log
 ----------
 
 .next
-- nothing yet
+- support for Android 4.0-5.0 (no code changes required, now actively testing)
+- support for Safari 8, iOS 8.0 and 8.1 (no code changes required, now actively testing)
 
 1.2.0
 - deprecated rest/interceptor/entity: instead use response.entity()
-- deprecated and removed wire.js reference resolves 'client!' and 'resource!', instead use the 'rest/wire' factory 
+- deprecated and removed wire.js reference resolves 'client!' and 'resource!', instead use the 'rest/wire' factory
 - deprecated and removed Dojo store support
 - separate browser and node main modules, browser consumers should switch their main module from 'rest/rest' to 'rest/browser'. This allows tools such as browerify and webpack to more intelligently reason about the module structure.
 - Multipart requests for browsers that support FormData (sorry IE 6-9). Thanks @mjackson

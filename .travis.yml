@@ -6,6 +6,7 @@ env:
   - BUSTER_TEST_OPT='--reporter specification'
   - SAUCE_USERNAME=cujojs-rest
   - SAUCE_ACCESS_KEY='083602fa-1a26-4c55-af2a-9d64a27f546e'
+  - PORT=8000
 matrix:
   include:
     - node_js: '0.10'
@@ -24,6 +25,10 @@ matrix:
       script: 'npm run-script sauceme'
       env:
         - BROWSERS=test/browsers/firefox.json
+    - node_js: '0.10'
+      script: 'npm run-script sauceme'
+      env:
+        - BROWSERS=test/browsers/firefox-31.json
     - node_js: '0.10'
       script: 'npm run-script sauceme'
       env:
@@ -67,6 +72,10 @@ matrix:
     - node_js: '0.10'
       script: 'npm run-script sauceme'
       env:
+        - BROWSERS=test/browsers/safari-8.json
+    - node_js: '0.10'
+      script: 'npm run-script sauceme'
+      env:
         - BROWSERS=test/browsers/safari-7.json
     - node_js: '0.10'
       script: 'npm run-script sauceme'
@@ -84,6 +93,14 @@ matrix:
       script: 'npm run-script sauceme'
       env:
         - BROWSERS=test/browsers/opera-11.json
+    - node_js: '0.10'
+      script: 'npm run-script sauceme'
+      env:
+        - BROWSERS=test/browsers/ios-8.1.json
+    - node_js: '0.10'
+      script: 'npm run-script sauceme'
+      env:
+        - BROWSERS=test/browsers/ios-8.json
     - node_js: '0.10'
       script: 'npm run-script sauceme'
       env:
@@ -108,3 +125,27 @@ matrix:
       script: 'npm run-script sauceme'
       env:
         - BROWSERS=test/browsers/ios-4.3.json
+    - node_js: '0.10'
+      script: 'npm run-script sauceme'
+      env:
+        - BROWSERS=test/browsers/android-5.0.json
+    - node_js: '0.10'
+      script: 'npm run-script sauceme'
+      env:
+        - BROWSERS=test/browsers/android-4.4.json
+    - node_js: '0.10'
+      script: 'npm run-script sauceme'
+      env:
+        - BROWSERS=test/browsers/android-4.3.json
+    - node_js: '0.10'
+      script: 'npm run-script sauceme'
+      env:
+        - BROWSERS=test/browsers/android-4.2.json
+    - node_js: '0.10'
+      script: 'npm run-script sauceme'
+      env:
+        - BROWSERS=test/browsers/android-4.1.json
+    - node_js: '0.10'
+      script: 'npm run-script sauceme'
+      env:
+        - BROWSERS=test/browsers/android-4.0.json
