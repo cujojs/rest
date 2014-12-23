@@ -69,7 +69,7 @@
 		}
 
 		return client(function xhr(request) {
-			return new responsePromise.ResponsePromise(function (resolve, reject) {
+			return responsePromise.promise(function (resolve, reject) {
 				/*jshint maxcomplexity:20 */
 
 				var client, method, url, headers, entity, headerName, response, XMLHttpRequest;

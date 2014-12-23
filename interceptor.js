@@ -117,7 +117,7 @@
 					meta = { 'arguments': Array.prototype.slice.call(arguments), client: interceptedClient };
 					request = typeof request === 'string' ? { path: request } : request || {};
 					request.originator = request.originator || interceptedClient;
-					return responsePromise(when(
+					return responsePromise(
 						requestHandler.call(context, request, config, meta),
 						function (request) {
 							var response, abort, next;
@@ -146,7 +146,7 @@
 						function (error) {
 							return when.reject({ request: request, error: error });
 						}
-					));
+					);
 				}
 
 				return client(interceptedClient, target);

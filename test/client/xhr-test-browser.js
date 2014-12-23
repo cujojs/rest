@@ -17,12 +17,11 @@
 
 	define('rest/client/xhr-test', function (require) {
 
-		var xhr, rest, xhrFallback, responsePromise, when, client;
+		var xhr, rest, xhrFallback, when, client;
 
 		xhr = require('rest/client/xhr');
 		rest = require('rest');
 		xhrFallback = require('rest/interceptor/ie/xhr');
-		responsePromise = require('rest/util/responsePromise');
 		when = require('when');
 
 		// use xhrFallback when XHR is not native
@@ -187,7 +186,7 @@
 				assert(typeof xhr.wrap === 'function');
 			},
 			'should return a ResponsePromise': function () {
-				assert(client() instanceof responsePromise.ResponsePromise);
+				assert.isFunction(client().entity);
 			},
 			'should ignore a "Content-Type: multipart/form-data" header': {
 				requiresSupportFor: {

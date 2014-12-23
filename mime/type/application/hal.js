@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors
+ * Copyright 2013-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -10,12 +10,13 @@
 
 	define(function (require) {
 
-		var json, pathPrefix, find, lazyPromise, when;
+		var json, pathPrefix, find, lazyPromise, responsePromise, when;
 
 		json = require('./json');
 		pathPrefix = require('../../../interceptor/pathPrefix');
 		find = require('../../../util/find');
 		lazyPromise = require('../../../util/lazyPromise');
+		responsePromise = require('../../../util/responsePromise');
 		when = require('when');
 
 		function defineProperty(obj, name, value) {
@@ -69,7 +70,10 @@
 				find.findProperties(root, '_embedded', function (embedded, resource, name) {
 					Object.keys(embedded).forEach(function (relationship) {
 						if (relationship in resource) { return; }
-						defineProperty(resource, relationship, when(embedded[relationship]));
+						var related = responsePromise({
+							entity: embedded[relationship]
+						});
+						defineProperty(resource, relationship, related);
 					});
 					defineProperty(resource, name, embedded);
 				});
@@ -77,10 +81,10 @@
 					Object.keys(links).forEach(function (relationship) {
 						var link = links[relationship];
 						if (relationship in resource || link.templated === true) { return; }
-						defineProperty(resource, relationship, lazyPromise(function () {
+						defineProperty(resource, relationship, responsePromise.make(lazyPromise(function () {
 							if (link.deprecation) { deprecationWarning(relationship, link.deprecation); }
 							return client({ path: link.href });
-						}));
+						})));
 					});
 					defineProperty(resource, name, links);
 					defineProperty(resource, 'clientFor', function (relationship, clientOverride) {

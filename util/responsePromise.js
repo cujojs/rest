@@ -10,17 +10,8 @@
 
 	define(function (require) {
 
-		var Promise = require('when/lib/Promise'),
-			when = require('when'),
+		var when = require('when'),
 			normalizeHeaderName = require('./normalizeHeaderName');
-
-		// extend ResponsePromise from Promise
-		function ResponsePromise() {
-			return Promise.apply(this, arguments);
-		}
-		ResponsePromise.prototype = Object.create(Promise.prototype);
-
-		// augment ResponsePromise with HTTP Response specific methods
 
 		function property(promise, name) {
 			return promise.then(
@@ -38,27 +29,30 @@
 		 *
 		 * @returns {Promise} for the response entity
 		 */
-		ResponsePromise.prototype.entity = function entity() {
+		function entity() {
+			/*jshint validthis:true */
 			return property(this, 'entity');
-		};
+		}
 
 		/**
 		 * Obtain the response status
 		 *
 		 * @returns {Promise} for the response status
 		 */
-		ResponsePromise.prototype.status = function status() {
+		function status() {
+			/*jshint validthis:true */
 			return property(property(this, 'status'), 'code');
-		};
+		}
 
 		/**
 		 * Obtain the response headers map
 		 *
 		 * @returns {Promise} for the response headers map
 		 */
-		ResponsePromise.prototype.headers = function headers() {
+		function headers() {
+			/*jshint validthis:true */
 			return property(this, 'headers');
-		};
+		}
 
 		/**
 		 * Obtain a specific response header
@@ -66,10 +60,11 @@
 		 * @param {String} headerName the header to retrieve
 		 * @returns {Promise} for the response header's value
 		 */
-		ResponsePromise.prototype.header = function header(headerName) {
+		function header(headerName) {
+			/*jshint validthis:true */
 			headerName = normalizeHeaderName(headerName);
 			return property(this.headers(), headerName);
-		};
+		}
 
 		/**
 		 * Wrap a Promise as an ResponsePromise
@@ -77,13 +72,27 @@
 		 * @param {Promise<Response>} promise the promise for an HTTP Response
 		 * @returns {ResponsePromise<Response>} wrapped promise for Response with additional helper methods
 		 */
-		function makeResponsePromise(promise) {
-			return new ResponsePromise(promise.then.bind(promise));
+		function make(promise) {
+			promise.status = status;
+			promise.headers = headers;
+			promise.header = header;
+			promise.entity = entity;
+			return promise;
 		}
 
-		makeResponsePromise.ResponsePromise = ResponsePromise;
+		function responsePromise() {
+			return make(when.apply(when, arguments));
+		}
 
-		return makeResponsePromise;
+		responsePromise.make = make;
+		responsePromise.reject = function (val) {
+			return make(when.reject(val));
+		};
+		responsePromise.promise = function (func) {
+			return make(when.promise(func));
+		};
+
+		return responsePromise;
 
 	});
 

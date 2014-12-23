@@ -79,7 +79,7 @@
 		 * @returns {Promise<Response>}
 		 */
 		return client(function jsonp(request) {
-			return new responsePromise.ResponsePromise(function (resolve, reject) {
+			return responsePromise.promise(function (resolve, reject) {
 
 				var callbackName, callbackParams, script, firstScript, response;
 

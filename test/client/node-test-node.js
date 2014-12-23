@@ -18,11 +18,10 @@
 
 	define('rest/client/node-test', function (require) {
 
-		var rest, client, responsePromise, http, https, fs, serverHttp, serverHttps;
+		var rest, client, http, https, fs, serverHttp, serverHttps;
 
 		rest = require('rest');
 		client = require('rest/client/node');
-		responsePromise = require('rest/util/responsePromise');
 		http = require('http');
 		https = require('https');
 		fs = require('fs');
@@ -176,7 +175,7 @@
 			'should return a ResponsePromise': function () {
 				var response = client();
 				response.otherwise(function () {});
-				assert(response instanceof responsePromise.ResponsePromise);
+				assert.isFunction(response.entity);
 			}
 		});
 

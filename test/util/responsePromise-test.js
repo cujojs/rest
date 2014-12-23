@@ -21,11 +21,11 @@
 
 		buster.testCase('rest/util/responsePromise', {
 			'should be an instance of Promise': function () {
-				assert(responsePromise(when()) instanceof when.Promise);
+				assert(responsePromise() instanceof when.Promise);
 			},
 
 			'should resolve the response entity': function () {
-				var response = responsePromise(when({ entity: 43 }));
+				var response = responsePromise({ entity: 43 });
 
 				return response.entity().then(
 					function (entity) {
@@ -35,7 +35,7 @@
 				);
 			},
 			'should resolve the response entity for a rejected promise': function () {
-				var response = responsePromise(when.reject({ entity: 43 }));
+				var response = responsePromise.reject({ entity: 43 });
 
 				return response.entity().then(
 					fail,
@@ -46,7 +46,7 @@
 			},
 
 			'should resolve the response status code': function () {
-				var response = responsePromise(when({ status: { code: 200 } }));
+				var response = responsePromise({ status: { code: 200 } });
 
 				return response.status().then(
 					function (status) {
@@ -56,7 +56,7 @@
 				);
 			},
 			'should resolve the response status code for a rejected promise': function () {
-				var response = responsePromise(when.reject({ status: { code: 200 } }));
+				var response = responsePromise.reject({ status: { code: 200 } });
 
 				return response.status().then(
 					fail,
@@ -68,7 +68,7 @@
 
 			'should resolve the response headers': function () {
 				var headers = { 'Content-Type': 'text/plain' };
-				var response = responsePromise(when({ headers: headers }));
+				var response = responsePromise({ headers: headers });
 
 				return response.headers().then(
 					function (_headers) {
@@ -79,7 +79,7 @@
 			},
 			'should resolve the response headers for a rejected promise': function () {
 				var headers = { 'Content-Type': 'text/plain' };
-				var response = responsePromise(when.reject({ headers: headers }));
+				var response = responsePromise.reject({ headers: headers });
 
 				return response.headers().then(
 					fail,
@@ -91,7 +91,7 @@
 
 			'should resolve a response header': function () {
 				var headers = { 'Content-Type': 'text/plain' };
-				var response = responsePromise(when({ headers: headers }));
+				var response = responsePromise({ headers: headers });
 
 				return response.header('Content-Type').then(
 					function (_header) {
@@ -102,7 +102,7 @@
 			},
 			'should resolve a response header for a rejected promise': function () {
 				var headers = { 'Content-Type': 'text/plain' };
-				var response = responsePromise(when.reject({ headers: headers }));
+				var response = responsePromise.reject({ headers: headers });
 
 				return response.header('Content-Type').then(
 					fail,
@@ -113,7 +113,7 @@
 			},
 			'should resolve a response header, by the normalized name': function () {
 				var headers = { 'Content-Type': 'text/plain' };
-				var response = responsePromise(when({ headers: headers }));
+				var response = responsePromise({ headers: headers });
 
 				return response.header('content-type').then(
 					function (_header) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors
+ * Copyright 2013-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -48,7 +48,7 @@
 			},
 			'should place embedded relationships on the host object': function () {
 				var resource = hal.read(JSON.stringify({ _embedded: { prop: 'embed' } }));
-				return resource.prop.then(function (prop) {
+				return resource.prop.entity().then(function (prop) {
 					assert.same(prop, 'embed');
 				});
 			},
@@ -58,7 +58,7 @@
 			},
 			'should place linked relationships on the host object': function () {
 				var resource = hal.read(JSON.stringify({ _links: { prop: { href: '/' } } }));
-				assert.isFunction(resource.prop.then);
+				assert.isFunction(resource.prop.entity);
 			},
 			'should not overwrite a property on the host oject with a linked relationship': function () {
 				var resource = hal.read(JSON.stringify({ prop: 'host', _links: { prop: { href: '/' } } }));

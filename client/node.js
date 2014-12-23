@@ -59,7 +59,7 @@
 
 		return client(function node(request) {
 			/*jshint maxcomplexity:20 */
-			return new responsePromise.ResponsePromise(function (resolve, reject) {
+			return responsePromise.promise(function (resolve, reject) {
 
 				var options, clientRequest, client, url, headers, entity, response;
 

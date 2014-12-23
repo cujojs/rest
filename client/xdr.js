@@ -18,7 +18,7 @@
 		client = require('../client');
 
 		return client(function xdr(request) {
-			return new responsePromise.ResponsePromise(function (resolve, reject) {
+			return responsePromise.promise(function (resolve, reject) {
 
 				var client, method, url, entity, response;
 

@@ -17,12 +17,11 @@
 
 	define('rest/interceptor-test', function (require) {
 
-		var interceptor, rest, when, responsePromise;
+		var interceptor, rest, when;
 
 		interceptor = require('rest/interceptor');
 		rest = require('rest');
 		when = require('when');
-		responsePromise = require('rest/util/responsePromise');
 
 		function defaultClient(request) {
 			return { request: request, id: 'default' };
@@ -497,7 +496,7 @@
 				var theInterceptor, client;
 				theInterceptor = interceptor();
 				client = theInterceptor(defaultClient);
-				assert(client() instanceof responsePromise.ResponsePromise);
+				assert.isFunction(client().entity);
 			}
 		});
 
