@@ -7,6 +7,10 @@ env:
   - SAUCE_USERNAME=cujojs-rest
   - SAUCE_ACCESS_KEY='083602fa-1a26-4c55-af2a-9d64a27f546e'
   - PORT=8000
+cache:
+  directories:
+  - node_modules
+sudo: false
 matrix:
   include:
     - node_js: '0.10'
