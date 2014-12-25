@@ -234,6 +234,7 @@ Change Log
 .next
 - support for Android 4.0-5.0 (no code changes required, now actively testing)
 - support for Safari 8, iOS 8.0 and 8.1 (no code changes required, now actively testing)
+- response.follow() for easy traversal of hypermedia APIs
 - request.mixin properties attempt setting before before and after opening the request. Some browsers (IE) are sensitive to when the properties are set.
 - normalize responses for linked and embedded resources from application/hal mime converter to always be a ResponsePromise
 

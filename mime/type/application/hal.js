@@ -89,6 +89,9 @@
 					defineProperty(resource, name, links);
 					defineProperty(resource, 'clientFor', function (relationship, clientOverride) {
 						var link = links[relationship];
+						if (!link) {
+							throw new Error('Unknown relationship: ' + relationship);
+						}
 						if (link.deprecation) { deprecationWarning(relationship, link.deprecation); }
 						return pathPrefix(
 							clientOverride || client,

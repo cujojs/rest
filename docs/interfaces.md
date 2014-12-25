@@ -172,7 +172,13 @@ These methods assume a standard response object. If an interceptor or client ret
   <td>header</td>
   <td>headerName</td>
   <td>Promise&lt;Header&gt;</td>
-  <td>Promise for a specific HTTP response headers. A Header may be a string or an array of strings depending on the number of the header name occurances in the response</td>
+  <td>Promise for a specific HTTP response headers. A Header may be a string or an array of strings depending on the number of the header name occurrences in the response</td>
+</tr>
+<tr>
+  <td>follow</td>
+  <td>relationship</td>
+  <td>ResponsePromise&lt;Response&gt;</td>
+  <td>Traverse to the resource identified by the relationship. An array of relationships will traverse deep into the API following each relationship in turn. Params for templated URIs can be express in the form `{ rel: relationship, params: { ... } }`</td>
 </tr>
 </table>
 

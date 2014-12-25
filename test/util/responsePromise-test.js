@@ -8,16 +8,37 @@
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute, fail;
+	var assert, refute, fail, failOnThrow;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
+	failOnThrow = buster.assertions.failOnThrow;
 
 	define('rest/util/responsePromise-test', function (require) {
 
-		var responsePromise = require('rest/util/responsePromise'),
-			when = require('when');
+		var responsePromise, mime, when, client;
+
+		responsePromise = require('rest/util/responsePromise');
+		mime = require('rest/interceptor/mime');
+		when = require('when');
+
+		client = mime(function (request) {
+			var page = request.params && request.params.page || 0;
+			return {
+				request: request,
+				headers: {
+					'Content-Type': 'application/hal+json'
+				},
+				entity: JSON.stringify({
+					page: page,
+					_links: {
+						self: { href: request.path },
+						next: { href: request.path + '/next' }
+					}
+				})
+			};
+		});
 
 		buster.testCase('rest/util/responsePromise', {
 			'should be an instance of Promise': function () {
@@ -39,9 +60,9 @@
 
 				return response.entity().then(
 					fail,
-					function (entity) {
+					failOnThrow(function (entity) {
 						assert.equals(43, entity);
-					}
+					})
 				);
 			},
 
@@ -60,9 +81,9 @@
 
 				return response.status().then(
 					fail,
-					function (status) {
+					failOnThrow(function (status) {
 						assert.equals(200, status);
-					}
+					})
 				);
 			},
 
@@ -83,9 +104,9 @@
 
 				return response.headers().then(
 					fail,
-					function (_headers) {
+					failOnThrow(function (_headers) {
 						assert.same(headers, _headers);
-					}
+					})
 				);
 			},
 
@@ -106,9 +127,9 @@
 
 				return response.header('Content-Type').then(
 					fail,
-					function (_header) {
+					failOnThrow(function (_header) {
 						assert.same(headers['Content-Type'], _header);
-					}
+					})
 				);
 			},
 			'should resolve a response header, by the normalized name': function () {
@@ -121,6 +142,57 @@
 					},
 					fail
 				);
+			},
+			'should follow hypermedia reltionships': {
+				'': function () {
+					return client('http://example.com').follow('next').entity().then(
+						function (response) {
+							assert.same('http://example.com/next', response._links.self.href);
+						},
+						fail
+					);
+				},
+				'passing params': function () {
+					return client('http://example.com').follow({ rel: 'next', params: { projection: 'limited' } }).then(
+						function (response) {
+							assert.same('limited', response.request.params.projection);
+							assert.same('http://example.com/next', response.entity._links.self.href);
+						},
+						fail
+					);
+				},
+				'by chaining': function () {
+					return client('http://example.com').follow('next').follow('next').entity().then(
+						function (response) {
+							assert.same('http://example.com/next/next', response._links.self.href);
+						},
+						fail
+					);
+				},
+				'by inline chaining': function () {
+					return client('http://example.com').follow(['next', 'next']).entity().then(
+						function (response) {
+							assert.same('http://example.com/next/next', response._links.self.href);
+						},
+						fail
+					);
+				},
+				'with errors for non hypermedia responses': function () {
+					return responsePromise({ entity: {} }).follow('next').then(
+						fail,
+						failOnThrow(function (err) {
+							assert.same('Hypermedia response expected', err.message);
+						})
+					);
+				},
+				'with errors for unknown relationships': function () {
+					return client('http://example.com').follow('prev').then(
+						fail,
+						failOnThrow(function (err) {
+							assert.same('Unknown relationship: prev', err.message);
+						})
+					);
+				}
 			}
 
 		});
