@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2014 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -75,6 +75,27 @@
 				child.register('application/vnd.com.example', converterChild);
 				return registry.lookup('application/vnd.com.example').then(function (c) {
 					assert.same(converterParent, c);
+				}).otherwise(fail);
+			},
+			'should ignore charset in mime resolution': function () {
+				var converter = {};
+				registry.register('application/vnd.com.example', converter);
+				return registry.lookup('application/vnd.com.example;charset=utf-8').then(function (c) {
+					assert.same(converter, c);
+				}).otherwise(fail);
+			},
+			'should ignore suffix in mime resolution': function () {
+				var converter = {};
+				registry.register('application/vnd.com.example', converter);
+				return registry.lookup('application/vnd.com.example+foo').then(function (c) {
+					assert.same(converter, c);
+				}).otherwise(fail);
+			},
+			'should fallback to suffix if mime type is not resolved': function () {
+				var converter = {};
+				registry.register('+foo', converter);
+				return registry.lookup('application/vnd.com.example+foo').then(function (c) {
+					assert.same(converter, c);
 				}).otherwise(fail);
 			}
 		});

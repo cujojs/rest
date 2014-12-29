@@ -16,10 +16,13 @@
 
 	define('rest/mime/type/application/hal-test', function (require) {
 
-		var hal, mime, supports;
+		var hal, mime, registry, halMime, supports;
 
 		hal = require('rest/mime/type/application/hal');
 		mime = require('rest/interceptor/mime');
+		registry = require('rest/mime/registry');
+
+		halMime = require('rest/mime').parse('application/hal+json');
 
 		function client(request) {
 			return { request: request };
@@ -41,28 +44,36 @@
 
 		buster.testCase('rest/mime/type/application/hal', {
 			'should stringify json': function () {
-				assert.equals('{"foo":"bar"}', hal.write({ foo: 'bar' }));
+				return hal.write({ foo: 'bar' }, { mime: halMime, registry: registry }).then(function (resource) {
+					assert.equals('{"foo":"bar"}', resource);
+				}).otherwise(fail);
 			},
 			'should read json': function () {
-				assert.equals({ foo: 'bar' }, hal.read('{"foo":"bar"}'));
+				return hal.read('{"foo":"bar"}', { mime: halMime, registry: registry }).then(function (resource) {
+					assert.equals({ foo: 'bar' }, resource);
+				}).otherwise(fail);
 			},
 			'should place embedded relationships on the host object': function () {
-				var resource = hal.read(JSON.stringify({ _embedded: { prop: 'embed' } }));
-				return resource.prop.entity().then(function (prop) {
-					assert.same(prop, 'embed');
-				});
+				return hal.read(JSON.stringify({ _embedded: { prop: 'embed' } }), { mime: halMime, registry: registry }).then(function (resource) {
+					return resource.prop.entity().then(function (prop) {
+						assert.same(prop, 'embed');
+					});
+				}).otherwise(fail);
 			},
 			'should not overwrite a property on the host oject with an embedded relationship': function () {
-				var resource = hal.read(JSON.stringify({ prop: 'host', _embedded: { prop: 'embed' } }));
-				assert.same(resource.prop, 'host');
+				return hal.read(JSON.stringify({ prop: 'host', _embedded: { prop: 'embed' } }), { mime: halMime, registry: registry }).then(function (resource) {
+					assert.same(resource.prop, 'host');
+				}).otherwise(fail);
 			},
 			'should place linked relationships on the host object': function () {
-				var resource = hal.read(JSON.stringify({ _links: { prop: { href: '/' } } }));
-				assert.isFunction(resource.prop.entity);
+				return hal.read(JSON.stringify({ _links: { prop: { href: '/' } } }), { mime: halMime, registry: registry }).then(function (resource) {
+					assert.isFunction(resource.prop.entity);
+				}).otherwise(fail);
 			},
 			'should not overwrite a property on the host oject with a linked relationship': function () {
-				var resource = hal.read(JSON.stringify({ prop: 'host', _links: { prop: { href: '/' } } }));
-				assert.same(resource.prop, 'host');
+				return hal.read(JSON.stringify({ prop: 'host', _links: { prop: { href: '/' } } }), { mime: halMime, registry: registry }).then(function (resource) {
+					assert.same(resource.prop, 'host');
+				}).otherwise(fail);
 			},
 			'should fetch a linked resource': function () {
 				var client = mime(function client(request) {
@@ -79,74 +90,82 @@
 				}).otherwise(fail);
 			},
 			'should get a client for an relationship': function () {
-				var resource = hal.read(JSON.stringify({ _links: { prop: { href: '/' } } }), { client: client });
-				return resource.clientFor('prop')().then(function (response) {
-					assert.same('/', response.request.path);
+				return hal.read(JSON.stringify({ _links: { prop: { href: '/' } } }), { mime: halMime, registry: registry, client: client }).then(function (resource) {
+					return resource.clientFor('prop')().then(function (response) {
+						assert.same('/', response.request.path);
+					});
 				}).otherwise(fail);
 			},
 			'should safely warn when accessing a deprecated relationship': {
 				'': function () {
-					var console, resource;
+					var console;
 
 					console = {
 						warn: this.spy(),
 						log: this.spy()
 					};
-					resource = hal.read(JSON.stringify({ _links: { prop: { href: '/', deprecation: 'http://example.com/deprecation' } } }), { client: client, console: console });
 
-					return resource.clientFor('prop')().then(function (response) {
-						assert.same('/', response.request.path);
-						assert.calledWith(console.warn, 'Relationship \'prop\' is deprecated, see http://example.com/deprecation');
-						refute.called(console.log);
+					return hal.read(JSON.stringify({ _links: { prop: { href: '/', deprecation: 'http://example.com/deprecation' } } }), { mime: halMime, registry: registry, client: client, console: console }).then(function (resource) {
+						return resource.clientFor('prop')().then(function (response) {
+							assert.same('/', response.request.path);
+							assert.calledWith(console.warn, 'Relationship \'prop\' is deprecated, see http://example.com/deprecation');
+							refute.called(console.log);
+						});
 					}).otherwise(fail);
+
 				},
 				'falling back to log if warn is not availble': function () {
-					var console, resource;
+					var console;
 
 					console = {
 						log: this.spy()
 					};
-					resource = hal.read(JSON.stringify({ _links: { prop: { href: '/', deprecation: 'http://example.com/deprecation' } } }), { client: client, console: console });
 
-					return resource.clientFor('prop')().then(function (response) {
-						assert.same('/', response.request.path);
-						assert.calledWith(console.log, 'Relationship \'prop\' is deprecated, see http://example.com/deprecation');
+					return hal.read(JSON.stringify({ _links: { prop: { href: '/', deprecation: 'http://example.com/deprecation' } } }), { mime: halMime, registry: registry, client: client, console: console }).then(function (resource) {
+						return resource.clientFor('prop')().then(function (response) {
+							assert.same('/', response.request.path);
+							assert.calledWith(console.log, 'Relationship \'prop\' is deprecated, see http://example.com/deprecation');
+						});
 					}).otherwise(fail);
 				},
 				'doing nothing if the console is unavailable': function () {
-					var console, resource;
+					var console;
 
 					console = {};
-					resource = hal.read(JSON.stringify({ _links: { prop: { href: '/', deprecation: 'http://example.com/deprecation' } } }), { client: client, console: console });
 
-					return resource.clientFor('prop')().then(function (response) {
-						assert.same('/', response.request.path);
+					return hal.read(JSON.stringify({ _links: { prop: { href: '/', deprecation: 'http://example.com/deprecation' } } }), { mime: halMime, registry: registry, client: client, console: console }).then(function (resource) {
+						return resource.clientFor('prop')().then(function (response) {
+							assert.same('/', response.request.path);
+						});
 					}).otherwise(fail);
 				}
 			},
 			'should not index templated links': function () {
-				var resource = hal.read(JSON.stringify({ _links: {
+				return hal.read(JSON.stringify({ _links: {
 					prop: { href: '/', templated: 'true' },        // not-templated, must be boolean true
 					query: { href: '/{?query}', templated: true }  // templated
-				} }));
-				assert.isFunction(resource.prop.then);
-				refute(resource.query);
+				} }), { mime: halMime, registry: registry }).then(function (resource) {
+					assert.isFunction(resource.prop.then);
+					refute(resource.query);
+				}).otherwise(fail);
 			},
 			'should be able to write read entities': function () {
-				var raw, read, writen;
+				var raw;
 
 				raw = { _embedded: { prop: 'embed' }, _links: { prop: { href: '/' } }, foo: 'bar' };
-				read = hal.read(JSON.stringify(raw));
-				writen = hal.write(read);
 
-				assert.match(writen, '"foo":"bar"');
+				return hal.read(JSON.stringify(raw), { mime: halMime, registry: registry }).then(function (read) {
+					return hal.write(read, { mime: halMime, registry: registry });
+				}).then(function (written) {
+					assert.match(written, '"foo":"bar"');
 
-				if (!supports['Object.defineProperty']) {
-					refute.match(writen, '_embedded');
-					refute.match(writen, '_links');
-					refute.match(writen, 'clientFor');
-					refute.match(writen, 'prop');
-				}
+					if (!supports['Object.defineProperty']) {
+						refute.match(written, '_embedded');
+						refute.match(written, '_links');
+						refute.match(written, 'clientFor');
+						refute.match(written, 'prop');
+					}
+				});
 			}
 		});
 

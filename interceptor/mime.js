@@ -10,9 +10,10 @@
 
 	define(function (require) {
 
-		var interceptor, registry, plainText, when;
+		var interceptor, mime, registry, plainText, when;
 
 		interceptor = require('../interceptor');
+		mime = require('../mime');
 		registry = require('../mime/registry');
 		when = require('when');
 
@@ -32,7 +33,7 @@
 		 *   entity
 		 * @param {string} [config.accept] Accept header for the request
 		 * @param {Client} [config.client=<request.originator>] client passed to the
-		 *   serializer, defaults to the client originating the request
+		 *   converter, defaults to the client originating the request
 		 * @param {Registry} [config.registry] MIME registry, defaults to the root
 		 *   registry
 		 *
@@ -44,20 +45,20 @@
 				return config;
 			},
 			request: function (request, config) {
-				var mime, headers;
+				var type, headers;
 
 				headers = request.headers || (request.headers = {});
-				mime = headers['Content-Type'] = headers['Content-Type'] || config.mime || 'text/plain';
-				headers.Accept = headers.Accept || config.accept || mime + ', application/json;q=0.8, text/plain;q=0.5, */*;q=0.2';
+				type = mime.parse(headers['Content-Type'] = headers['Content-Type'] || config.mime || 'text/plain');
+				headers.Accept = headers.Accept || config.accept || type.raw + ', application/json;q=0.8, text/plain;q=0.5, */*;q=0.2';
 
 				if (!('entity' in request)) {
 					return request;
 				}
 
-				return config.registry.lookup(mime).then(function (serializer) {
+				return config.registry.lookup(type).then(function (converter) {
 					var client = config.client || request.originator;
 
-					return when.attempt(serializer.write, request.entity, { client: client, request: request })
+					return when.attempt(converter.write, request.entity, { client: client, request: request, mime: type, registry: config.registry })
 						.otherwise(function() {
 							throw 'mime-serialization';
 						})
@@ -74,12 +75,12 @@
 					return response;
 				}
 
-				var mime = response.headers['Content-Type'];
+				var type = mime.parse(response.headers['Content-Type']);
 
-				return config.registry.lookup(mime).otherwise(function () { return plainText; }).then(function (serializer) {
+				return config.registry.lookup(type).otherwise(function () { return plainText; }).then(function (converter) {
 					var client = config.client || response.request && response.request.originator;
 
-					return when.attempt(serializer.read, response.entity, { client: client, response: response })
+					return when.attempt(converter.read, response.entity, { client: client, response: response, mime: type, registry: config.registry })
 						.otherwise(function (e) {
 							response.error = 'mime-deserialization';
 							response.cause = e;

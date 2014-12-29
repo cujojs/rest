@@ -135,8 +135,18 @@
 					assert.equals('application/vnd.com.example', response.headers['Content-Type']);
 					assert.equals('read: response entity', response.entity);
 
-					assert.calledWith(converter.read, 'response entity', { client: client, response: response });
-					assert.calledWith(converter.write, 'request entity', { client: client, request: response.request });
+					assert.calledWith(converter.read, 'response entity', {
+						client: client,
+						response: response,
+						mime: { raw: 'application/vnd.com.example', type: 'application/vnd.com.example', suffix: '', params: {} },
+						registry: customRegistry
+					});
+					assert.calledWith(converter.write, 'request entity', {
+						client: client,
+						request: response.request,
+						mime: { raw: 'application/vnd.com.example', type: 'application/vnd.com.example', suffix: '', params: {} },
+						registry: customRegistry
+					});
 				}).otherwise(fail);
 			},
 			'should reject the response if the serializer fails to write the request': function () {

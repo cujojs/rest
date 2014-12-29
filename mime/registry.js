@@ -10,51 +10,51 @@
 
 	define(function (require) {
 
-		var when, registry;
+		var mime, when, registry;
 
+		mime = require('../mime');
 		when = require('when');
 
-		function normalizeMime(mime) {
-			// TODO we're dropping info that may be important
-			return mime.split(/[;\+]/)[0].trim();
-		}
-
-		function Registry(parent) {
-			var mimes = {};
+		function Registry(mimes) {
 
 			/**
 			 * Lookup the converter for a MIME type
 			 *
-			 * @param {string} mime the MIME type
+			 * @param {string} type the MIME type
 			 * @return a promise for the converter
 			 */
-			this.lookup = function lookup(mime) {
-				mime = normalizeMime(mime);
-				if (mime in mimes) {
-					return  mimes[mime];
+			this.lookup = function lookup(type) {
+				var parsed;
+
+				parsed = typeof type === 'string' ? mime.parse(type) : type;
+
+				if (mimes[parsed.raw]) {
+					return mimes[parsed.raw];
 				}
-				else if (parent) {
-					return parent.lookup(mime);
+				if (mimes[parsed.type + parsed.suffix]) {
+					return mimes[parsed.type + parsed.suffix];
 				}
-				return when.reject(new Error('Unable to locate converter for mime "' + mime + '"'));
+				if (mimes[parsed.type]) {
+					return mimes[parsed.type];
+				}
+				if (mimes[parsed.suffix]) {
+					return mimes[parsed.suffix];
+				}
+
+				return when.reject(new Error('Unable to locate converter for mime "' + parsed.raw + '"'));
 			};
 
 			/**
 			 * Register a custom converter for a MIME type
 			 *
-			 * @param {string} mime the MIME type
+			 * @param {string} type the MIME type
 			 * @param converter the converter for the MIME type
 			 * @return a promise for the converter
 			 */
-			this.register = function register(mime, converter) {
-				mime = normalizeMime(mime);
-				mimes[mime] = when(converter);
-				return mimes[mime];
+			this.register = function register(type, converter) {
+				mimes[type] = when(converter);
+				return mimes[type];
 			};
-
-		}
-
-		Registry.prototype = {
 
 			/**
 			 * Create a child registry whoes registered converters remain local, while
@@ -62,13 +62,13 @@
 			 *
 			 * @returns child MIME registry
 			 */
-			child: function child() {
-				return new Registry(this);
-			}
+			this.child = function child() {
+				return new Registry(Object.create(mimes));
+			};
 
-		};
+		}
 
-		registry = new Registry();
+		registry = new Registry({});
 
 		// include provided serializers
 		registry.register('application/hal', require('./type/application/hal'));
@@ -76,6 +76,8 @@
 		registry.register('application/x-www-form-urlencoded', require('./type/application/x-www-form-urlencoded'));
 		registry.register('multipart/form-data', require('./type/multipart/form-data'));
 		registry.register('text/plain', require('./type/text/plain'));
+
+		registry.register('+json', registry.lookup('application/json'));
 
 		return registry;
 

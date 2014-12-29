@@ -10,9 +10,8 @@
 
 	define(function (require) {
 
-		var json, pathPrefix, find, lazyPromise, responsePromise, when;
+		var pathPrefix, find, lazyPromise, responsePromise, when;
 
-		json = require('./json');
 		pathPrefix = require('../../../interceptor/pathPrefix');
 		find = require('../../../util/find');
 		lazyPromise = require('../../../util/lazyPromise');
@@ -29,7 +28,7 @@
 		}
 
 		/**
-		 * JSON Hypertext Application Language serializer
+		 * Hypertext Application Language serializer
 		 *
 		 * Implemented to http://tools.ietf.org/html/draft-kelly-json-hal-05
 		 *
@@ -54,12 +53,11 @@
 		return {
 
 			read: function (str, opts) {
-				var root, client, console;
+				var client, console;
 
 				opts = opts || {};
 				client = opts.client;
 				console = opts.console || console;
-				root = json.read.apply(json, arguments);
 
 				function deprecationWarning(relationship, deprecation) {
 					if (deprecation && console && console.warn || console.log) {
@@ -67,44 +65,52 @@
 					}
 				}
 
-				find.findProperties(root, '_embedded', function (embedded, resource, name) {
-					Object.keys(embedded).forEach(function (relationship) {
-						if (relationship in resource) { return; }
-						var related = responsePromise({
-							entity: embedded[relationship]
+				return opts.registry.lookup(opts.mime.suffix).then(function (converter) {
+					return when(converter.read(str, opts)).then(function (root) {
+
+						find.findProperties(root, '_embedded', function (embedded, resource, name) {
+							Object.keys(embedded).forEach(function (relationship) {
+								if (relationship in resource) { return; }
+								var related = responsePromise({
+									entity: embedded[relationship]
+								});
+								defineProperty(resource, relationship, related);
+							});
+							defineProperty(resource, name, embedded);
 						});
-						defineProperty(resource, relationship, related);
-					});
-					defineProperty(resource, name, embedded);
-				});
-				find.findProperties(root, '_links', function (links, resource, name) {
-					Object.keys(links).forEach(function (relationship) {
-						var link = links[relationship];
-						if (relationship in resource || link.templated === true) { return; }
-						defineProperty(resource, relationship, responsePromise.make(lazyPromise(function () {
-							if (link.deprecation) { deprecationWarning(relationship, link.deprecation); }
-							return client({ path: link.href });
-						})));
-					});
-					defineProperty(resource, name, links);
-					defineProperty(resource, 'clientFor', function (relationship, clientOverride) {
-						var link = links[relationship];
-						if (!link) {
-							throw new Error('Unknown relationship: ' + relationship);
-						}
-						if (link.deprecation) { deprecationWarning(relationship, link.deprecation); }
-						return pathPrefix(
-							clientOverride || client,
-							{ prefix: link.href }
-						);
+						find.findProperties(root, '_links', function (links, resource, name) {
+							Object.keys(links).forEach(function (relationship) {
+								var link = links[relationship];
+								if (relationship in resource || link.templated === true) { return; }
+								defineProperty(resource, relationship, responsePromise.make(lazyPromise(function () {
+									if (link.deprecation) { deprecationWarning(relationship, link.deprecation); }
+									return client({ path: link.href });
+								})));
+							});
+							defineProperty(resource, name, links);
+							defineProperty(resource, 'clientFor', function (relationship, clientOverride) {
+								var link = links[relationship];
+								if (!link) {
+									throw new Error('Unknown relationship: ' + relationship);
+								}
+								if (link.deprecation) { deprecationWarning(relationship, link.deprecation); }
+								return pathPrefix(
+									clientOverride || client,
+									{ prefix: link.href }
+								);
+							});
+						});
+
+						return root;
 					});
 				});
 
-				return root;
 			},
 
-			write: function () {
-				return json.write.apply(json, arguments);
+			write: function (obj, opts) {
+				return opts.registry.lookup(opts.mime.suffix).then(function (converter) {
+					return converter.write(obj, opts);
+				});
 			}
 
 		};

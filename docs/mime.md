@@ -28,7 +28,7 @@ registry.lookup('application/json').then(function (jsonConverter) {
 <a name="mime-converters"></a>
 ## MIME Converters
 
-Serveral common MIME types are supported out of the box including:
+Several common MIME types are supported out of the box including:
 
 - text/plain
 - application/hal+json
@@ -38,14 +38,14 @@ Serveral common MIME types are supported out of the box including:
 
 These converters are loaded lazily and are located under `rest/mime/type/*`. So 'text/plain' is resolved to `rest/mime/type/text/plain`. The main MIME registry knows how to fetch these converters. Child registries extend from the main registry hierarchically and thus also get access to these provided converters.
 
-* Multipart support is only available for requests from browsers that has implemented XMLHttpRequest 2. This includes most modern browsers with the exception of IE <=9.
+* Multipart support is only available for requests from browsers that have implemented XMLHttpRequest 2. This includes most modern browsers with the exception of IE <=9.
 
 <a name="mime-converters-custom"></a>
 ### Custom Converters
 
 A converter is fundamentally a object with two methods: `read` and `write`. The read method accepts the entity as a string and returns an object. The write method accepts the entity as an object and returns a string. While not strictly required, the read and write methods are typically reflexive. A convert may implement either the read or write methods, but that limits the converters ability to handle response or request entities, respectively.
 
-The `read` and `write` methods may additionaly accept an `opts` argument. Common opts include the `request` or `response`, and a `client` to make further requests if needed. Either a raw value or a promise may be returned.
+The `read` and `write` methods may additionally accept an `opts` argument. Common opts include the `request` or `response`, parsed `mime` type, and a `client` to make further requests if needed. Either a raw value or a promise may be returned.
 
 ```javascript
 numberConverter = {
