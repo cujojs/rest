@@ -237,6 +237,9 @@ Change Log
 
 .next
 - response.follow() for easy traversal of hypermedia APIs
+- application/hal mime converter supports templated URLs
+- full URI Template (rfc6570) support in rest/util/uriTemplate
+- section aware URI encoding in rest/util/uriEncoder
 - best fit MIME type resolution, including by suffix (i.e. '+json'). Parsed MIME type provided to converters
 - installation via jspm and loader support for System.js
 - support for Android 4.0-5.0 (no code changes required, now actively testing)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors
+ * Copyright 2014-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -99,7 +99,7 @@
 					throw new Error('Hypermedia response expected');
 				}
 				var client = response.entity.clientFor(rel.rel);
-				return client({ path: '', params: rel.params });
+				return client({ params: rel.params });
 			}, this));
 		}
 

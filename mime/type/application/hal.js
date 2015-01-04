@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 the original author or authors
+ * Copyright 2013-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -10,9 +10,10 @@
 
 	define(function (require) {
 
-		var pathPrefix, find, lazyPromise, responsePromise, when;
+		var pathPrefix, template, find, lazyPromise, responsePromise, when;
 
 		pathPrefix = require('../../../interceptor/pathPrefix');
+		template = require('../../../interceptor/template');
 		find = require('../../../util/find');
 		lazyPromise = require('../../../util/lazyPromise');
 		responsePromise = require('../../../util/responsePromise');
@@ -30,7 +31,7 @@
 		/**
 		 * Hypertext Application Language serializer
 		 *
-		 * Implemented to http://tools.ietf.org/html/draft-kelly-json-hal-05
+		 * Implemented to https://tools.ietf.org/html/draft-kelly-json-hal-06
 		 *
 		 * As the spec is still a draft, this implementation will be updated as the
 		 * spec evolves
@@ -81,9 +82,12 @@
 						find.findProperties(root, '_links', function (links, resource, name) {
 							Object.keys(links).forEach(function (relationship) {
 								var link = links[relationship];
-								if (relationship in resource || link.templated === true) { return; }
+								if (relationship in resource) { return; }
 								defineProperty(resource, relationship, responsePromise.make(lazyPromise(function () {
 									if (link.deprecation) { deprecationWarning(relationship, link.deprecation); }
+									if (link.templated === true) {
+										return template(client)({ path: link.href });
+									}
 									return client({ path: link.href });
 								})));
 							});
@@ -94,6 +98,12 @@
 									throw new Error('Unknown relationship: ' + relationship);
 								}
 								if (link.deprecation) { deprecationWarning(relationship, link.deprecation); }
+								if (link.templated === true) {
+									return template(
+										clientOverride || client,
+										{ template: link.href }
+									);
+								}
 								return pathPrefix(
 									clientOverride || client,
 									{ prefix: link.href }

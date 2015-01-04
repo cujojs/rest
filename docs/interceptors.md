@@ -1,6 +1,6 @@
 # Interceptors
 
-- [Incerceptor Principals](#interceptor-principals)
+- [Interceptor Principals](#interceptor-principals)
 - [Provided Interceptors](#interceptor-provided)
     - [Common Interceptors](#interceptor-provided-common)
         - [Default Request Interceptor](#module-rest/interceptor/defaultRequest)
@@ -8,6 +8,7 @@
         - [Location Interceptor](#module-rest/interceptor/location)
         - [MIME Interceptor](#module-rest/interceptor/mime)
         - [Path Prefix Interceptor](#module-rest/interceptor/pathPrefix)
+        - [Template Interceptor](#module-rest/interceptor/template)
     - [Authentication Interceptors](#interceptor-provided-auth)
         - [Basic Auth Interceptor](#module-rest/interceptor/basicAuth)
         - [OAuth Interceptor](#module-rest/interceptor/oAuth)
@@ -30,14 +31,14 @@
         - [Error Creators](#interceptor-custom-concepts-error)
         - [Error Recovery](#interceptor-custom-concepts-recovery)
         - [Cancellation](#interceptor-custom-concepts-cancellation)
-        - [Sharred Request/Response Context](#interceptor-custom-concepts-context)
+        - [Shared Request/Response Context](#interceptor-custom-concepts-context)
         - [Async Request/Response](#interceptor-custom-concepts-async)
         - [Override Parent Client (ComplexRequest)](#interceptor-custom-concepts-parent)
         - [Abort Request (ComplexRequest)](#interceptor-custom-concepts-abort)
 
 
 <a name="interceptor-principals"></a>
-## Incerceptor Principals
+## Interceptor Principals
 
 rest.js distinguishes itself from other HTTP client libraries by providing a minimal core that can be wrapped by more advanced behavior.  These configured clients can then be consumed by our application.  If a portion of our application needs more advanced behavior, it can continue to wrap the client without impacting other portions of the application.  Functional programming FTW.
 
@@ -411,6 +412,53 @@ The path prefix interceptor prepends its value to the path provided in the reque
 client = rest.wrap(pathPrefix, { prefix: 'http://example.com/messages' });
 client({ path: '1' }).then(function (response) {
     assert.same('http://example.com/messages/1', response.request.path);
+});
+```
+
+
+<a name="module-rest/interceptor/template"></a>
+#### Template Interceptor
+
+`rest/interceptor/template` ([src](../interceptor/template.js))
+
+The template interceptor fully defines the request URI by expending the path as a URI Template with the request params. Params defined by the tempalte that are missing as well as additional params are ignored. After the template interceptor, the request.params are removed from the request object, as the URI is fully defined.
+
+Note: primitive templating is provided by `rest/UrlBuilder`, however, its behavior is non-standard and less powerful.
+
+**Phases**
+
+- request
+
+**Configuration**
+
+<table>
+<tr>
+<th>Property</th>
+<th>Required?</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>template</td>
+<td>optional</td>
+<td><em>empty string</em></td>
+<td>default template if request.path is undefined</td>
+</tr>
+<tr>
+<td>params</td>
+<td>optional</td>
+<td><em>empty object</em></td>
+<td>default params to be combined with request.params</td>
+</tr>
+</table>
+
+**Example**
+
+```javascript
+client = rest.wrap(template, { params: { lang: 'en-us' } });
+client({ path: '/dictionary{/term:1,term}{?lang}', params: { term: 'hypermedia' } }).then(function (response) {
+    assert.same('/dictionary/h/hypermedia?lang=en-us', response.request.path);
+    assert.same(undefined, response.request.params);
 });
 ```
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors
+ * Copyright 2014-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -34,7 +34,8 @@
 					page: page,
 					_links: {
 						self: { href: request.path },
-						next: { href: request.path + '/next' }
+						next: { href: request.path + '/next' },
+						search: { href: request.path + '/{?q}', templated: true }
 					}
 				})
 			};
@@ -157,6 +158,15 @@
 						function (response) {
 							assert.same('limited', response.request.params.projection);
 							assert.same('http://example.com/next', response.entity._links.self.href);
+						},
+						fail
+					);
+				},
+				'applying params to templates': function () {
+					return client('http://example.com').follow({ rel: 'search', params: { q: 'hypermedia client' } }).then(
+						function (response) {
+							assert.same('http://example.com/?q=hypermedia%20client', response.request.path);
+							refute('params' in response.request);
 						},
 						fail
 					);

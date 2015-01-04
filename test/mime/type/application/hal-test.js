@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 the original author or authors
+ * Copyright 2013-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -89,10 +89,32 @@
 					});
 				}).otherwise(fail);
 			},
-			'should get a client for an relationship': function () {
+			'should fetch a templated linked resource': function () {
+				var client = mime(function client(request) {
+					return request.path === '/' ?
+						{ request: request, entity: JSON.stringify({ _links: { self: { href: '/' }, child: { templated: true, href: '/resource{?lang}' } } }), headers: { 'Content-Type': 'application/hal+json' } } :
+						{ request: request, entity: JSON.stringify({ _links: { self: { href: '/resource' }, parent: { href: '/' } } }), headers: { 'Content-Type': 'application/hal+json' } };
+				});
+
+				return client({ path: '/' }).then(function (response) {
+					assert.same('/', response.request.path);
+					return response.entity.child.then(function (response) {
+						assert.same('/resource', response.request.path);
+					});
+				}).otherwise(fail);
+			},
+			'should get a client for a relationship': function () {
 				return hal.read(JSON.stringify({ _links: { prop: { href: '/' } } }), { mime: halMime, registry: registry, client: client }).then(function (resource) {
 					return resource.clientFor('prop')().then(function (response) {
 						assert.same('/', response.request.path);
+					});
+				}).otherwise(fail);
+			},
+			'should get a client for a templated relationship': function () {
+				return hal.read(JSON.stringify({ _links: { prop: { templated: true, href: '/{?lang}' } } }), { mime: halMime, registry: registry, client: client }).then(function (resource) {
+					return resource.clientFor('prop')({ params: { lang: 'en-us' } }).then(function (response) {
+						assert.same('/?lang=en-us', response.request.path);
+						refute('params' in response.request);
 					});
 				}).otherwise(fail);
 			},
@@ -139,15 +161,6 @@
 						});
 					}).otherwise(fail);
 				}
-			},
-			'should not index templated links': function () {
-				return hal.read(JSON.stringify({ _links: {
-					prop: { href: '/', templated: 'true' },        // not-templated, must be boolean true
-					query: { href: '/{?query}', templated: true }  // templated
-				} }), { mime: halMime, registry: registry }).then(function (resource) {
-					assert.isFunction(resource.prop.then);
-					refute(resource.query);
-				}).otherwise(fail);
 			},
 			'should be able to write read entities': function () {
 				var raw;
