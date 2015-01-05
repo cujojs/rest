@@ -173,9 +173,9 @@ From source:
 
     $ npm install
 
-rest.js is designed to run in a browser environment, utilizing [AMD modules](https://github.com/amdjs/amdjs-api/wiki/AMD), or within [Node.js](http://nodejs.org/).  [curl.js](https://github.com/cujojs/curl) is highly recommended as an AMD loader, although any loader should work.
+rest.js is designed to run in a browser environment, utilizing [AMD modules](https://github.com/amdjs/amdjs-api/wiki/AMD), or within [Node.js](http://nodejs.org/) as CommonJS modules. Any module loader capable of loading either AMD or CommonJS modules should be able to load rest.js. cujoJS [curl.js](https://github.com/cujojs/curl) is actively tested.
 
-An ECMAScript 5 compatible environment is assumed.  Older browsers, ::cough:: IE, that do not support ES5 natively can be shimmed.  Any shim should work, although we've tested against cujo's [poly.js](https://github.com/cujojs/poly)
+An ECMAScript 5 compatible environment is assumed.  Older browsers, ::cough:: IE, that do not support ES5 natively can be shimmed.  Any shim should work, although we test with cujoJS [poly.js](https://github.com/cujojs/poly)
 
 
 Documentation
@@ -227,7 +227,7 @@ Please see CONTRIBUTING.md for details on how to contribute to this project.
 Copyright
 ---------
 
-Copyright 2012-2014 the original author or authors
+Copyright 2012-2015 the original author or authors
 
 rest.js is made available under the MIT license.  See LICENSE.txt for details.
 

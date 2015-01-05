@@ -72,7 +72,7 @@ present in the framework.
 
 ```javascript
 /*
- * Copyright 2013 the original author or authors
+ * Copyright 2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author FirstName LastName <OptionalEmailAddress>
@@ -210,8 +210,8 @@ Add a comment to the associated issue(s) linking to your new pull request.
 
 ## Expect discussion and rework
 
-The Spring team takes a very conservative approach to accepting contributions to
-the framework. This is to keep code quality and stability as high as possible,
+The cujoJS team takes a very conservative approach to accepting contributions to
+the library. This is to keep code quality and stability as high as possible,
 and to keep complexity at a minimum. Your changes, if accepted, may be heavily
 modified prior to merging. You will retain "Author:" attribution for your Git
 commits granted that the bulk of your changes remain intact. You may be asked to
