@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 the original author or authors
+ * Copyright 2013-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -310,14 +310,12 @@
 				theInterceptor = interceptor({
 					request: function (request, config) {
 						request.phase = 'request';
-						refute.same(theConfig, config);
-						assert.same(theConfig.foo, config.foo);
+						assert.same(theConfig, config);
 						return request;
 					},
 					response: function (response, config) {
 						response.phase = 'response';
-						refute.same(theConfig, config);
-						assert.same(theConfig.foo, config.foo);
+						assert.same(theConfig, config);
 						return response;
 					}
 				});
@@ -444,32 +442,29 @@
 					assert.same('default', response.id);
 				}).otherwise(fail);
 			},
-			'should initialize the config object, without modifying the provided object': function () {
+			'should initialize the config object, modifying the provided object': function () {
 				var theConfig, theInterceptor, client;
 				theConfig = { foo: 'bar' };
 				theInterceptor = interceptor({
 					init: function (config) {
-						refute.same(theConfig, config);
-						assert.same('bar', config.foo);
+						assert.same(theConfig, config);
 						config.bleep = 'bloop';
 						return config;
 					},
 					request: function (request, config) {
-						refute.same(theConfig, config);
-						assert.same('bar', config.foo);
-						config.foo = 'not-bar';
-						assert.same('bar', theConfig.foo);
+						assert.same(theConfig, config);
 						request.phase = 'request';
 						return request;
 					},
 					response: function (response, config) {
-						assert.same('not-bar', config.foo);
-						assert.same('bar', theConfig.foo);
+						assert.same(theConfig, config);
 						response.phase = 'response';
 						return response;
 					}
 				});
+				refute('bleep' in theConfig);
 				client = theInterceptor(defaultClient, theConfig);
+				assert.same('bloop', theConfig.bleep);
 				return client().then(function (response) {
 					assert.same('request', response.request.phase);
 					assert.same('response', response.phase);

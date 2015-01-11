@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -109,7 +109,7 @@
 					target = handlers.client || defaultClient;
 				}
 
-				config = initHandler(Object.create(config || {}));
+				config = initHandler(config || {});
 
 				function interceptedClient(request) {
 					var context, meta;
