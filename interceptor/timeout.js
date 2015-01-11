@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Jeremy Grelle
@@ -30,19 +30,22 @@
 				return config;
 			},
 			request: function (request, config) {
-				var timeout, abortTrigger;
+				var timeout, abortTrigger, transient;
 				timeout = 'timeout' in request ? request.timeout : config.timeout;
+				transient = 'transient' in request ? request.transient : config.transient;
 				if (timeout <= 0) {
 					return request;
 				}
 				abortTrigger = when.defer();
 				this.timeout = setTimeout(function () {
 					abortTrigger.reject({ request: request, error: 'timeout' });
-					if (request.cancel) {
-						request.cancel();
-					}
-					else {
-						request.canceled = true;
+					if (!transient) {
+						if (request.cancel) {
+							request.cancel();
+						}
+						else {
+							request.canceled = true;
+						}
 					}
 				}, timeout);
 				return new interceptor.ComplexRequest({ request: request, abort: abortTrigger.promise });

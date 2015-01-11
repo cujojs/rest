@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Jeremy Grelle
@@ -126,6 +126,36 @@
 						assert.same(request, response.request);
 						assert.equals('timeout', response.error);
 						assert(request.canceled);
+					})
+				);
+				refute(request.canceled);
+				return response;
+			},
+			'should not cancel request if transient config enabled': function () {
+				var client, request, response;
+				client = timeout(cancelableClient, { timeout: 11, transient: true });
+				request = {};
+				response = client(request).then(
+					fail,
+					failOnThrow(function (response) {
+						assert.same(request, response.request);
+						assert.equals('timeout', response.error);
+						refute(request.canceled);
+					})
+				);
+				refute(request.canceled);
+				return response;
+			},
+			'should use request transient value rather then interceptor': function () {
+				var client, request, response;
+				client = timeout(cancelableClient, { timeout: 11, transient: false });
+				request = { transient: true };
+				response = client(request).then(
+					fail,
+					failOnThrow(function (response) {
+						assert.same(request, response.request);
+						assert.equals('timeout', response.error);
+						refute(request.canceled);
 					})
 				);
 				refute(request.canceled);
