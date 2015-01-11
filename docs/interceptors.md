@@ -370,7 +370,7 @@ client({ path: 'data.json' }).then(function (response) {
 ```
 
 ```javascript
-client = rest.wrap(mime, { mime: 'application/json' );
+client = rest.wrap(mime, { mime: 'application/json' });
 client({ method: 'POST', entity: { key: 'value' } }).then(function (response) {
     assert.same('{ "key": "value" }', response.request.entity);
     assert.same('application/json, application/json;q=0.8, text/plain;q=0.5, */*;q=0.2', response.request.headers['Content-Type']);
