@@ -45,6 +45,9 @@
 		 * Links are indexed onto the resource as a lazy promise that will GET the
 		 * resource when a handler is first registered on the promise.
 		 *
+		 * A `requestFor` method is added to the entity to make a request for the
+		 * relationship.
+		 *
 		 * A `clientFor` method is added to the entity to get a full Client for a
 		 * relationship.
 		 *
@@ -108,6 +111,10 @@
 									clientOverride || client,
 									{ prefix: link.href }
 								);
+							});
+							defineProperty(resource, 'requestFor', function (relationship, request, clientOverride) {
+								var client = this.clientFor(relationship, clientOverride);
+								return client(request);
 							});
 						});
 

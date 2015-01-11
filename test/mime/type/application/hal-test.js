@@ -103,6 +103,14 @@
 					});
 				}).otherwise(fail);
 			},
+			'should make a request for a relationship': function () {
+				return hal.read(JSON.stringify({ _links: { prop: { href: '/' } } }), { mime: halMime, registry: registry, client: client }).then(function (resource) {
+					return resource.requestFor('prop', { method: 'delete' }).then(function (response) {
+						assert.same('/', response.request.path);
+						assert.same('delete', response.request.method);
+					});
+				}).otherwise(fail);
+			},
 			'should get a client for a relationship': function () {
 				return hal.read(JSON.stringify({ _links: { prop: { href: '/' } } }), { mime: halMime, registry: registry, client: client }).then(function (resource) {
 					return resource.clientFor('prop')().then(function (response) {

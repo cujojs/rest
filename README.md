@@ -237,7 +237,7 @@ Change Log
 
 .next
 - response.follow() for easy traversal of hypermedia APIs
-- application/hal mime converter supports templated URLs
+- application/hal mime converter supports templated URLs, and resource.requestFor('relationship', request)
 - full URI Template (rfc6570) support in rest/util/uriTemplate
 - section aware URI encoding in rest/util/uriEncoder
 - best fit MIME type resolution, including by suffix (i.e. '+json'). Parsed MIME type provided to converters
