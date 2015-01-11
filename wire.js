@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -23,8 +23,11 @@
 			config.interceptors = when.all((Array.isArray(spec) ? spec : spec.interceptors || []).map(function (interceptorDef) {
 				var interceptorConfig = interceptorDef.config;
 				delete interceptorDef.config;
-				return wire(typeof interceptorDef === 'string' ? { module: interceptorDef } : interceptorDef).then(function (interceptor) {
-					return { interceptor: interceptor, config: interceptorConfig };
+				return when.all([
+					wire(typeof interceptorDef === 'string' ? { module: interceptorDef } : interceptorDef),
+					wire(interceptorConfig)
+				]).spread(function (interceptor, config) {
+					return { interceptor: interceptor, config: config };
 				});
 			}));
 

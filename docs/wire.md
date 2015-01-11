@@ -77,3 +77,15 @@ mime: { module: 'rest/interceptor/mime' },
 hateoas: { module: 'rest/interceptor/hateoas' },
 $plugins: [{ module: 'rest/wire' }]
 ```
+
+The 'config' object for an interceptor may also use any wire.js facility. If a literal config object is desired, but is being wired in an undesirable way, use the 'literal' wire.js factory to provide the literal config.
+
+```javascript
+client: {
+    rest: [
+        { $ref: 'myInterceptor', config: { literal: { module: 'not/a/wire/module/factory' } } },
+    ]
+},
+myInterceptor: { ... },
+$plugins: [{ module: 'rest/wire' }]
+```

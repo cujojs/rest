@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -164,7 +164,7 @@
 						assert.same(client, spec.client.skip());
 					}).otherwise(fail);
 				},
-				'without wiring interceptor configurations': function () {
+				'wiring interceptor configurations': function () {
 					var spec, client;
 					client = function (request) {
 						return { request: request };
@@ -174,12 +174,12 @@
 							rest: {
 								parent: client,
 								interceptors: [
-									{ module: 'rest/interceptor/pathPrefix', config: { $ref: 'basePath', prefix: 'useThisOne' } }
+									{ module: 'rest/interceptor/pathPrefix', config: { $ref: 'basePath', prefix: 'dontUseThisOne' } }
 								]
 							}
 						},
 						basePath: {
-							literal: { prefix: 'dontUseThis' }
+							literal: { prefix: 'useThisOne' }
 						},
 						$plugins: [{ module: 'rest/wire' }]
 					};
