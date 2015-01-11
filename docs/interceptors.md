@@ -782,7 +782,7 @@ client({}).then(
 
 `rest/interceptor/timeout` ([src](../interceptor/timeout.js))
 
-Rejects a request that takes longer than the timeout.  If a request is in-flight, it is canceled.  The timeout value may be specified in the request or the interceptor config.
+Rejects a request that takes longer than the timeout.  If a request is in-flight, it is canceled by default.  The timeout value may be specified in the request or the interceptor config.
 
 **Phases**
 
@@ -803,6 +803,12 @@ Rejects a request that takes longer than the timeout.  If a request is in-flight
   <td>optional</td>
   <td><em>disabled</em></td>
   <td>duration in milliseconds before canceling the request. Non-positive values disable the timeout.</td>
+</tr>
+<tr>
+  <td>transient</td>
+  <td>optional</td>
+  <td>false</td>
+  <td>disables the cancellation of timed out requests, allowing additional interceptors to gracefully handle the timeout.</td>
 </tr>
 </table>
 
