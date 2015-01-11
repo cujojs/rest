@@ -37,12 +37,13 @@
 		}
 
 		function cancelableClient(request) {
+			/*jshint validthis:true */
 			var d = when.defer();
 			request.canceled = false;
-			request.cancel = function () {
+			request.cancel = this.spy(function () {
 				request.canceled = true;
 				d.resolver.reject({ request: request });
-			};
+			});
 			return d.promise;
 		}
 
@@ -118,13 +119,14 @@
 			},
 			'should cancel request if client support cancelation': function () {
 				var client, request, response;
-				client = timeout(cancelableClient, { timeout: 11 });
+				client = timeout(cancelableClient.bind(this), { timeout: 11 });
 				request = {};
 				response = client(request).then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert.equals('timeout', response.error);
+						assert.called(request.cancel);
 						assert(request.canceled);
 					})
 				);
@@ -133,13 +135,14 @@
 			},
 			'should not cancel request if transient config enabled': function () {
 				var client, request, response;
-				client = timeout(cancelableClient, { timeout: 11, transient: true });
+				client = timeout(cancelableClient.bind(this), { timeout: 11, transient: true });
 				request = {};
 				response = client(request).then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert.equals('timeout', response.error);
+						assert.called(request.cancel);
 						refute(request.canceled);
 					})
 				);
@@ -148,13 +151,14 @@
 			},
 			'should use request transient value rather then interceptor': function () {
 				var client, request, response;
-				client = timeout(cancelableClient, { timeout: 11, transient: false });
+				client = timeout(cancelableClient.bind(this), { timeout: 11, transient: false });
 				request = { transient: true };
 				response = client(request).then(
 					fail,
 					failOnThrow(function (response) {
 						assert.same(request, response.request);
 						assert.equals('timeout', response.error);
+						assert.called(request.cancel);
 						refute(request.canceled);
 					})
 				);
