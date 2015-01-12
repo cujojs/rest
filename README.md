@@ -235,7 +235,7 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
-.next
+1.3.0
 - response.follow() for easy traversal of hypermedia APIs
 - application/hal mime converter supports templated URLs, and resource.requestFor('relationship', request)
 - full URI Template (rfc6570) support in rest/util/uriTemplate
