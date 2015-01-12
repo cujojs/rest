@@ -82,9 +82,26 @@ Converters need to be registered for a MIME type. MIME types are well known and 
 Vendor MIMEs '\*/vnd.*' are unreserved and available for internal use and experimentation. Application may use vendor MIMEs to provide additional knowledge about the type of object an entity represents, or to vary the rendering of the same object. As an example, 'application/json' provides a strong structure for the entity, but does nothing to indicate what the entity represents. Vendor MIMEs can provide that extra semantic meaning, but requires both the client and server understand and establish that meaning out-of-band.
 
 
+<a name="custom-json-converters"></a>
+## Custom JSON Converters
+
+Advanced JSON serialization often leverages custom revivers and replacers. The JSON converter can be extended to use custom revivers and replacers.
+
+```javascript
+var json = require('rest/mime/type/application/json');
+var customJson = json.extend(reviver, replacer);
+```
+
+In order to use the extended converter, it must be [registered in a MIME registry](#mime-converters-custom). It's generally recommended to use a custom vendored MIME type when overriding a common converter. If that is not possible, using a child registry is highly recommended to avoid conflicts.
+
+```javascript
+registry.register('application/json', customJson);
+```
+
+
 <a name="mime-interceptor"></a>
 ## MIME Interceptor
 
 `rest/interceptor/mime` ([src](../interceptor/mime.js))
 
-The [MIME interceptor](interceptors.md#module-rest/interceptor/mime) utilizes the mime registry to convert request and response entities between objects and text strings.
+The [MIME interceptor](interceptors.md#module-rest/interceptor/mime) utilizes the mime registry to convert request and response entities between objects and text strings. A custom registry

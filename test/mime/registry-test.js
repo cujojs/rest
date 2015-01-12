@@ -97,6 +97,22 @@
 				return registry.lookup('application/vnd.com.example+foo').then(function (c) {
 					assert.same(converter, c);
 				}).otherwise(fail);
+			},
+			'should invoke the delegate mime converter': function () {
+				var converter = {
+					read: function (obj) {
+						return 'read ' + obj;
+					},
+					write: function (obj) {
+						return 'write ' + obj;
+					}
+				};
+				registry.register('+bar', registry.delegate('+foo'));
+				registry.register('+foo', converter);
+				return registry.lookup('application/vnd.com.example+foo').then(function (converter) {
+					assert.same('read hello', converter.read('hello'));
+					assert.same('write world', converter.write('world'));
+				});
 			}
 		});
 

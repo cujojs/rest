@@ -8,7 +8,7 @@
 (function (buster, define) {
 	'use strict';
 
-	var assert, refute;
+	var assert, refute, undef;
 
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
@@ -22,6 +22,20 @@
 				assert.equals({ foo: 'bar' }, json.read('{"foo":"bar"}'));
 			},
 			'should stringify json': function () {
+				assert.equals('{"foo":"bar"}', json.write({ foo: 'bar' }));
+			},
+			'should use provided reviver and replacer': function () {
+				var reviver, replacer, customJson;
+
+				reviver = function reviver() {};
+				replacer = [];
+				customJson = json.extend(reviver, replacer);
+
+				assert.equals(undef, customJson.read('{"foo":"bar"}'));
+				assert.equals('{}', customJson.write({ foo: 'bar' }));
+
+				// old json convert is unmodified
+				assert.equals({ foo: 'bar' }, json.read('{"foo":"bar"}'));
 				assert.equals('{"foo":"bar"}', json.write({ foo: 'bar' }));
 			}
 		});
