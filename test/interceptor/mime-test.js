@@ -96,6 +96,23 @@
 					})
 				);
 			},
+			'should error the request if unable to find a converter for the desired mime, unless in permissive mode': function () {
+				var client, entity, request;
+
+				client = mime(
+					function (request) {
+						return { request: request, headers: {} };
+					},
+					{ permissive: true }
+				);
+
+				entity = {};
+				request = { headers: { 'Content-Type': 'application/vnd.com.example' }, entity: entity };
+				return client(request).then(function (response) {
+					assert.same(entity, response.request.entity);
+					assert.equals('application/vnd.com.example', response.request.headers['Content-Type']);
+				}).otherwise(fail);
+			},
 			'should use text/plain converter for a response if unable to find a converter for the desired mime': function () {
 				var client;
 

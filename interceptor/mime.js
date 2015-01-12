@@ -10,14 +10,17 @@
 
 	define(function (require) {
 
-		var interceptor, mime, registry, plainText, when;
+		var interceptor, mime, registry, noopConverter, when;
 
 		interceptor = require('../interceptor');
 		mime = require('../mime');
 		registry = require('../mime/registry');
 		when = require('when');
 
-		plainText = registry.lookup('text/plain');
+		noopConverter = {
+			read: function (obj) { return obj; },
+			write: function (obj) { return obj; }
+		};
 
 		/**
 		 * MIME type support for request and response entities.  Entities are
@@ -36,6 +39,7 @@
 		 *   converter, defaults to the client originating the request
 		 * @param {Registry} [config.registry] MIME registry, defaults to the root
 		 *   registry
+		 * @param {boolean} [config.permissive] Allow an unkown request MIME type
 		 *
 		 * @returns {Client}
 		 */
@@ -55,7 +59,13 @@
 					return request;
 				}
 
-				return config.registry.lookup(type).then(function (converter) {
+				return config.registry.lookup(type).otherwise(function () {
+					// failed to resolve converter
+					if (config.permissive) {
+						return noopConverter;
+					}
+					throw 'mime-unknown';
+				}).then(function (converter) {
 					var client = config.client || request.originator;
 
 					return when.attempt(converter.write, request.entity, { client: client, request: request, mime: type, registry: config.registry })
@@ -66,8 +76,6 @@
 							request.entity = entity;
 							return request;
 						});
-				}, function () {
-					throw 'mime-unknown';
 				});
 			},
 			response: function (response, config) {
@@ -77,7 +85,7 @@
 
 				var type = mime.parse(response.headers['Content-Type']);
 
-				return config.registry.lookup(type).otherwise(function () { return plainText; }).then(function (converter) {
+				return config.registry.lookup(type).otherwise(function () { return noopConverter; }).then(function (converter) {
 					var client = config.client || response.request && response.request.originator;
 
 					return when.attempt(converter.read, response.entity, { client: client, response: response, mime: type, registry: config.registry })

@@ -357,6 +357,12 @@ See the docs for the MIME registry for more information on available converters 
   <td><em>default registry</em></td>
   <td>custom MIME registry</td>
 </tr>
+<tr>
+  <td>permissive</td>
+  <td>optional</td>
+  td><em>false</em></td>
+  <td>allow an unknown mime type for a request</td>
+</tr>
 </table>
 
 **Example**
