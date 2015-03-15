@@ -55,18 +55,7 @@
 				if (value === undef || value === null) {
 					return result;
 				}
-				if (typeof value === 'string') {
-					if (opts.maxLength) {
-						value = value.slice(0, opts.maxLength);
-					}
-					result += result.length ? operation.separator : operation.first;
-					if (operation.named) {
-						result += operation.encoder(variable);
-						result += value.length ? '=' : operation.empty;
-					}
-					result += operation.encoder(value);
-				}
-				else if (Array.isArray(value)) {
+				if (Array.isArray(value)) {
 					result += value.reduce(function (result, value) {
 						if (result.length) {
 							result += opts.explode ? operation.separator : ',';
@@ -86,7 +75,7 @@
 						return result;
 					}, '');
 				}
-				else {
+				else if (typeof value === 'object') {
 					result += Object.keys(value).reduce(function (result, name) {
 						if (result.length) {
 							result += opts.explode ? operation.separator : ',';
@@ -103,6 +92,18 @@
 						result += operation.encoder(value[name]);
 						return result;
 					}, '');
+				}
+				else {
+					value = String(value);
+					if (opts.maxLength) {
+						value = value.slice(0, opts.maxLength);
+					}
+					result += result.length ? operation.separator : operation.first;
+					if (operation.named) {
+						result += operation.encoder(variable);
+						result += value.length ? '=' : operation.empty;
+					}
+					result += operation.encoder(value);
 				}
 
 				return result;

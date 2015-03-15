@@ -236,7 +236,7 @@ Change Log
 ----------
 
 .next
-- nothing yet
+- fix to allow numbers and boolean values as parameters to URI Template expansion.
 
 1.3.0
 - response.follow() for easy traversal of hypermedia APIs
