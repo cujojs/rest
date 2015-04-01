@@ -34,8 +34,8 @@
 			strings.fragment = strings.pchar + '/?';
 
 			return Object.keys(strings).reduce(function (charMap, set) {
-				charMap[set] = strings[set].split('').reduce(function (chars, char) {
-					chars[char] = true;
+				charMap[set] = strings[set].split('').reduce(function (chars, myChar) {
+					chars[myChar] = true;
 					return chars;
 				}, {});
 				return charMap;
@@ -46,16 +46,16 @@
 			if (typeof str !== 'string') {
 				throw new Error('String required for URL encoding');
 			}
-			return str.split('').map(function (char) {
-				if (allowed.hasOwnProperty(char)) {
-					return char;
+			return str.split('').map(function (myChar) {
+				if (allowed.hasOwnProperty(myChar)) {
+					return myChar;
 				}
-				var code = char.charCodeAt(0);
+				var code = myChar.charCodeAt(0);
 				if (code <= 127) {
 					return '%' + code.toString(16).toUpperCase();
 				}
 				else {
-					return encodeURIComponent(char).toUpperCase();
+					return encodeURIComponent(myChar).toUpperCase();
 				}
 			}).join('');
 		}
