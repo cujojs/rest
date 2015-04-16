@@ -235,7 +235,7 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
-.next
+1.3.1
 - fix to allow numbers and boolean values as parameters to URI Template expansion.
 
 1.3.0
