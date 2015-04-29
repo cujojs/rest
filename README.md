@@ -80,7 +80,7 @@ client({ path: '/data.json' }).then(
 );
 ```
 
-In this example, we take the client create by the [MIME Interceptor](docs/interceptors.md#module-rest/interceptor/mime), and wrap it with the [Error Code Interceptor](https://github.com/s2js/rest/blob/cujojs/docs/interceptors.md#module-rest/interceptor/errorCode).  The error code interceptor accepts a configuration object that indicates what status codes should be considered an error.  In this case we override the default value of <=400, to only reject with 500 or greater status code.
+In this example, we take the client create by the [MIME Interceptor](docs/interceptors.md#module-rest/interceptor/mime), and wrap it with the [Error Code Interceptor](docs/interceptors.md#module-rest/interceptor/errorCode).  The error code interceptor accepts a configuration object that indicates what status codes should be considered an error.  In this case we override the default value of <=400, to only reject with 500 or greater status code.
 
 Since the error code interceptor can reject the response promise, we also add a second handler function to receive the response for requests in error.
 
