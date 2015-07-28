@@ -238,7 +238,7 @@ The entire response object graph will be inspected looking for an Array property
 
 ```javascript
 // assuming a native ES5 environment
-client = rest.warp(mime).wrap(hateoas);
+client = rest.wrap(mime).wrap(hateoas);
 client({ path: '/people/scott' }).then(function (response) {
     // assuming response for /people/scott: { entity: '{ "name": "Scott", "links": [ { "rel": "father", "href": "/peopele/ron" } ], ...  }', ... }
     // assuming response for /people/ron: { entity: '{ "name": "Ron", ... }', ... }
