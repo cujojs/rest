@@ -29,7 +29,7 @@
 				);
 				return client({}).then(function (response) {
 					assert.equals('Basic dXNlcjpwYXNz', response.request.headers.Authorization);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should authenticate the requst from the request': function () {
 				var client = basicAuth(
@@ -37,7 +37,7 @@
 				);
 				return client({ username: 'user', password: 'pass'}).then(function (response) {
 					assert.equals('Basic dXNlcjpwYXNz', response.request.headers.Authorization);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should not authenticate without a username': function () {
 				var client = basicAuth(
@@ -45,7 +45,7 @@
 				);
 				return client({}).then(function (response) {
 					refute.defined(response.request.headers.Authorization);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, basicAuth().skip());

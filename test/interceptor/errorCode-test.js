@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -29,7 +29,7 @@
 				);
 				return client({}).then(function (response) {
 					assert.equals(399, response.status.code);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should reject for 400 or greater by default': function () {
 				var client = errorCode(

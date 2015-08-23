@@ -10,7 +10,7 @@
 
 	define(function (require) {
 
-		var when = require('when'),
+		var Promise = require('./Promise'),
 			normalizeHeaderName = require('./normalizeHeaderName');
 
 		function property(promise, name) {
@@ -19,7 +19,7 @@
 					return value && value[name];
 				},
 				function (value) {
-					return when.reject(value && value[name]);
+					return Promise.reject(value && value[name]);
 				}
 			);
 		}
@@ -91,15 +91,18 @@
 		function follow(rels) {
 			/*jshint validthis:true */
 			rels = [].concat(rels);
-			return make(when.reduce(rels, function (response, rel) {
-				if (typeof rel === 'string') {
-					rel = { rel: rel };
-				}
-				if (typeof response.entity.clientFor !== 'function') {
-					throw new Error('Hypermedia response expected');
-				}
-				var client = response.entity.clientFor(rel.rel);
-				return client({ params: rel.params });
+
+			return make(rels.reduce(function (response, rel) {
+				return response.then(function (response) {
+					if (typeof rel === 'string') {
+						rel = { rel: rel };
+					}
+					if (typeof response.entity.clientFor !== 'function') {
+						throw new Error('Hypermedia response expected');
+					}
+					var client = response.entity.clientFor(rel.rel);
+					return client({ params: rel.params });
+				});
 			}, this));
 		}
 
@@ -118,16 +121,16 @@
 			return promise;
 		}
 
-		function responsePromise() {
-			return make(when.apply(when, arguments));
+		function responsePromise(obj, callback, errback) {
+			return make(Promise.resolve(obj).then(callback, errback));
 		}
 
 		responsePromise.make = make;
 		responsePromise.reject = function (val) {
-			return make(when.reject(val));
+			return make(Promise.reject(val));
 		};
 		responsePromise.promise = function (func) {
-			return make(when.promise(func));
+			return make(new Promise(func));
 		};
 
 		return responsePromise;

@@ -59,7 +59,7 @@
 						// delay to make sure timeout has fired, but not rejected the response
 						refute(request.canceled);
 					});
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should resolve if client responds before timeout': function () {
 				var client, request;
@@ -69,7 +69,7 @@
 					assert.same(request, response.request);
 					refute(response.error);
 					refute(request.canceled);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should reject even if client responds after timeout': function () {
 				var client, request;
@@ -105,7 +105,7 @@
 					assert.same(request, response.request);
 					refute(response.error);
 					refute(request.canceled);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should not reject without a configured timeout value': function () {
 				var client, request;
@@ -115,7 +115,7 @@
 					assert.same(request, response.request);
 					refute(response.error);
 					refute(request.canceled);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should cancel request if client support cancelation': function () {
 				var client, request, response;

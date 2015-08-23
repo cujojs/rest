@@ -52,7 +52,7 @@
 							assert.equals(0, response.request.headers.Accept.indexOf('application/json'));
 							assert.equals('application/json', response.request.headers['Content-Type']);
 						});
-					}).otherwise(fail);
+					})['catch'](fail);
 				},
 				'with interceptor references': function () {
 					var spec, client;
@@ -84,7 +84,7 @@
 							assert.equals(0, response.request.headers.Accept.indexOf('application/json'));
 							assert.equals('application/json', response.request.headers['Content-Type']);
 						});
-					}).otherwise(fail);
+					})['catch'](fail);
 				},
 				'with interceptor string shortcuts': function () {
 					var spec, client;
@@ -104,7 +104,7 @@
 					};
 					return wire(spec, { require: require }).then(function (spec) {
 						assert.same(client, spec.client.skip().skip().skip());
-					}).otherwise(fail);
+					})['catch'](fail);
 				},
 				'with concrete interceptors': function () {
 					var spec, client;
@@ -127,7 +127,7 @@
 						spec.client().then(function (response) {
 							assert.equals('thePrefix', response.request.path);
 						});
-					}).otherwise(fail);
+					})['catch'](fail);
 				},
 				'using the default client': function () {
 					var spec;
@@ -141,7 +141,7 @@
 					};
 					return wire(spec, { require: require }).then(function (spec) {
 						assert.same(rest, spec.client.skip());
-					}).otherwise(fail);
+					})['catch'](fail);
 				},
 				'using a referenced parent client': function () {
 					var spec, client;
@@ -162,7 +162,7 @@
 					};
 					return wire(spec, { require: require }).then(function (spec) {
 						assert.same(client, spec.client.skip());
-					}).otherwise(fail);
+					})['catch'](fail);
 				},
 				'wiring interceptor configurations': function () {
 					var spec, client;
@@ -188,7 +188,7 @@
 						spec.client().then(function (response) {
 							assert.equals('useThisOne', response.request.path);
 						});
-					}).otherwise(fail);
+					})['catch'](fail);
 				}
 			}
 		});

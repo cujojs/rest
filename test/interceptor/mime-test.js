@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -34,7 +34,7 @@
 
 				return client({}).then(function (response) {
 					assert.equals({}, response.entity);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should encode the request entity': function () {
 				var client;
@@ -48,7 +48,7 @@
 
 				return client({ entity: {} }).then(function (response) {
 					assert.equals('{}', response.request.entity);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should encode the request entity from the Content-Type of the request, ignoring the filter config': function () {
 				var client;
@@ -64,7 +64,7 @@
 					assert.equals('{}', response.request.entity);
 					assert.equals('application/json', response.request.headers['Content-Type']);
 					assert.equals(0, response.request.headers.Accept.indexOf('application/json'));
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should not overwrite the requests Accept header': function () {
 				var client;
@@ -80,7 +80,7 @@
 					assert.equals('{}', response.request.entity);
 					assert.equals('application/json', response.request.headers['Content-Type']);
 					assert.equals('foo', response.request.headers.Accept);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should error the request if unable to find a converter for the desired mime': function () {
 				var client, request;
@@ -111,7 +111,7 @@
 				return client(request).then(function (response) {
 					assert.same(entity, response.request.entity);
 					assert.equals('application/vnd.com.example', response.request.headers['Content-Type']);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should use text/plain converter for a response if unable to find a converter for the desired mime': function () {
 				var client;
@@ -122,7 +122,7 @@
 
 				return client({}).then(function (response) {
 					assert.same('{}', response.entity);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should use the configured mime registry': function () {
 				var client, converter, customRegistry;
@@ -164,7 +164,7 @@
 						mime: { raw: 'application/vnd.com.example', type: 'application/vnd.com.example', suffix: '', params: {} },
 						registry: customRegistry
 					});
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should reject the response if the serializer fails to write the request': function () {
 				var client, converter, customRegistry;
@@ -265,7 +265,7 @@
 
 				return client({}).then(function (response) {
 					assert.equals('response entity', response.entity);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should wait for entity to resolve before returning when serializer returns a promise while writing request entity': function () {
 				var client, converter, customRegistry, entityToPromise;
@@ -289,7 +289,7 @@
 
 				return client({ entity: 'request entity' }).then(function (response) {
 					assert.equals('request entity', response.request.entity);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should reject the response if serializer rejects promise while writing request entity': function () {
 				var client, converter, customRegistry;

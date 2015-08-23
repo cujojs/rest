@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -30,7 +30,7 @@
 
 				return client().then(function (response) {
 					assert.same(body, response);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should return the whole response if there is no entity': function () {
 				var client, response;
@@ -40,7 +40,7 @@
 
 				return client().then(function (r) {
 					assert.same(response, r);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, entity().skip());

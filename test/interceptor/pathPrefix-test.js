@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -29,7 +29,7 @@
 				);
 				return client({ path: '/bar' }).then(function (response) {
 					assert.equals('/foo/bar', response.request.path);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should prepend prefix before path, adding slash between path segments': function () {
 				var client = pathPrefix(
@@ -38,7 +38,7 @@
 				);
 				return client({ path: 'bar' }).then(function (response) {
 					assert.equals('/foo/bar', response.request.path);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should prepend prefix before path, not adding extra slash between path segments': function () {
 				var client = pathPrefix(
@@ -47,7 +47,7 @@
 				);
 				return client({ path: 'bar' }).then(function (response) {
 					assert.equals('/foo/bar', response.request.path);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should not prepend prefix before a fully qualified path': function () {
 				var client = pathPrefix(
@@ -56,7 +56,7 @@
 				);
 				return client({ path: 'http://www.example.com/' }).then(function (response) {
 					assert.equals('http://www.example.com/', response.request.path);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, pathPrefix().skip());

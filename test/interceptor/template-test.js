@@ -35,7 +35,7 @@
 				return client({ path: 'http://example.com/dictionary{/term:1,term}{?lang}', params: { term: 'hypermedia' } }).then(function (response) {
 					assert.same('http://example.com/dictionary/h/hypermedia', response.request.path);
 					refute('params' in response.request);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should apply the template and params from the config if not defined on the request': function () {
 				var client, config;
@@ -46,7 +46,7 @@
 				return client().then(function (response) {
 					assert.same('http://example.com/dictionary/h/hypermedia', response.request.path);
 					refute('params' in response.request);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should individually mix config params into the request': function () {
 				var client, config;
@@ -57,7 +57,7 @@
 				return client({ path: 'http://example.com/dictionary{/term:1,term}{?lang}', params: { term: 'hypermedia' } }).then(function (response) {
 					assert.same('http://example.com/dictionary/h/hypermedia?lang=en-us', response.request.path);
 					refute('params' in response.request);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should ignore missing and overdefined params': function () {
 				var client, config;
@@ -68,7 +68,7 @@
 				return client({ path: 'http://example.com/dictionary{/term:1,term}{?lang}', params: { q: 'hypermedia' } }).then(function (response) {
 					assert.same('http://example.com/dictionary', response.request.path);
 					refute('params' in response.request);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, template().skip());

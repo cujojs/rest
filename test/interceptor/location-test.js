@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -42,7 +42,7 @@
 					assert.same(spy.args[2][0].path, '/foo/2');
 					assert.same(spy.args[2][0].method, 'GET');
 					refute(spy.returnValues[2].headers.Location);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should follow the location header when status code is greater or equal to configured status code': function () {
 				var client, spy;
@@ -63,7 +63,7 @@
 				return client({}).then(function () {
 					assert.same(2, spy.callCount);
 					assert.same(spy.args[1][0].path, '/foo');
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should return the response if there is no location header': function () {
 				var client, spy;
@@ -72,7 +72,7 @@
 				return client({}).then(function (response) {
 					assert.equals(200, response.status.code);
 					assert.same(1, spy.callCount);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, location().skip());

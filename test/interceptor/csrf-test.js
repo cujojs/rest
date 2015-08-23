@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 the original author or authors
+ * Copyright 2013-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -29,7 +29,7 @@
 				);
 				return client({}).then(function (response) {
 					assert.equals('abc123xyz789', response.request.headers['X-Csrf-Token']);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should protect the requst from the request': function () {
 				var client = csrf(
@@ -37,7 +37,7 @@
 				);
 				return client({ csrfToken: 'abc123xyz789' }).then(function (response) {
 					assert.equals('abc123xyz789', response.request.headers['X-Csrf-Token']);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should protect the requst from the config using a custom header': function () {
 				var client = csrf(
@@ -46,7 +46,7 @@
 				);
 				return client({}).then(function (response) {
 					assert.equals('abc123xyz789', response.request.headers['Csrf-Token']);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should protect the requst from the request using a custom header': function () {
 				var client = csrf(
@@ -54,7 +54,7 @@
 				);
 				return client({ csrfToken: 'abc123xyz789', csrfTokenName: 'Csrf-Token' }).then(function (response) {
 					assert.equals('abc123xyz789', response.request.headers['Csrf-Token']);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should not protect without a token': function () {
 				var client = csrf(
@@ -62,7 +62,7 @@
 				);
 				return client({}).then(function (response) {
 					refute.defined(response.request.headers['X-Csrf-Token']);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, csrf().skip());

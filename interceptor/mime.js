@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -8,18 +8,25 @@
 (function (define) {
 	'use strict';
 
+	var undef;
+
 	define(function (require) {
 
-		var interceptor, mime, registry, noopConverter, when;
+		var interceptor, mime, registry, noopConverter, missingConverter, attempt;
 
 		interceptor = require('../interceptor');
 		mime = require('../mime');
 		registry = require('../mime/registry');
-		when = require('when');
+		attempt = require('../util/attempt');
 
 		noopConverter = {
 			read: function (obj) { return obj; },
 			write: function (obj) { return obj; }
+		};
+
+		missingConverter = {
+			read: function () { throw 'No read method found on converter'; },
+			write: function () { throw 'No write method found on converter'; }
 		};
 
 		/**
@@ -59,17 +66,18 @@
 					return request;
 				}
 
-				return config.registry.lookup(type).otherwise(function () {
+				return config.registry.lookup(type)['catch'](function () {
 					// failed to resolve converter
 					if (config.permissive) {
 						return noopConverter;
 					}
 					throw 'mime-unknown';
 				}).then(function (converter) {
-					var client = config.client || request.originator;
+					var client = config.client || request.originator,
+						write = converter.write || missingConverter.write;
 
-					return when.attempt(converter.write, request.entity, { client: client, request: request, mime: type, registry: config.registry })
-						.otherwise(function() {
+					return attempt(write.bind(undef, request.entity, { client: client, request: request, mime: type, registry: config.registry }))
+						['catch'](function() {
 							throw 'mime-serialization';
 						})
 						.then(function(entity) {
@@ -85,11 +93,12 @@
 
 				var type = mime.parse(response.headers['Content-Type']);
 
-				return config.registry.lookup(type).otherwise(function () { return noopConverter; }).then(function (converter) {
-					var client = config.client || response.request && response.request.originator;
+				return config.registry.lookup(type)['catch'](function () { return noopConverter; }).then(function (converter) {
+					var client = config.client || response.request && response.request.originator,
+						read = converter.read || missingConverter.read;
 
-					return when.attempt(converter.read, response.entity, { client: client, response: response, mime: type, registry: config.registry })
-						.otherwise(function (e) {
+					return attempt(read.bind(undef, response.entity, { client: client, response: response, mime: type, registry: config.registry }))
+						['catch'](function (e) {
 							response.error = 'mime-deserialization';
 							response.cause = e;
 							throw response;

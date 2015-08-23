@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -33,7 +33,7 @@
 					assert.equals('callback', response.request.callback.param);
 					assert.equals('jsonp', response.request.callback.prefix);
 					assert.equals('jsonp123456', response.request.callback.name);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should include callback info from request overridding config values': function () {
 				var client = jsonp(
@@ -44,7 +44,7 @@
 					assert.equals('customCallback', response.request.callback.param);
 					assert.equals('customPrefix', response.request.callback.prefix);
 					assert.equals('customName', response.request.callback.name);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should have the jsonp client as the parent by default': function () {
 				refute.same(rest, jsonp().skip());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 the original author or authors
+ * Copyright 2013-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -10,9 +10,8 @@
 
 	define(function (require) {
 
-		var when, UrlBuilder, responsePromise, client;
+		var UrlBuilder, responsePromise, client;
 
-		when = require('when');
 		UrlBuilder = require('../UrlBuilder');
 		responsePromise = require('../util/responsePromise');
 		client = require('../client');

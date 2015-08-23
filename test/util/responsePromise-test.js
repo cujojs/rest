@@ -17,9 +17,10 @@
 
 	define('rest/util/responsePromise-test', function (require) {
 
-		var responsePromise, mime, when, client;
+		var responsePromise, Promise, mime, when, client;
 
 		responsePromise = require('rest/util/responsePromise');
+		Promise = require('rest/util/Promise');
 		mime = require('rest/interceptor/mime');
 		when = require('when');
 
@@ -43,7 +44,7 @@
 
 		buster.testCase('rest/util/responsePromise', {
 			'should be an instance of Promise': function () {
-				assert(responsePromise() instanceof when.Promise);
+				assert(responsePromise() instanceof Promise);
 			},
 
 			'should resolve the response entity': function () {

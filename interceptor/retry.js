@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Jeremy Grelle
@@ -11,10 +11,11 @@
 
 	define(function (require) {
 
-		var interceptor, when;
+		var interceptor, delay, Promise;
 
 		interceptor = require('../interceptor');
-		when = require('when');
+		delay = require('../util/delay');
+		Promise = require('../util/Promise');
 
 		/**
 		 * Retries a rejected request using an exponential backoff.
@@ -41,10 +42,10 @@
 				request = response.request;
 				request.retry = request.retry || config.initial;
 
-				return when(request).delay(request.retry).then(function (request) {
+				return delay(request.retry, request).then(function (request) {
 					if (request.canceled) {
 						// cancel here in case client doesn't check canceled flag
-						return when.reject({ request: request, error: 'precanceled' });
+						return Promise.reject({ request: request, error: 'precanceled' });
 					}
 					request.retry = Math.min(request.retry * config.multiplier, config.max);
 					return meta.client(request);

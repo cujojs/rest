@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -29,14 +29,14 @@
 				return registry.lookup('text/plain').then(function (converter) {
 					assert.isFunction(converter.read);
 					assert.isFunction(converter.write);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should return registed converter': function () {
 				var converter = {};
 				registry.register('application/vnd.com.example', converter);
 				return registry.lookup('application/vnd.com.example').then(function (c) {
 					assert.same(converter, c);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should reject for non-existant converter': function () {
 				return registry.lookup('application/bogus').then(
@@ -53,7 +53,7 @@
 				registry.register('application/vnd.com.example', converter);
 				return child.lookup('application/vnd.com.example').then(function (c) {
 					assert.same(converter, c);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should override parent registries when registering in a child': function () {
 				var child, converterParent, converterChild;
@@ -64,7 +64,7 @@
 				child.register('application/vnd.com.example', converterChild);
 				return child.lookup('application/vnd.com.example').then(function (c) {
 					assert.same(converterChild, c);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should not have any side effects in a parent registry from a child': function () {
 				var child, converterParent, converterChild;
@@ -75,28 +75,28 @@
 				child.register('application/vnd.com.example', converterChild);
 				return registry.lookup('application/vnd.com.example').then(function (c) {
 					assert.same(converterParent, c);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should ignore charset in mime resolution': function () {
 				var converter = {};
 				registry.register('application/vnd.com.example', converter);
 				return registry.lookup('application/vnd.com.example;charset=utf-8').then(function (c) {
 					assert.same(converter, c);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should ignore suffix in mime resolution': function () {
 				var converter = {};
 				registry.register('application/vnd.com.example', converter);
 				return registry.lookup('application/vnd.com.example+foo').then(function (c) {
 					assert.same(converter, c);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should fallback to suffix if mime type is not resolved': function () {
 				var converter = {};
 				registry.register('+foo', converter);
 				return registry.lookup('application/vnd.com.example+foo').then(function (c) {
 					assert.same(converter, c);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should invoke the delegate mime converter': function () {
 				var converter = {

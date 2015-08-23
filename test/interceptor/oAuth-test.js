@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -33,7 +33,7 @@
 
 				return client({}).then(function (response) {
 					assert.equals('bearer abcxyz', response.request.headers.Authorization);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should use implicit flow to authenticate the request': function () {
 				var client, windowStrategy, windowStrategyClose, oAuthCallbackName;
@@ -67,7 +67,7 @@
 				return client({}).then(function (response) {
 					assert.equals('bearer abcxyz', response.request.headers.Authorization);
 					assert.called(windowStrategyClose);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, oAuth({ token: 'bearer abcxyz' }).skip());

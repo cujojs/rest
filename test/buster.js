@@ -1,11 +1,15 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
  */
 
 var config = exports;
+
+if (typeof Promise === 'undefined') {
+	require('when/es6-shim/Promise');
+}
 
 config['rest:node'] = {
 	environment: 'node',
@@ -37,6 +41,7 @@ config['rest:browser'] = {
 		{ path: '/wait', backend: 'http://example.com' }
 	],
 	libs: [
+		'node_modules/when/es6-shim/Promise.js',
 		'test/curl-config.js',
 		'node_modules/curl/src/curl.js'
 	],

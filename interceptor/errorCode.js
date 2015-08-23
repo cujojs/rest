@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -10,10 +10,10 @@
 
 	define(function (require) {
 
-		var interceptor, when;
+		var interceptor, Promise;
 
 		interceptor = require('../interceptor');
-		when = require('when');
+		Promise = require('../util/Promise');
 
 		/**
 		 * Rejects the response promise based on the status code.
@@ -33,7 +33,7 @@
 			},
 			response: function (response, config) {
 				if (response.status && response.status.code >= config.code) {
-					return when.reject(response);
+					return Promise.reject(response);
 				}
 				return response;
 			}

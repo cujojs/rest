@@ -1,12 +1,12 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Jeremy Grelle
  * @author Scott Andrews
  */
 
-(function (buster, define, nextTick) {
+(function (buster, define) {
 	'use strict';
 
 	var assert, fail, failOnThrow;
@@ -17,7 +17,7 @@
 
 	define('rest/interceptor/retry-test', function (require) {
 
-		var interceptor, retry, rest, when, clock;
+		var interceptor, retry, rest, when;
 
 		interceptor = require('rest/interceptor');
 		retry = require('rest/interceptor/retry');
@@ -38,42 +38,31 @@
 				);
 				return client({}).then(function (response) {
 				    assert.equals(200, response.status.code);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
-			'should accept custom config': {
-				setUp: function () {
-					clock = this.useFakeTimers();
-				},
-				tearDown: function () {
-					clock.restore();
-				},
-				'': function () {
-					var count = 0, client, start, config;
+			'should accept custom config': function () {
+				var count = 0, client, start, config;
 
-					start = new Date().getTime();
-					config = { initial: 10, multiplier: 3, max: 20 };
-					client = retry(
-						function (request) {
-							var tick = Math.min(Math.pow(config.multiplier, count) * config.initial, config.max);
-							count += 1;
-							if (count === 4) {
-								return { request: request, status: { code: 200 } };
-							} else {
-								nextTick(function () {
-									clock.tick(tick);
-								}, 0);
-								return when.reject({ request: request, error: 'Thrown by fake client' });
-							}
-						},
-						config
-					);
+				start = new Date().getTime();
+				config = { initial: 10, multiplier: 3, max: 20 };
+				client = retry(
+					function (request) {
+						count += 1;
+						if (count === 4) {
+							return { request: request, status: { code: 200 } };
+						} else {
+							return when.reject({ request: request, error: 'Thrown by fake client' });
+						}
+					},
+					config
+				);
 
-					return client({}).then(function (response) {
-						assert.equals(200, response.status.code);
-					    assert.equals(count, 4);
-						assert.equals(50, new Date().getTime() - start);
-					}).otherwise(fail);
-				}
+				return client({}).then(function (response) {
+					var durration = Date.now() - start;
+					assert.equals(200, response.status.code);
+					assert.equals(count, 4);
+					assert(50 <= durration);
+				})['catch'](fail);
 			},
 			'should not make propagate request if marked as canceled': function () {
 				var parent, client, request, response;
@@ -114,16 +103,6 @@
 		factory(function (moduleId) {
 			return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId);
 		});
-	},
-	// retain access to the native setTimeout function
-	(function (setTimeout) {
-		return typeof process !== 'undefined' && process.nextTick ?
-			function (work) {
-				process.nextTick(work);
-			} :
-			function (work) {
-				setTimeout(work, 0);
-			};
-	}(setTimeout))
+	}
 	// Boilerplate for AMD and Node
 ));

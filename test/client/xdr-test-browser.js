@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 the original author or authors
+ * Copyright 2013-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -34,7 +34,7 @@
 						assert.same(request, response.request);
 						assert.equals(response.request.method, 'GET');
 						refute(request.canceled);
-					}).otherwise(fail);
+					})['catch'](fail);
 				},
 				'should make an explicit GET': function () {
 					var request = { path: flickrUrl, method: 'GET' };
@@ -46,7 +46,7 @@
 						assert.equals(response.request.method, 'GET');
 						assert.equals(xdr.responseText, response.entity);
 						refute(request.canceled);
-					}).otherwise(fail);
+					})['catch'](fail);
 				},
 				'should make a POST with an entity': function () {
 					var request = { path: flickrUrl, entity: 'hello world' };
@@ -58,7 +58,7 @@
 						assert.equals(response.request.method, 'POST');
 						assert.equals(xdr.responseText, response.entity);
 						refute(request.canceled);
-					}).otherwise(fail);
+					})['catch'](fail);
 				},
 				'should make an explicit POST with an entity': function () {
 					var request = { path: flickrUrl, entity: 'hello world', method: 'POST' };
@@ -70,7 +70,7 @@
 						assert.equals(response.request.method, 'POST');
 						assert.equals(xdr.responseText, response.entity);
 						refute(request.canceled);
-					}).otherwise(fail);
+					})['catch'](fail);
 				},
 				'should abort the request if canceled': function () {
 					// TDOO find an endpoint that takes a bit to respond, cached files may return synchronously
@@ -112,7 +112,7 @@
 					return client(flickrUrl).then(function (response) {
 						assert.equals(response.url, flickrUrl);
 						assert.same(flickrUrl, response.request.path);
-					}).otherwise(fail);
+					})['catch'](fail);
 				},
 				'should return a ResponsePromise': function () {
 					assert.isFunction(client().entity);

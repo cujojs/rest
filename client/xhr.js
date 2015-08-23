@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -10,9 +10,8 @@
 
 	define(function (require) {
 
-		var when, UrlBuilder, normalizeHeaderName, responsePromise, client, headerSplitRE;
+		var UrlBuilder, normalizeHeaderName, responsePromise, client, headerSplitRE;
 
-		when = require('when');
 		UrlBuilder = require('../UrlBuilder');
 		normalizeHeaderName = require('../util/normalizeHeaderName');
 		responsePromise = require('../util/responsePromise');

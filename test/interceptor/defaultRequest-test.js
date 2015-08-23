@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 the original author or authors
+ * Copyright 2013-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -32,38 +32,38 @@
 					assert.same(client, response.request.originator);
 					delete response.request.originator;
 					assert.equals({}, response.request);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should default the method': function () {
 				var client = defaultRequest(defaultClient, { method: 'PUT' });
 				return client({}).then(function (response) {
 					assert.equals('PUT', response.request.method);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should not overwrite the method': function () {
 				var client = defaultRequest(defaultClient, { method: 'PUT' });
 				return client({ method: 'GET' }).then(function (response) {
 					assert.equals('GET', response.request.method);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should default the path': function () {
 				var client = defaultRequest(defaultClient, { path: '/foo' });
 				return client({}).then(function (response) {
 					assert.equals('/foo', response.request.path);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should not overwrite the path': function () {
 				var client = defaultRequest(defaultClient, { path: '/foo' });
 				return client({ path: '/bar' }).then(function (response) {
 					assert.equals('/bar', response.request.path);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should default params': function () {
 				var client = defaultRequest(defaultClient, { params: { foo: 'bar', bool: 'false' } });
 				return client({}).then(function (response) {
 					assert.equals('bar', response.request.params.foo);
 					assert.equals('false', response.request.params.bool);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should merge params': function () {
 				var client = defaultRequest(defaultClient, { params: { foo: 'bar', bool: 'false' } });
@@ -71,14 +71,14 @@
 					assert.equals('bar', response.request.params.foo);
 					assert.equals('true', response.request.params.bool);
 					assert.equals('bloop', response.request.params.bleep);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should default headers': function () {
 				var client = defaultRequest(defaultClient, { headers: { foo: 'bar', bool: 'false' } });
 				return client({}).then(function (response) {
 					assert.equals('bar', response.request.headers.foo);
 					assert.equals('false', response.request.headers.bool);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should merge headers': function () {
 				var client = defaultRequest(defaultClient, { headers: { foo: 'bar', bool: 'false' } });
@@ -86,19 +86,19 @@
 					assert.equals('bar', response.request.headers.foo);
 					assert.equals('true', response.request.headers.bool);
 					assert.equals('bloop', response.request.headers.bleep);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should default the entity': function () {
 				var client = defaultRequest(defaultClient, { entity: Math });
 				return client({}).then(function (response) {
 					assert.same(Math, response.request.entity);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should not overwrite the entity': function () {
 				var client = defaultRequest(defaultClient, { entity: Math });
 				return client({ entity: Date }).then(function (response) {
 					assert.same(Date, response.request.entity);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should have the default client as the parent by default': function () {
 				assert.same(rest, defaultRequest().skip());

@@ -33,7 +33,7 @@
 					var client = xhr(defaultClient);
 					return client({}).then(function (response) {
 						assert.same(XMLHttpRequest, response.request.engine);
-					}).otherwise(fail);
+					})['catch'](fail);
 				}
 			},
 			'should fall back to an ActiveX XHR-like object as the engine': {
@@ -44,7 +44,7 @@
 					return client({}).then(function (response) {
 						refute.same(XMLHttpRequest, response.request.engine);
 						assert.same('function', typeof response.request.engine);
-					}).otherwise(fail);
+					})['catch'](fail);
 				}
 			},
 			'should have the default client as the parent by default': function () {

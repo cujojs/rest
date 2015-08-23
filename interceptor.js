@@ -10,13 +10,13 @@
 
 	define(function (require) {
 
-		var defaultClient, mixin, responsePromise, client, when;
+		var defaultClient, mixin, responsePromise, client, Promise;
 
 		defaultClient = require('./client/default');
 		mixin = require('./util/mixin');
 		responsePromise = require('./util/responsePromise');
 		client = require('./client');
-		when = require('when');
+		Promise = require('./util/Promise');
 
 		/**
 		 * Interceptors have the ability to intercept the request and/org response
@@ -47,15 +47,6 @@
 
 		function defaultResponseHandler(response /*, config, meta */) {
 			return response;
-		}
-
-		function race(promisesOrValues) {
-			// this function is different than when.any as the first to reject also wins
-			return when.promise(function (resolve, reject) {
-				promisesOrValues.forEach(function (promiseOrValue) {
-					when(promiseOrValue, resolve, reject);
-				});
-			});
 		}
 
 		/**
@@ -97,7 +88,8 @@
 			successResponseHandler = handlers.success || handlers.response || defaultResponseHandler;
 			errorResponseHandler   = handlers.error   || function () {
 				// Propagate the rejection, with the result of the handler
-				return when((handlers.response || defaultResponseHandler).apply(this, arguments), when.reject, when.reject);
+				return Promise.resolve((handlers.response || defaultResponseHandler).apply(this, arguments))
+					.then(Promise.reject.bind(Promise));
 			};
 
 			return function (target, config) {
@@ -130,9 +122,8 @@
 								// normalize request, must be last
 								request = request.request;
 							}
-							response = response || when(request, function (request) {
-								return when(
-									next(request),
+							response = response || Promise.resolve(request).then(function (request) {
+								return Promise.resolve(next(request)).then(
 									function (response) {
 										return successResponseHandler.call(context, response, config, meta);
 									},
@@ -141,10 +132,10 @@
 									}
 								);
 							});
-							return abort ? race([response, abort]) : response;
+							return abort ? Promise.race([response, abort]) : response;
 						},
 						function (error) {
-							return when.reject({ request: request, error: error });
+							return Promise.reject({ request: request, error: error });
 						}
 					);
 				}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Jeremy Grelle
@@ -77,7 +77,7 @@
 					assert.equals('text/plain', response.headers['Content-Type']);
 					assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
 					refute(request.canceled);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should make an explicit GET': function () {
 				var request = { path: 'http://localhost:8080/', method: 'GET' };
@@ -88,7 +88,7 @@
 					assert.equals(response.entity, 'hello world');
 					assert.equals(response.status.code, 200);
 					refute(request.canceled);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should make a POST with an entity': function () {
 				var request = { path: 'http://localhost:8080/', entity: 'echo' };
@@ -101,7 +101,7 @@
 					assert.equals('text/plain', response.headers['Content-Type']);
 					assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
 					refute(request.canceled);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should make an explicit POST with an entity': function () {
 				var request = { path: 'http://localhost:8080/', entity: 'echo', method: 'POST' };
@@ -111,7 +111,7 @@
 					assert.equals(response.request.method, 'POST');
 					assert.equals(response.entity, 'echo');
 					refute(request.canceled);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should make an https request': function () {
 				var request = {
@@ -130,7 +130,7 @@
 					assert.equals('text/plain', response.headers['Content-Type']);
 					assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
 					refute(request.canceled);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should abort the request if canceled': function () {
 				var request, response;
@@ -171,7 +171,7 @@
 				return client('http://localhost:8080/').then(function (response) {
 					assert.equals(response.url, 'http://localhost:8080/');
 					assert.same('http://localhost:8080/', response.request.path);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should be the default client': function () {
 				rest.resetDefaultClient();
@@ -182,7 +182,7 @@
 			},
 			'should return a ResponsePromise': function () {
 				var response = client();
-				response.otherwise(function () {});
+				response['catch'](function () {});
 				assert.isFunction(response.entity);
 			}
 		});

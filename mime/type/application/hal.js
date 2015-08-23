@@ -10,14 +10,13 @@
 
 	define(function (require) {
 
-		var pathPrefix, template, find, lazyPromise, responsePromise, when;
+		var pathPrefix, template, find, lazyPromise, responsePromise;
 
 		pathPrefix = require('../../../interceptor/pathPrefix');
 		template = require('../../../interceptor/template');
 		find = require('../../../util/find');
 		lazyPromise = require('../../../util/lazyPromise');
 		responsePromise = require('../../../util/responsePromise');
-		when = require('when');
 
 		function defineProperty(obj, name, value) {
 			Object.defineProperty(obj, name, {
@@ -70,56 +69,55 @@
 				}
 
 				return opts.registry.lookup(opts.mime.suffix).then(function (converter) {
-					return when(converter.read(str, opts)).then(function (root) {
-
-						find.findProperties(root, '_embedded', function (embedded, resource, name) {
-							Object.keys(embedded).forEach(function (relationship) {
-								if (relationship in resource) { return; }
-								var related = responsePromise({
-									entity: embedded[relationship]
-								});
-								defineProperty(resource, relationship, related);
+					return converter.read(str, opts);
+				}).then(function (root) {
+					find.findProperties(root, '_embedded', function (embedded, resource, name) {
+						Object.keys(embedded).forEach(function (relationship) {
+							if (relationship in resource) { return; }
+							var related = responsePromise({
+								entity: embedded[relationship]
 							});
-							defineProperty(resource, name, embedded);
+							defineProperty(resource, relationship, related);
 						});
-						find.findProperties(root, '_links', function (links, resource, name) {
-							Object.keys(links).forEach(function (relationship) {
-								var link = links[relationship];
-								if (relationship in resource) { return; }
-								defineProperty(resource, relationship, responsePromise.make(lazyPromise(function () {
-									if (link.deprecation) { deprecationWarning(relationship, link.deprecation); }
-									if (link.templated === true) {
-										return template(client)({ path: link.href });
-									}
-									return client({ path: link.href });
-								})));
-							});
-							defineProperty(resource, name, links);
-							defineProperty(resource, 'clientFor', function (relationship, clientOverride) {
-								var link = links[relationship];
-								if (!link) {
-									throw new Error('Unknown relationship: ' + relationship);
-								}
+						defineProperty(resource, name, embedded);
+					});
+					find.findProperties(root, '_links', function (links, resource, name) {
+						Object.keys(links).forEach(function (relationship) {
+							var link = links[relationship];
+							if (relationship in resource) { return; }
+							defineProperty(resource, relationship, responsePromise.make(lazyPromise(function () {
 								if (link.deprecation) { deprecationWarning(relationship, link.deprecation); }
 								if (link.templated === true) {
-									return template(
-										clientOverride || client,
-										{ template: link.href }
-									);
+									return template(client)({ path: link.href });
 								}
-								return pathPrefix(
-									clientOverride || client,
-									{ prefix: link.href }
-								);
-							});
-							defineProperty(resource, 'requestFor', function (relationship, request, clientOverride) {
-								var client = this.clientFor(relationship, clientOverride);
-								return client(request);
-							});
+								return client({ path: link.href });
+							})));
 						});
-
-						return root;
+						defineProperty(resource, name, links);
+						defineProperty(resource, 'clientFor', function (relationship, clientOverride) {
+							var link = links[relationship];
+							if (!link) {
+								throw new Error('Unknown relationship: ' + relationship);
+							}
+							if (link.deprecation) { deprecationWarning(relationship, link.deprecation); }
+							if (link.templated === true) {
+								return template(
+									clientOverride || client,
+									{ template: link.href }
+								);
+							}
+							return pathPrefix(
+								clientOverride || client,
+								{ prefix: link.href }
+							);
+						});
+						defineProperty(resource, 'requestFor', function (relationship, request, clientOverride) {
+							var client = this.clientFor(relationship, clientOverride);
+							return client(request);
+						});
 					});
+
+					return root;
 				});
 
 			},

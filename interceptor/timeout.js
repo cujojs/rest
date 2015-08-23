@@ -11,10 +11,10 @@
 
 	define(function (require) {
 
-		var interceptor, when;
+		var interceptor, Promise;
 
 		interceptor = require('../interceptor');
-		when = require('when');
+		Promise = require('../util/Promise');
 
 		/**
 		 * Cancels a request if it takes longer then the timeout value.
@@ -32,15 +32,17 @@
 				return config;
 			},
 			request: function (request, config) {
-				var timeout, abortTrigger, transient;
+				var timeout, abort, triggerAbort, transient;
 				timeout = 'timeout' in request ? request.timeout : config.timeout;
 				transient = 'transient' in request ? request.transient : config.transient;
 				if (timeout <= 0) {
 					return request;
 				}
-				abortTrigger = when.defer();
+				abort = new Promise(function (resolve, reject) {
+					triggerAbort = reject;
+				});
 				this.timeout = setTimeout(function () {
-					abortTrigger.reject({ request: request, error: 'timeout' });
+					triggerAbort({ request: request, error: 'timeout' });
 					if (request.cancel) {
 						request.cancel();
 						if (transient) {
@@ -52,7 +54,7 @@
 						request.canceled = true;
 					}
 				}, timeout);
-				return new interceptor.ComplexRequest({ request: request, abort: abortTrigger.promise });
+				return new interceptor.ComplexRequest({ request: request, abort: abort });
 			},
 			response: function (response) {
 				if (this.timeout) {

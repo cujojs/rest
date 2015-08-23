@@ -40,17 +40,17 @@
 				'should use the XDomainRequest engine for cross domain requests': function () {
 					return client({ path: 'http://example.com' }).then(function (response) {
 						assert.same('xdr', response.client);
-					}).otherwise(fail);
+					})['catch'](fail);
 				},
 				'should use the standard engine for same domain requests, with absolute paths': function () {
 					return client({ path: window.location.toString() }).then(function (response) {
 						assert.same('default', response.client);
-					}).otherwise(fail);
+					})['catch'](fail);
 				},
 				'should use the standard engine for same domain requests, with relative paths': function () {
 					return client({ path: '/' }).then(function (response) {
 						assert.same('default', response.client);
-					}).otherwise(fail);
+					})['catch'](fail);
 				}
 			},
 			'for non-XDomainRequest enabled browsers': {
@@ -58,7 +58,7 @@
 				'should always use the standard engine': function () {
 					return client({ path: 'http://example.com' }).then(function (response) {
 						assert.same('default', response.client);
-					}).otherwise(fail);
+					})['catch'](fail);
 				}
 			},
 			'should have the default client as the parent by default': function () {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors
+ * Copyright 2013-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -10,9 +10,8 @@
 
 	define(function (require) {
 
-		var when;
-
-		when = require('when');
+		var Promise = require('./Promise'),
+			attempt = require('./attempt');
 
 		/**
 		 * Create a promise whose work is started only when a handler is registered.
@@ -25,19 +24,22 @@
 		 * @returns {Promise} a lazy promise
 		 */
 		function lazyPromise(work) {
-			var defer, started, resolver, promise, then;
+			var started, resolver, promise, then;
 
-			defer = when.defer();
 			started = false;
 
-			resolver = defer.resolver;
-			promise = defer.promise;
+			promise = new Promise(function (resolve, reject) {
+				resolver = {
+					resolve: resolve,
+					reject: reject
+				};
+			});
 			then = promise.then;
 
 			promise.then = function () {
 				if (!started) {
 					started = true;
-					when.attempt(work).then(resolver.resolve, resolver.reject);
+					attempt(work).then(resolver.resolve, resolver.reject);
 				}
 				return then.apply(promise, arguments);
 			};

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -10,10 +10,10 @@
 
 	define(function (require) {
 
-		var mime, when, registry;
+		var mime, Promise, registry;
 
 		mime = require('../mime');
-		when = require('when');
+		Promise = require('../util/Promise');
 
 		function Registry(mimes) {
 
@@ -41,7 +41,7 @@
 					return mimes[parsed.suffix];
 				}
 
-				return when.reject(new Error('Unable to locate converter for mime "' + parsed.raw + '"'));
+				return Promise.reject(new Error('Unable to locate converter for mime "' + parsed.raw + '"'));
 			};
 
 			/**
@@ -78,7 +78,7 @@
 			 * @return a promise for the converter
 			 */
 			this.register = function register(type, converter) {
-				mimes[type] = when(converter);
+				mimes[type] = Promise.resolve(converter);
 				return mimes[type];
 			};
 

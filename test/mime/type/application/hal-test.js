@@ -46,34 +46,34 @@
 			'should stringify json': function () {
 				return hal.write({ foo: 'bar' }, { mime: halMime, registry: registry }).then(function (resource) {
 					assert.equals('{"foo":"bar"}', resource);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should read json': function () {
 				return hal.read('{"foo":"bar"}', { mime: halMime, registry: registry }).then(function (resource) {
 					assert.equals({ foo: 'bar' }, resource);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should place embedded relationships on the host object': function () {
 				return hal.read(JSON.stringify({ _embedded: { prop: 'embed' } }), { mime: halMime, registry: registry }).then(function (resource) {
 					return resource.prop.entity().then(function (prop) {
 						assert.same(prop, 'embed');
 					});
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should not overwrite a property on the host oject with an embedded relationship': function () {
 				return hal.read(JSON.stringify({ prop: 'host', _embedded: { prop: 'embed' } }), { mime: halMime, registry: registry }).then(function (resource) {
 					assert.same(resource.prop, 'host');
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should place linked relationships on the host object': function () {
 				return hal.read(JSON.stringify({ _links: { prop: { href: '/' } } }), { mime: halMime, registry: registry }).then(function (resource) {
 					assert.isFunction(resource.prop.entity);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should not overwrite a property on the host oject with a linked relationship': function () {
 				return hal.read(JSON.stringify({ prop: 'host', _links: { prop: { href: '/' } } }), { mime: halMime, registry: registry }).then(function (resource) {
 					assert.same(resource.prop, 'host');
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should fetch a linked resource': function () {
 				var client = mime(function client(request) {
@@ -87,7 +87,7 @@
 					return response.entity.child.then(function (response) {
 						assert.same('/resource', response.request.path);
 					});
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should fetch a templated linked resource': function () {
 				var client = mime(function client(request) {
@@ -101,7 +101,7 @@
 					return response.entity.child.then(function (response) {
 						assert.same('/resource', response.request.path);
 					});
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should make a request for a relationship': function () {
 				return hal.read(JSON.stringify({ _links: { prop: { href: '/' } } }), { mime: halMime, registry: registry, client: client }).then(function (resource) {
@@ -109,14 +109,14 @@
 						assert.same('/', response.request.path);
 						assert.same('delete', response.request.method);
 					});
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should get a client for a relationship': function () {
 				return hal.read(JSON.stringify({ _links: { prop: { href: '/' } } }), { mime: halMime, registry: registry, client: client }).then(function (resource) {
 					return resource.clientFor('prop')().then(function (response) {
 						assert.same('/', response.request.path);
 					});
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should get a client for a templated relationship': function () {
 				return hal.read(JSON.stringify({ _links: { prop: { templated: true, href: '/{?lang}' } } }), { mime: halMime, registry: registry, client: client }).then(function (resource) {
@@ -124,7 +124,7 @@
 						assert.same('/?lang=en-us', response.request.path);
 						refute('params' in response.request);
 					});
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should safely warn when accessing a deprecated relationship': {
 				'': function () {
@@ -141,7 +141,7 @@
 							assert.calledWith(console.warn, 'Relationship \'prop\' is deprecated, see http://example.com/deprecation');
 							refute.called(console.log);
 						});
-					}).otherwise(fail);
+					})['catch'](fail);
 
 				},
 				'falling back to log if warn is not availble': function () {
@@ -156,7 +156,7 @@
 							assert.same('/', response.request.path);
 							assert.calledWith(console.log, 'Relationship \'prop\' is deprecated, see http://example.com/deprecation');
 						});
-					}).otherwise(fail);
+					})['catch'](fail);
 				},
 				'doing nothing if the console is unavailable': function () {
 					var console;
@@ -167,7 +167,7 @@
 						return resource.clientFor('prop')().then(function (response) {
 							assert.same('/', response.request.path);
 						});
-					}).otherwise(fail);
+					})['catch'](fail);
 				}
 			},
 			'should be able to write read entities': function () {

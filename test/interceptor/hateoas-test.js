@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -65,7 +65,7 @@
 					assert('next' in response.links);
 					assert.same(response.links.nextLink.href, 'http://example.com/TheBook/chapter4');
 					assert.same(response.links.nextLink.title, 'next chapter');
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should parse compound header links': function () {
 				var client, entity, headers;
@@ -81,7 +81,7 @@
 					assert('next' in response.links);
 					assert.same(response.links.nextLink.href, 'http://example.com/TheBook/chapter4');
 					assert.same(response.links.nextLink.title, 'next chapter');
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'should gracefully recover from maleformed header links': function () {
 				var client, entity, headers;
@@ -92,7 +92,7 @@
 
 				return client().then(function (response) {
 					assert.same(entity, response.entity);
-				}).otherwise(fail);
+				})['catch'](fail);
 			},
 			'': {
 				requiresSupportFor: { 'Object.defineProperty': supports['Object.defineProperty'] },
@@ -109,7 +109,7 @@
 					return client().then(function (response) {
 						assert.same(parent, response.entity._links.parentLink);
 						assert.same(self, response.entity._links.selfLink);
-					}).otherwise(fail);
+					})['catch'](fail);
 				},
 				'should parse links in the entity into the entity': function () {
 					var client, body, parent, self;
@@ -123,7 +123,7 @@
 					return client().then(function (response) {
 						assert.same(parent, response.entity.parentLink);
 						assert.same(self, response.entity.selfLink);
-					}).otherwise(fail);
+					})['catch'](fail);
 				},
 				'should create a client for the related resource': function () {
 					var client, body, parent, self;
@@ -139,7 +139,7 @@
 						return parentClient().then(function (response) {
 							assert.same(parent.href, response.request.path);
 						});
-					}).otherwise(fail);
+					})['catch'](fail);
 				},
 				'should return the same value for multiple property accesses': function () {
 					var client, body;
@@ -151,7 +151,7 @@
 
 					return client().then(function (response) {
 						assert.same(response.entity.self, response.entity.self);
-					}).otherwise(fail);
+					})['catch'](fail);
 				}
 			},
 			'should fetch a related resource': {
@@ -173,7 +173,7 @@
 							assert.same('/resource', response.request.path);
 							assert.same('/resource', response.entity.selfLink.href);
 						});
-					}).otherwise(fail);
+					})['catch'](fail);
 				}
 			},
 			'should have the default client as the parent by default': function () {

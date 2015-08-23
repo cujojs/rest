@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors
+ * Copyright 2012-2015 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -10,12 +10,12 @@
 
 	define(function (require) {
 
-		var interceptor, UrlBuilder, pubsub, when;
+		var interceptor, UrlBuilder, pubsub, Promise;
 
 		interceptor = require('../interceptor');
 		UrlBuilder = require('../UrlBuilder');
 		pubsub = require('../util/pubsub');
-		when = require('when');
+		Promise = require('../util/Promise');
 
 		function defaultOAuthCallback(hash) {
 			var params, queryString, regex, m;
@@ -44,7 +44,7 @@
 		function authorize(config) {
 			var state, url, dismissWindow;
 
-			return when.promise(function (resolve) {
+			return new Promise(function (resolve) {
 
 				state = Math.random() * new Date().getTime();
 				url = new UrlBuilder(config.authorizationUrlBase).build({
@@ -131,7 +131,7 @@
 					});
 				}
 				else if (response.status.code === 403) {
-					return when.reject(response);
+					return Promise.reject(response);
 				}
 
 				return response;
