@@ -25,9 +25,9 @@
 
 		buster.testCase('rest/client/jsonp', {
 			'should make a cross origin request': function () {
-				var request = { path: 'http://ip.jsontest.com/' };
+				var request = { path: 'https://api.github.com/' };
 				return client(request).then(function (response) {
-					assert(response.entity.ip);
+					assert(response.entity.data);
 					assert.same(request, response.request);
 					refute(request.canceled);
 					refute(response.raw.parentNode);
@@ -96,7 +96,7 @@
 				);
 			},
 			'should normalize a string to a request object': function () {
-				var request = 'http://ip.jsontest.com/';
+				var request = 'https://api.github.com/';
 				return client(request).then(function (response) {
 					assert.same(request, response.request.path);
 				}).otherwise(fail);
