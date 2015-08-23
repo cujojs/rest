@@ -146,7 +146,7 @@ Tested environments:
 - Firefox (stable, ESR, should work in earlier versions)
 - Edge
 - IE (6-11)
-- Safari (5-9, iOS 4-9.2, should work in earlier versions)
+- Safari (6-9, iOS 5-9.2, should work in earlier versions)
 - Android (4.0-5.1, should work in earlier versions)
 - Opera (11, 12, should work in earlier versions)
 
@@ -235,6 +235,10 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 
 Change Log
 ----------
+
+.next
+- MAJOR: Drop hard when.js dependency in favor of ES6 Promise API. See https://github.com/cujojs/when/blob/master/docs/es6-promise-shim.md to use when.js as an ES6 Promise polyfill.
+- Update tested browsers. Removing Safari 5 and iOS 4.3 (no longer supported by SauceLabs). Adding Firefox 38 ESR and Andriod 5.1.
 
 1.3.2
 - fix to correctly url encode character codes 0-15, such as \n

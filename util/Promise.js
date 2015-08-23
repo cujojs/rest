@@ -12,6 +12,10 @@
 
 	define(function (/* require */) {
 
+		if (typeof Promise !== 'function' && console && console.log) {
+			console.log('An ES6 Promise implementation is required to use rest.js. See https://github.com/cujojs/when/blob/master/docs/es6-promise-shim.md for using when.js as a Promise polyfill.');
+		}
+
 		return Promise;
 
 	});
