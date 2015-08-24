@@ -122,12 +122,12 @@
 					});
 				}
 			},
-			response: function (response, config, client) {
+			response: function (response, config, meta) {
 				if (response.status.code === 401) {
 					// token probably expired, reauthorize
 					return authorize(config).then(function (authorization) {
 						config.token = authorization;
-						return client(response.request);
+						return meta.client(response.request);
 					});
 				}
 				else if (response.status.code === 403) {
