@@ -427,7 +427,9 @@ client({ path: '1' }).then(function (response) {
 
 `rest/interceptor/template` ([src](../interceptor/template.js))
 
-The template interceptor fully defines the request URI by expending the path as a URI Template with the request params. Params defined by the tempalte that are missing as well as additional params are ignored. After the template interceptor, the request.params are removed from the request object, as the URI is fully defined.
+The template interceptor fully defines the request URI by expending the path as a URI Template with the request params. Params defined by the template that are missing as well as additional params are ignored. After the template interceptor, the request.params are removed from the request object, as the URI is fully defined.
+
+The [URI Template RFC](https://tools.ietf.org/html/rfc6570) has many good examples that fully demonstrate its power and potential.
 
 Note: primitive templating is provided by `rest/UrlBuilder`, however, its behavior is non-standard and less powerful.
 
