@@ -84,6 +84,10 @@ Interceptors and clients may define additional properties.
   <td>the underlying request object, like XMLHttpRequest in a browser</td>
 </tr>
 <tr>
+  <td>url</td>
+  <td>the actual URL requested. In some cases this value may be misleading, such as after a redirect in a browser. The value reported is URL for the request before the redirect.</td>
+</tr>
+<tr>
   <td>status.code</td>
   <td>status code of the response (i.e. 200, 404)</td>
 </tr>

@@ -66,6 +66,7 @@
 			'should make a GET by default': function () {
 				var request = { path: 'http://localhost:8080/' };
 				return client(request).then(function (response) {
+					assert.equals(response.url, 'http://localhost:8080/');
 					assert(response.raw.request instanceof http.ClientRequest);
 					// assert(response.raw.response instanceof http.ClientResponse);
 					assert(response.raw.response);
@@ -81,6 +82,7 @@
 			'should make an explicit GET': function () {
 				var request = { path: 'http://localhost:8080/', method: 'GET' };
 				return client(request).then(function (response) {
+					assert.equals(response.url, 'http://localhost:8080/');
 					assert.same(request, response.request);
 					assert.equals(response.request.method, 'GET');
 					assert.equals(response.entity, 'hello world');
@@ -91,6 +93,7 @@
 			'should make a POST with an entity': function () {
 				var request = { path: 'http://localhost:8080/', entity: 'echo' };
 				return client(request).then(function (response) {
+					assert.equals(response.url, 'http://localhost:8080/');
 					assert.same(request, response.request);
 					assert.equals(response.request.method, 'POST');
 					assert.equals(response.entity, 'echo');
@@ -103,6 +106,7 @@
 			'should make an explicit POST with an entity': function () {
 				var request = { path: 'http://localhost:8080/', entity: 'echo', method: 'POST' };
 				return client(request).then(function (response) {
+					assert.equals(response.url, 'http://localhost:8080/');
 					assert.same(request, response.request);
 					assert.equals(response.request.method, 'POST');
 					assert.equals(response.entity, 'echo');
@@ -115,6 +119,7 @@
 					mixin: { rejectUnauthorized: false }
 				};
 				return client(request).then(function (response) {
+					assert.equals(response.url, 'https://localhost:8443/');
 					assert(response.raw.request instanceof http.ClientRequest);
 					// assert(response.raw.response instanceof http.ClientResponse);
 					assert(response.raw.response);
@@ -132,7 +137,8 @@
 				request = { path: 'http://localhost:8080/' };
 				client(request).then(
 					fail,
-					failOnThrow(function (/* response */) {
+					failOnThrow(function (response) {
+						assert.equals(response.url, 'http://localhost:8080/');
 						assert(request.canceled);
 					})
 				);
@@ -145,6 +151,7 @@
 				return client(request).then(
 					fail,
 					failOnThrow(function (response) {
+						assert.equals(response.url, 'http://localhost:1234');
 						assert(response.error);
 					})
 				);
@@ -162,6 +169,7 @@
 			},
 			'should normalize a string to a request object': function () {
 				return client('http://localhost:8080/').then(function (response) {
+					assert.equals(response.url, 'http://localhost:8080/');
 					assert.same('http://localhost:8080/', response.request.path);
 				}).otherwise(fail);
 			},

@@ -34,6 +34,7 @@
 					var xhr, name;
 					xhr = response.raw;
 					assert.same(request, response.request);
+					assert.equals(response.url, '/');
 					assert.equals(response.request.method, 'GET');
 					assert.equals(xhr.responseText, response.entity);
 					assert.equals(xhr.status, response.status.code);
@@ -51,6 +52,7 @@
 					var xhr, name;
 					xhr = response.raw;
 					assert.same(request, response.request);
+					assert.equals(response.url, '/');
 					assert.equals(response.request.method, 'GET');
 					assert.equals(xhr.responseText, response.entity);
 					assert.equals(xhr.status, response.status.code);
@@ -68,6 +70,7 @@
 					var xhr, name;
 					xhr = response.raw;
 					assert.same(request, response.request);
+					assert.equals(response.url, '/');
 					assert.equals(response.request.method, 'POST');
 					assert.equals(xhr.responseText, response.entity);
 					assert.equals(xhr.status, response.status.code);
@@ -85,6 +88,7 @@
 					var xhr, name;
 					xhr = response.raw;
 					assert.same(request, response.request);
+					assert.equals(response.url, '/');
 					assert.equals(response.request.method, 'POST');
 					assert.equals(xhr.responseText, response.entity);
 					assert.equals(xhr.status, response.status.code);
@@ -145,6 +149,7 @@
 				return client(request).then(
 					fail,
 					failOnThrow(function (response) {
+						assert.equals(response.url, 'http://localhost:1234');
 						assert.same('loaderror', response.error);
 					})
 				);
@@ -168,6 +173,7 @@
 						fail,
 						failOnThrow(function (response) {
 							assert.same(request, response.request);
+							assert.equals(response.url, '/');
 							assert.same('xhr-not-available', response.error);
 						})
 					);
@@ -175,6 +181,7 @@
 			},
 			'should normalize a string to a request object': function () {
 				return client('/').then(function (response) {
+					assert.equals(response.url, '/');
 					assert.same('/', response.request.path);
 				}).otherwise(fail);
 			},

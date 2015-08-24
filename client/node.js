@@ -72,7 +72,7 @@
 					return;
 				}
 
-				url = new UrlBuilder(request.path || '', request.params).build();
+				url = response.url = new UrlBuilder(request.path || '', request.params).build();
 				client = url.match(httpsExp) ? https : http;
 
 				options = mixin({}, request.mixin, parser.parse(url));

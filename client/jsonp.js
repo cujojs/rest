@@ -107,7 +107,7 @@
 				script = document.createElement('script');
 				script.type = 'text/javascript';
 				script.async = true;
-				script.src = new UrlBuilder(request.path, request.params).build(callbackParams);
+				script.src = response.url = new UrlBuilder(request.path, request.params).build(callbackParams);
 
 				function handlePossibleError() {
 					if (typeof global[callbackName] === 'function') {
