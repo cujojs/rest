@@ -10,12 +10,13 @@
 
 	define(function (require) {
 
-		var UrlBuilder, normalizeHeaderName, responsePromise, client, headerSplitRE;
+		var UrlBuilder, normalizeHeaderName, responsePromise, client, headerSplitRE, ie;
 
 		UrlBuilder = require('../UrlBuilder');
 		normalizeHeaderName = require('../util/normalizeHeaderName');
 		responsePromise = require('../util/responsePromise');
 		client = require('../client');
+		ie = require('../util/ie');
 
 		// according to the spec, the line break is '\r\n', but doesn't hold true in practice
 		headerSplitRE = /[\r|\n]+/;
@@ -129,6 +130,10 @@
 							};
 							response.headers = parseHeaders(client.getAllResponseHeaders());
 							response.entity = client.responseText;
+
+							if (ie === 9 && response.status.code === 1223) {
+								response.status.code = 204;
+							}
 
 							if (response.status.code > 0) {
 								// check status code as readystatechange fires before error event
