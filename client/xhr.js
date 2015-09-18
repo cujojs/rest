@@ -10,13 +10,12 @@
 
 	define(function (require) {
 
-		var UrlBuilder, normalizeHeaderName, responsePromise, client, headerSplitRE, ie;
+		var UrlBuilder, normalizeHeaderName, responsePromise, client, headerSplitRE;
 
 		UrlBuilder = require('../UrlBuilder');
 		normalizeHeaderName = require('../util/normalizeHeaderName');
 		responsePromise = require('../util/responsePromise');
 		client = require('../client');
-		ie = require('../util/ie');
 
 		// according to the spec, the line break is '\r\n', but doesn't hold true in practice
 		headerSplitRE = /[\r|\n]+/;
@@ -131,7 +130,11 @@
 							response.headers = parseHeaders(client.getAllResponseHeaders());
 							response.entity = client.responseText;
 
-							if (ie === 9 && response.status.code === 1223) {
+							/**
+							 * #125 -- Sometimes IE8-9 uses 1223 instead of 204
+							 * http://stackoverflow.com/questions/10046972/msie-returns-status-code-of-1223-for-ajax-request
+							 */
+							if (response.status.code === 1223) {
 								response.status.code = 204;
 							}
 
