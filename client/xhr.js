@@ -130,10 +130,8 @@
 							response.headers = parseHeaders(client.getAllResponseHeaders());
 							response.entity = client.responseText;
 
-							/**
-							 * #125 -- Sometimes IE8-9 uses 1223 instead of 204
-							 * http://stackoverflow.com/questions/10046972/msie-returns-status-code-of-1223-for-ajax-request
-							 */
+							// #125 -- Sometimes IE8-9 uses 1223 instead of 204
+							// http://stackoverflow.com/questions/10046972/msie-returns-status-code-of-1223-for-ajax-request
 							if (response.status.code === 1223) {
 								response.status.code = 204;
 							}
