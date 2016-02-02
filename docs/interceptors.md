@@ -985,7 +985,7 @@ Request handlers are functions that accept the request object and interceptor co
 interceptor = require('rest/interceptor');
 noopInterceptor = interceptor({
     init: function (config) {
-        // do studd with the config
+        // do stuff with the config
         return config;
     },
     request: function (request, config, meta) {
