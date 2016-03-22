@@ -236,6 +236,7 @@ Change Log
 ----------
 
 .next
+- fix to correctly url encode character codes 0-15, such as \n
 - Update tested browsers. Removing Safari 5 and iOS 4.3 (no longer supported by SauceLabs). Adding Firefox 38 ESR and Andriod 5.1.
 
 1.3.1
