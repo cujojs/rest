@@ -41,7 +41,9 @@
 					assert.equals(xhr.statusText, response.status.text);
 					for (name in response.headers) {
 						/*jshint forin:false */
-						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
+						if (!Array.isArray(response.headers[name])) {
+							assert.equals(xhr.getResponseHeader(name), response.headers[name]);
+						}
 					}
 					refute(request.canceled);
 				}).otherwise(fail);
@@ -59,7 +61,9 @@
 					assert.equals(xhr.statusText, response.status.text);
 					for (name in response.headers) {
 						/*jshint forin:false */
-						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
+						if (!Array.isArray(response.headers[name])) {
+							assert.equals(xhr.getResponseHeader(name), response.headers[name]);
+						}
 					}
 					refute(request.canceled);
 				}).otherwise(fail);
@@ -77,7 +81,9 @@
 					assert.equals(xhr.statusText, response.status.text);
 					for (name in response.headers) {
 						/*jshint forin:false */
-						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
+						if (!Array.isArray(response.headers[name])) {
+							assert.equals(xhr.getResponseHeader(name), response.headers[name]);
+						}
 					}
 					refute(request.canceled);
 				}).otherwise(fail);
@@ -95,7 +101,9 @@
 					assert.equals(xhr.statusText, response.status.text);
 					for (name in response.headers) {
 						/*jshint forin:false */
-						assert.equals(xhr.getResponseHeader(name), response.headers[name]);
+						if (!Array.isArray(response.headers[name])) {
+							assert.equals(xhr.getResponseHeader(name), response.headers[name]);
+						}
 					}
 					refute(request.canceled);
 				}).otherwise(fail);

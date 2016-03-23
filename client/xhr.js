@@ -83,16 +83,16 @@
 					return;
 				}
 
-				XMLHttpRequest = request.engine || global.XMLHttpRequest;
-				if (!XMLHttpRequest) {
-					reject({ request: request, error: 'xhr-not-available' });
-					return;
-				}
-
 				entity = request.entity;
 				request.method = request.method || (entity ? 'POST' : 'GET');
 				method = request.method;
 				url = response.url = new UrlBuilder(request.path || '', request.params).build();
+
+				XMLHttpRequest = request.engine || global.XMLHttpRequest;
+				if (!XMLHttpRequest) {
+					reject({ request: request, url: url, error: 'xhr-not-available' });
+					return;
+				}
 
 				try {
 					client = response.raw = new XMLHttpRequest();

@@ -15,6 +15,12 @@ matrix:
   include:
     - node_js: '0.10'
       script: 'npm run-script lint'
+    - node_js: '5'
+      script: 'npm run-script buster'
+    - node_js: '4'
+      script: 'npm run-script buster'
+    - node_js: '0.12'
+      script: 'npm run-script buster'
     - node_js: '0.10'
       script: 'npm run-script buster'
     - node_js: '0.8'
@@ -52,7 +58,7 @@ matrix:
     - node_js: '0.10'
       script: 'npm run-script sauceme'
       env:
-        - BROWSERS=test/browsers/firefox-3.6.json
+        - BROWSERS=test/browsers/edge.json
     - node_js: '0.10'
       script: 'npm run-script sauceme'
       env:
@@ -80,6 +86,10 @@ matrix:
     - node_js: '0.10'
       script: 'npm run-script sauceme'
       env:
+        - BROWSERS=test/browsers/safari-9.json
+    - node_js: '0.10'
+      script: 'npm run-script sauceme'
+      env:
         - BROWSERS=test/browsers/safari-8.json
     - node_js: '0.10'
       script: 'npm run-script sauceme'
@@ -100,15 +110,15 @@ matrix:
     - node_js: '0.10'
       script: 'npm run-script sauceme'
       env:
-        - BROWSERS=test/browsers/ios-8.1.json
+        - BROWSERS=test/browsers/ios-9.2.json
+    - node_js: '0.10'
+      script: 'npm run-script sauceme'
+      env:
+        - BROWSERS=test/browsers/ios-8.4.json
     - node_js: '0.10'
       script: 'npm run-script sauceme'
       env:
         - BROWSERS=test/browsers/ios-8.json
-    - node_js: '0.10'
-      script: 'npm run-script sauceme'
-      env:
-        - BROWSERS=test/browsers/ios-7.1.json
     - node_js: '0.10'
       script: 'npm run-script sauceme'
       env:
