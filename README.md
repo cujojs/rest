@@ -236,7 +236,7 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
-.next
+1.3.2
 - fix to correctly url encode character codes 0-15, such as \n
 - include requested URL on response object
 - Update tested environments. Removing Firefox 3.6, Safari 5 and iOS 4.3 (no longer supported by SauceLabs). Adding Node 5, Node 4, Edge, Firefox 38 ESR, iOS 9.2, iOS 8.4 and Android 5.1.
