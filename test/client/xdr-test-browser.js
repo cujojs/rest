@@ -30,6 +30,7 @@
 				'should make a GET by default': function () {
 					var request = { path: flickrUrl };
 					return client(request).then(function (response) {
+						assert.equals(response.url, flickrUrl);
 						assert.same(request, response.request);
 						assert.equals(response.request.method, 'GET');
 						refute(request.canceled);
@@ -40,6 +41,7 @@
 					return client(request).then(function (response) {
 						var xdr;
 						xdr = response.raw;
+						assert.equals(response.url, flickrUrl);
 						assert.same(request, response.request);
 						assert.equals(response.request.method, 'GET');
 						assert.equals(xdr.responseText, response.entity);
@@ -51,6 +53,7 @@
 					return client(request).then(function (response) {
 						var xdr;
 						xdr = response.raw;
+						assert.equals(response.url, flickrUrl);
 						assert.same(request, response.request);
 						assert.equals(response.request.method, 'POST');
 						assert.equals(xdr.responseText, response.entity);
@@ -62,6 +65,7 @@
 					return client(request).then(function (response) {
 						var xdr;
 						xdr = response.raw;
+						assert.equals(response.url, flickrUrl);
 						assert.same(request, response.request);
 						assert.equals(response.request.method, 'POST');
 						assert.equals(xdr.responseText, response.entity);
@@ -75,6 +79,7 @@
 					response = client(request).then(
 						fail,
 						failOnThrow(function (response) {
+							assert.match(response.url, flickrUrl + '&q=');
 							assert(response.request.canceled);
 						})
 					);
@@ -87,6 +92,7 @@
 					return client(request).then(
 						fail,
 						failOnThrow(function (response) {
+							assert.equals(response.url, 'http://localhost:1234');
 							assert.same('loaderror', response.error);
 						})
 					);
@@ -104,6 +110,7 @@
 				},
 				'should normalize a string to a request object': function () {
 					return client(flickrUrl).then(function (response) {
+						assert.equals(response.url, flickrUrl);
 						assert.same(flickrUrl, response.request.path);
 					}).otherwise(fail);
 				},

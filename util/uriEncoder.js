@@ -52,7 +52,8 @@
 				}
 				var code = myChar.charCodeAt(0);
 				if (code <= 127) {
-					return '%' + code.toString(16).toUpperCase();
+					var encoded = code.toString(16).toUpperCase();
+					return '%' + (encoded.length % 2 === 1 ? '0' : '') + encoded;
 				}
 				else {
 					return encodeURIComponent(myChar).toUpperCase();

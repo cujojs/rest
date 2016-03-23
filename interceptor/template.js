@@ -21,6 +21,8 @@
 		 *
 		 * Params are removed from the request object, as they have been consumed.
 		 *
+		 * @see https://tools.ietf.org/html/rfc6570
+		 *
 		 * @param {Client} [client] client to wrap
 		 * @param {Object} [config.params] default param values
 		 * @param {string} [config.template] default template

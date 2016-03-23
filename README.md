@@ -141,12 +141,13 @@ Our goal is to work in every major JavaScript environment; Node.js and major bro
 If your preferred environment is not supported, please let us know. Some features may not be available in all environments.
 
 Tested environments:
-- Node.js (0.6, 0.8. 0.10)
+- Node.js (0.6, 0.8. 0.10, 4, 5)
 - Chrome (stable)
 - Firefox (stable, ESR, should work in earlier versions)
+- Edge
 - IE (6-11)
-- Safari (5-8, iOS 4-8.1, should work in earlier versions)
-- Android (4.0-5.0, should work in earlier versions)
+- Safari (5-9, iOS 4-9.2, should work in earlier versions)
+- Android (4.0-5.1, should work in earlier versions)
 - Opera (11, 12, should work in earlier versions)
 
 Specific browser test are provided by [Travis CI](https://travis-ci.org/cujojs/rest) and [Sauce Labs' Open Sauce Plan](https://saucelabs.com/opensource). You can see [specific browser test results](https://saucelabs.com/u/cujojs-rest), although odds are they do not reference this specific release/branch/commit.
@@ -234,6 +235,11 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 
 Change Log
 ----------
+
+1.3.2
+- fix to correctly url encode character codes 0-15, such as \n
+- include requested URL on response object
+- Update tested environments. Removing Firefox 3.6, Safari 5 and iOS 4.3 (no longer supported by SauceLabs). Adding Node 5, Node 4, Edge, Firefox 38 ESR, iOS 9.2, iOS 8.4 and Android 5.1.
 
 1.3.1
 - fix to allow numbers and boolean values as parameters to URI Template expansion.
