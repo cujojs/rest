@@ -82,6 +82,21 @@
 					assert.equals('foo', response.request.headers.Accept);
 				})['catch'](fail);
 			},
+			'should not set the requests Content-Type header if there is no entity': function () {
+				var client;
+
+				client = mime(
+					function (request) {
+						return { request: request, headers: {} };
+					},
+					{ mime: 'application/json' }
+				);
+
+				return client({}).then(function (response) {
+					assert.equals(undefined, response.request.entity);
+					assert.equals(undefined, response.request.headers['Content-Type']);
+				})['catch'](fail);
+			},
 			'should error the request if unable to find a converter for the desired mime': function () {
 				var client, request;
 

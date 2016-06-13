@@ -59,12 +59,14 @@
 				var type, headers;
 
 				headers = request.headers || (request.headers = {});
-				type = mime.parse(headers['Content-Type'] = headers['Content-Type'] || config.mime || 'text/plain');
+				type = mime.parse(headers['Content-Type'] || config.mime || 'text/plain');
 				headers.Accept = headers.Accept || config.accept || type.raw + ', application/json;q=0.8, text/plain;q=0.5, */*;q=0.2';
 
 				if (!('entity' in request)) {
 					return request;
 				}
+
+				headers['Content-Type'] = type.raw;
 
 				return config.registry.lookup(type)['catch'](function () {
 					// failed to resolve converter
