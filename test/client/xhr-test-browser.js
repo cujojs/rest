@@ -181,7 +181,6 @@
 						fail,
 						failOnThrow(function (response) {
 							assert.same(request, response.request);
-							assert.equals(response.url, '/');
 							assert.same('xhr-not-available', response.error);
 						})
 					);
