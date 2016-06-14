@@ -25,7 +25,7 @@
 				var start = Date.now();
 				return delay(20, 'hello').then(
 					function (value) {
-						assert(Date.now() - start > 20);
+						assert(Date.now() - start >= 20);
 						assert.equals('hello', value);
 					},
 					fail
@@ -41,7 +41,7 @@
 				});
 				return delay(20, trigger).then(
 					function (value) {
-						assert(Date.now() - start > 40);
+						assert(Date.now() - start >= 40);
 						assert.equals('world', value);
 					},
 					fail
