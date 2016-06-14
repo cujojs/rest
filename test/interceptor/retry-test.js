@@ -61,7 +61,7 @@
 					var durration = Date.now() - start;
 					assert.equals(200, response.status.code);
 					assert.equals(count, 4);
-					assert(50 <= durration);
+					assert(40 <= durration);
 				})['catch'](fail);
 			},
 			'should not make propagate request if marked as canceled': function () {
