@@ -12,9 +12,10 @@
 
 	define(function (require) {
 
-		var mixin, origin, urlRE, absoluteUrlRE, fullyQualifiedUrlRE;
+		var mixin, xWWWFormURLEncoder, origin, urlRE, absoluteUrlRE, fullyQualifiedUrlRE;
 
 		mixin = require('./util/mixin');
+		xWWWFormURLEncoder = require('./mime/type/application/x-www-form-urlencoded');
 
 		urlRE = /([a-z][a-z0-9\+\-\.]*:)\/\/([^@]+@)?(([^:\/]+)(:([0-9]+))?)?(\/[^?#]*)?(\?[^#]*)?(#\S*)?/i;
 		absoluteUrlRE = /^([a-z][a-z0-9\-\+\.]*:\/\/|\/)/i;
@@ -32,7 +33,7 @@
 		 */
 		function buildUrl(template, params) {
 			// internal builder to convert template with params.
-			var url, name, queryStringParams, re;
+			var url, name, queryStringParams, queryString, re;
 
 			url = template;
 			queryStringParams = {};
@@ -48,13 +49,11 @@
 						queryStringParams[name] = params[name];
 					}
 				}
-				for (name in queryStringParams) {
+
+				queryString = xWWWFormURLEncoder.write(queryStringParams);
+				if (queryString) {
 					url += url.indexOf('?') === -1 ? '?' : '&';
-					url += encodeURIComponent(name);
-					if (queryStringParams[name] !== null && queryStringParams[name] !== undefined) {
-						url += '=';
-						url += encodeURIComponent(queryStringParams[name]);
-					}
+					url += queryString;
 				}
 			}
 			return url;

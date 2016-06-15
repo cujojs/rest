@@ -33,11 +33,14 @@
 			'should add only name of unused param to query string if value is undefined': function () {
 				assert.equals('/foo/bar?foo', new UrlBuilder('/foo/bar', { foo: undef }).build());
 			},
+			'should add named param multiple times to query string if value is an array': function () {
+				assert.equals('/foo/bar?foo=bar&foo=baz', new UrlBuilder('/foo/bar', { foo: ['bar', 'baz'] }).build());
+			},
 			'should add unused params to an exsisting query string': function () {
 				assert.equals('/foo/bar?bleep=bloop', new UrlBuilder('/foo/{foo}', { foo: 'bar', bleep: 'bloop' }).build());
 			},
 			'should url encode all param names and values added to the url': function () {
-				assert.equals('/foo/bar?bl%25eep=bl%20oop', new UrlBuilder('/foo/bar', { 'bl%eep': 'bl oop' }).build());
+				assert.equals('/foo/bar?bl%25eep=bl+oop', new UrlBuilder('/foo/bar', { 'bl%eep': 'bl oop' }).build());
 			},
 			'should return a built url for string concatination': function () {
 				assert.equals('/prefix/foo/bar', '/prefix' + new UrlBuilder('/foo/bar'));
