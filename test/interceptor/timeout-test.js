@@ -63,7 +63,7 @@
 			},
 			'should resolve if client responds before timeout': function () {
 				var client, request;
-				client = timeout(delayedClient, { timeout: 100 });
+				client = timeout(delayedClient, { timeout: 200 });
 				request = {};
 				return client(request).then(function (response) {
 					assert.same(request, response.request);

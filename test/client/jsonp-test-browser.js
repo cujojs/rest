@@ -25,10 +25,10 @@
 
 		buster.testCase('rest/client/jsonp', {
 			'should make a cross origin request': function () {
-				var request = { path: 'https://api.github.com/' };
+				var request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'jsonp' } };
 				return client(request).then(function (response) {
-					assert.match(response.url, 'https://api.github.com/?callback=');
-					assert(response.entity.data);
+					assert.match(response.url, 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0');
+					assert(Object.keys(response.entity).length);
 					assert.same(request, response.request);
 					refute(request.canceled);
 					refute(response.raw.parentNode);
@@ -102,9 +102,9 @@
 				);
 			},
 			'should normalize a string to a request object': function () {
-				var request = 'https://api.github.com/';
+				var request = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=jsonp';
 				return client(request).then(function (response) {
-					assert.match(response.url, 'https://api.github.com/?callback=');
+					assert.match(response.url, 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=jsonp&callback=');
 					assert.same(request, response.request.path);
 				})['catch'](fail);
 			},
