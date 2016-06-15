@@ -25,9 +25,9 @@
 
 		buster.testCase('rest/client/jsonp', {
 			'should make a cross origin request': function () {
-				var request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'jsonp' } };
+				var request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=jsonp' };
 				return client(request).then(function (response) {
-					assert.match(response.url, 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0');
+					assert.match(response.url, 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=jsonp&callback=');
 					assert(Object.keys(response.entity).length);
 					assert.same(request, response.request);
 					refute(request.canceled);
@@ -46,7 +46,7 @@
 			},
 			'should abort the request if canceled': function () {
 				var request, response;
-				request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'jsonp' } };
+				request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=jsonp' };
 				response = client(request).then(
 					fail,
 					failOnThrow(function (response) {
@@ -71,7 +71,7 @@
 				);
 			},
 			'should not make a request that has already been canceled': function () {
-				var request = { canceled: true, path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', params: { q: 'html5' } };
+				var request = { canceled: true, path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=html5' };
 				return client(request).then(
 					fail,
 					failOnThrow(function (response) {

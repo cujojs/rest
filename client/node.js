@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors
+ * Copyright 2012-2016 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Jeremy Grelle
@@ -11,12 +11,11 @@
 
 	define(function (require) {
 
-		var parser, http, https, UrlBuilder, mixin, normalizeHeaderName, responsePromise, client, httpsExp;
+		var parser, http, https, mixin, normalizeHeaderName, responsePromise, client, httpsExp;
 
 		parser = envRequire('url');
 		http = envRequire('http');
 		https = envRequire('https');
-		UrlBuilder = require('../UrlBuilder');
 		mixin = require('../util/mixin');
 		normalizeHeaderName = require('../util/normalizeHeaderName');
 		responsePromise = require('../util/responsePromise');
@@ -71,7 +70,7 @@
 					return;
 				}
 
-				url = response.url = new UrlBuilder(request.path || '', request.params).build();
+				url = response.url = request.path || '';
 				client = url.match(httpsExp) ? https : http;
 
 				options = mixin({}, request.mixin, parser.parse(url));

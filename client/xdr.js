@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2015 the original author or authors
+ * Copyright 2013-2016 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -10,9 +10,8 @@
 
 	define(function (require) {
 
-		var UrlBuilder, responsePromise, client;
+		var responsePromise, client;
 
-		UrlBuilder = require('../UrlBuilder');
 		responsePromise = require('../util/responsePromise');
 		client = require('../client');
 
@@ -35,7 +34,7 @@
 				entity = request.entity;
 				request.method = request.method || (entity ? 'POST' : 'GET');
 				method = request.method;
-				url = response.url = new UrlBuilder(request.path || '', request.params).build();
+				url = response.url = request.path || '';
 
 				try {
 					client.open(method, url);

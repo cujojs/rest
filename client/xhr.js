@@ -10,9 +10,8 @@
 
 	define(function (require) {
 
-		var UrlBuilder, normalizeHeaderName, responsePromise, client, headerSplitRE;
+		var normalizeHeaderName, responsePromise, client, headerSplitRE;
 
-		UrlBuilder = require('../UrlBuilder');
 		normalizeHeaderName = require('../util/normalizeHeaderName');
 		responsePromise = require('../util/responsePromise');
 		client = require('../client');
@@ -85,7 +84,7 @@
 				entity = request.entity;
 				request.method = request.method || (entity ? 'POST' : 'GET');
 				method = request.method;
-				url = response.url = new UrlBuilder(request.path || '', request.params).build();
+				url = response.url = request.path || '';
 
 				XMLHttpRequest = request.engine || global.XMLHttpRequest;
 				if (!XMLHttpRequest) {

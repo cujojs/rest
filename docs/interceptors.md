@@ -9,6 +9,7 @@
         - [MIME Interceptor](#module-rest/interceptor/mime)
         - [Path Prefix Interceptor](#module-rest/interceptor/pathPrefix)
         - [Template Interceptor](#module-rest/interceptor/template)
+        - [Params Interceptor](#module-rest/interceptor/params)
     - [Authentication Interceptors](#interceptor-provided-auth)
         - [Basic Auth Interceptor](#module-rest/interceptor/basicAuth)
         - [OAuth Interceptor](#module-rest/interceptor/oAuth)
@@ -431,8 +432,6 @@ The template interceptor fully defines the request URI by expending the path as 
 
 The [URI Template RFC](https://tools.ietf.org/html/rfc6570) has many good examples that fully demonstrate its power and potential.
 
-Note: primitive templating is provided by `rest/UrlBuilder`, however, its behavior is non-standard and less powerful.
-
 **Phases**
 
 - request
@@ -466,6 +465,49 @@ Note: primitive templating is provided by `rest/UrlBuilder`, however, its behavi
 client = rest.wrap(template, { params: { lang: 'en-us' } });
 client({ path: '/dictionary{/term:1,term}{?lang}', params: { term: 'hypermedia' } }).then(function (response) {
     assert.same('/dictionary/h/hypermedia?lang=en-us', response.request.path);
+    assert.same(undefined, response.request.params);
+});
+```
+
+
+<a name="module-rest/interceptor/params"></a>
+#### Params Interceptor
+
+`rest/interceptor/template` ([src](../interceptor/params.js))
+
+**Deprecated**
+
+The params interceptor expands token in the path defined by the param named wrapped in curly braces. Unbound params are appended to the end of the path as a query string. The params object is consumed by this interceptor.
+
+The [Template Interceptor](#module-rest/interceptor/template) is recommended instead of this interceptor. It is more powerful and flexible.
+
+**Phases**
+
+- request
+
+**Configuration**
+
+<table>
+<tr>
+<th>Property</th>
+<th>Required?</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>params</td>
+<td>optional</td>
+<td><em>empty object</em></td>
+<td>default params to be combined with request.params</td>
+</tr>
+</table>
+
+**Example**
+
+```javascript
+client = rest.wrap(params, { params: { lang: 'en-us' } });
+client({ path: '/dictionary/{term}', params: { term: 'hypermedia' } }).then(function (response) {
+    assert.same('/dictionary/hypermedia?lang=en-us', response.request.path);
     assert.same(undefined, response.request.params);
 });
 ```

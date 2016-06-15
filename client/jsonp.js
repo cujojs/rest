@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors
+ * Copyright 2012-2016 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -106,7 +106,7 @@
 				script = document.createElement('script');
 				script.type = 'text/javascript';
 				script.async = true;
-				script.src = response.url = new UrlBuilder(request.path, request.params).build(callbackParams);
+				script.src = response.url = new UrlBuilder(request.path, callbackParams).build();
 
 				function handlePossibleError() {
 					if (typeof global[callbackName] === 'function') {
