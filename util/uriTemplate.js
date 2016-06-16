@@ -56,7 +56,7 @@
 					return result;
 				}
 				if (Array.isArray(value)) {
-					result += value.reduce(function (result, value) {
+					result = value.reduce(function (result, value) {
 						if (result.length) {
 							result += opts.explode ? operation.separator : ',';
 							if (operation.named && opts.explode) {
@@ -73,10 +73,10 @@
 						}
 						result += operation.encoder(value);
 						return result;
-					}, '');
+					}, result);
 				}
 				else if (typeof value === 'object') {
-					result += Object.keys(value).reduce(function (result, name) {
+					result = Object.keys(value).reduce(function (result, name) {
 						if (result.length) {
 							result += opts.explode ? operation.separator : ',';
 						}
@@ -91,7 +91,7 @@
 						result += opts.explode ? '=' : ',';
 						result += operation.encoder(value[name]);
 						return result;
-					}, '');
+					}, result);
 				}
 				else {
 					value = String(value);

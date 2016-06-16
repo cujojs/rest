@@ -53,6 +53,11 @@
 					assert.same(uriTemplate.expand('{?count}', params), '?count=one,two,three');
 					assert.same(uriTemplate.expand('{?count*}', params), '?count=one&count=two&count=three');
 					assert.same(uriTemplate.expand('{&count*}', params), '&count=one&count=two&count=three');
+
+					assert.same(uriTemplate.expand('{?count*,who}', params), '?count=one&count=two&count=three&who=fred');
+					assert.same(uriTemplate.expand('{?who,count*}', params), '?who=fred&count=one&count=two&count=three');
+					assert.same(uriTemplate.expand('{?keys*,who}', params), '?semi=%3B&dot=.&comma=%2C&who=fred');
+					assert.same(uriTemplate.expand('{?who,keys*}', params), '?who=fred&semi=%3B&dot=.&comma=%2C');
 				},
 				'3.2.2. Simple String Expansion: {var}': function () {
 					assert.same(uriTemplate.expand('{var}', params), 'value');

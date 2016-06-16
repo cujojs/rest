@@ -228,7 +228,7 @@ Please see CONTRIBUTING.md for details on how to contribute to this project.
 Copyright
 ---------
 
-Copyright 2012-2015 the original author or authors
+Copyright 2012-2016 the original author or authors
 
 rest.js is made available under the MIT license.  See LICENSE.txt for details.
 
@@ -239,6 +239,7 @@ Change Log
 .next
 - MAJOR: Drop hard when.js dependency in favor of ES6 Promise API. See https://github.com/cujojs/when/blob/master/docs/es6-promise-shim.md to use when.js as an ES6 Promise polyfill.
 - Moved path token param replacement from the clients into the `rest/interceptor/params` interceptor, which is also deprecated. The behavior will no longer be applied automatically in the client. Using the `rest/interceptor/template` interceptor is far more powerful and preferred.
+- Fixed an issue preventing uri template exploded values from expanding correctly.
 - Update tested browsers. Removing Safari 5 and iOS 4.3 (no longer supported by SauceLabs). Adding Firefox 38 ESR and Andriod 5.1.
 - include requested URL on response object
 - mime interceptor no longer sets Content-Type on requests without an entity
