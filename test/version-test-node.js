@@ -13,7 +13,7 @@
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
-	define('rest/version-test', function (require) {
+	define('rest-test/version-test', function (require) {
 
 		var bowerJson, packageJson;
 

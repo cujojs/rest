@@ -1,29 +1,20 @@
 /*
- * Copyright 2012 the original author or authors
+ * Copyright 2012-2016 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
  */
 
-(function (define) {
-	'use strict';
+'use strict';
 
-	define(function (/* require */) {
+module.exports = {
 
-		return {
+	read: function (str) {
+		return str;
+	},
 
-			read: function (str) {
-				return str;
-			},
+	write: function (obj) {
+		return obj.toString();
+	}
 
-			write: function (obj) {
-				return obj.toString();
-			}
-
-		};
-	});
-
-}(
-	typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
-	// Boilerplate for AMD and Node
-));
+};

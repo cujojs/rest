@@ -13,12 +13,12 @@
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
-	define('rest/mime/type/multipart/form-data-test', function (require) {
+	define('rest-test/mime/type/multipart/form-data-test', function (require) {
 
 		var encoder = require('rest/mime/type/multipart/form-data');
 
 		buster.testCase('rest/mime/type/multipart/form-data', {
-			requiresSupportFor: { FormData: 'FormData' in window },
+			requiresSupportFor: { FormData: typeof FormData !== 'undefined' },
 			'should pass a FormData object through unmodified': function () {
 				var data = new FormData();
 				assert.same(encoder.write(data), data);

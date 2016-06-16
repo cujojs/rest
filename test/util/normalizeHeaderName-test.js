@@ -13,7 +13,7 @@
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
-	define('rest/util/normalizeHeaderName-test', function (require) {
+	define('rest-test/util/normalizeHeaderName-test', function (require) {
 
 		var normalizeHeaderName = require('rest/util/normalizeHeaderName');
 

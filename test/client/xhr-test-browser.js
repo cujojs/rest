@@ -15,7 +15,7 @@
 	fail = buster.assertions.fail;
 	failOnThrow = buster.assertions.failOnThrow;
 
-	define('rest/client/xhr-test', function (require) {
+	define('rest-test/client/xhr-test', function (require) {
 
 		var xhr, rest, xhrFallback, when, client;
 

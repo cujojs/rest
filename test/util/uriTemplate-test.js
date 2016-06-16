@@ -13,7 +13,7 @@
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
-	define('rest/util/uriTemplate-test', function (require) {
+	define('rest-test/util/uriTemplate-test', function (require) {
 
 		var uriTemplate, params;
 

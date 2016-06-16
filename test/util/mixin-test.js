@@ -13,7 +13,7 @@
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
-	define('rest/util/mixin-test', function (require) {
+	define('rest-test/util/mixin-test', function (require) {
 
 		var mixin = require('rest/util/mixin');
 

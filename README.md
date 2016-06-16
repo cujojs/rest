@@ -172,7 +172,7 @@ From source:
 
     $ npm install
 
-rest.js is designed to run in a browser environment, utilizing [AMD modules](https://github.com/amdjs/amdjs-api/wiki/AMD), or within [Node.js](http://nodejs.org/) as CommonJS modules. Any module loader capable of loading either AMD or CommonJS modules should be able to load rest.js. cujoJS [curl.js](https://github.com/cujojs/curl) is actively tested.
+rest.js is designed to run in a browser environment, utilizing a CommonJS Module loader, a transformer such as Browserify or WebPack, or within [Node.js](http://nodejs.org/). Any module loader capable of loading either CommonJS modules should be able to load rest.js. cujoJS [curl.js](https://github.com/cujojs/curl) is actively tested with the cjsm11 loader.
 
 An ECMAScript 5 compatible environment is assumed.  Older browsers, ::cough:: IE, that do not support ES5 natively can be shimmed.  Any shim should work, although we test with cujoJS [poly.js](https://github.com/cujojs/poly)
 
@@ -236,6 +236,7 @@ Change Log
 
 .next
 - MAJOR: Drop hard when.js dependency in favor of ES6 Promise API. See https://github.com/cujojs/when/blob/master/docs/es6-promise-shim.md to use when.js as an ES6 Promise polyfill.
+- MAJOR: AMD modules are no longer supported. curl.js users can use the cjsm11 loader, see https://github.com/cujojs/curl#api-at-a-glance
 - Moved path token param replacement from the clients into the `rest/interceptor/params` interceptor, which is also deprecated. The behavior will no longer be applied automatically in the client. Using the `rest/interceptor/template` interceptor is far more powerful and preferred.
 - Fixed an issue preventing uri template exploded values from expanding correctly.
 - Update tested environments:

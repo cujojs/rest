@@ -2,7 +2,7 @@
 	"name": "rest",
 	"version": "2.0.0-pre",
 	"main": "./browser.js",
-	"moduleType": ["amd", "node"],
+	"moduleType": ["node"],
 	"dependencies": {},
 	"ignore": [
 		"docs",

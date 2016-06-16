@@ -15,12 +15,11 @@
 	fail = buster.assertions.fail;
 	failOnThrow = buster.assertions.failOnThrow;
 
-	define('rest/util/responsePromise-test', function (require) {
+	define('rest-test/util/responsePromise-test', function (require) {
 
-		var responsePromise, Promise, mime, when, client;
+		var responsePromise, mime, when, client;
 
 		responsePromise = require('rest/util/responsePromise');
-		Promise = require('rest/util/Promise');
 		mime = require('rest/interceptor/mime');
 		when = require('when');
 

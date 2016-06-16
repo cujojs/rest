@@ -15,7 +15,7 @@
 	fail = buster.assertions.fail;
 	failOnThrow = buster.assertions.failOnThrow;
 
-	define('rest/interceptor/mime-test', function (require) {
+	define('rest-test/interceptor/mime-test', function (require) {
 
 		var mime, registry, rest, when;
 

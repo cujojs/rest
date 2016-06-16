@@ -15,7 +15,7 @@
 	fail = buster.assertions.fail;
 	failOnThrow = buster.assertions.failOnThrow;
 
-	define('rest/client/xdr-test', function (require) {
+	define('rest-test/client/xdr-test', function (require) {
 
 		var client, rest, flickrUrl;
 
@@ -26,7 +26,7 @@
 
 		buster.testCase('rest/client/xdr', {
 			'': {
-				requiresSupportFor: { xdr: 'XDomainRequest' in window },
+				requiresSupportFor: { xdr: typeof XDomainRequest !== 'undefined' },
 				'should make a GET by default': function () {
 					var request = { path: flickrUrl };
 					return client(request).then(function (response) {

@@ -14,7 +14,7 @@
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
 
-	define('rest/interceptor/hateoas-test', function (require) {
+	define('rest-test/interceptor/hateoas-test', function (require) {
 
 		var hateoas, rest, when, supports;
 

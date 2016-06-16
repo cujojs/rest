@@ -13,7 +13,7 @@
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
-	define('rest/util/find-test', function (require) {
+	define('rest-test/util/find-test', function (require) {
 
 		var find = require('rest/util/find');
 

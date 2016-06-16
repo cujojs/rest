@@ -14,7 +14,7 @@
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
 
-	define('rest/interceptor/defaultRequest-test', function (require) {
+	define('rest-test/interceptor/defaultRequest-test', function (require) {
 
 		var defaultRequest, rest;
 

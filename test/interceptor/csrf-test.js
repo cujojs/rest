@@ -14,7 +14,7 @@
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
 
-	define('rest/interceptor/csrf-test', function (require) {
+	define('rest-test/interceptor/csrf-test', function (require) {
 
 		var csrf, rest;
 

@@ -15,7 +15,7 @@
 	fail = buster.assertions.fail;
 	failOnThrow = buster.assertions.failOnThrow;
 
-	define('rest/util/attempt-test', function (require) {
+	define('rest-test/util/attempt-test', function (require) {
 
 		var attempt = require('rest/util/attempt');
 

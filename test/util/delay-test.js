@@ -15,10 +15,9 @@
 	fail = buster.assertions.fail;
 	failOnThrow = buster.assertions.failOnThrow;
 
-	define('rest/util/delay-test', function (require) {
+	define('rest-test/util/delay-test', function (require) {
 
 		var delay = require('rest/util/delay');
-		var Promise = require('rest/util/Promise');
 
 		buster.testCase('rest/util/delay', {
 			'delays promise resolution': function () {

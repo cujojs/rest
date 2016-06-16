@@ -13,7 +13,7 @@
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
-	define('rest/util/pubsub-test', function (require) {
+	define('rest-test/util/pubsub-test', function (require) {
 
 		var pubsub = require('rest/util/pubsub');
 

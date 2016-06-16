@@ -14,7 +14,7 @@
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
 
-	define('rest/interceptor/ie/xhr-test', function (require) {
+	define('rest-test/interceptor/ie/xhr-test', function (require) {
 
 		var xhr, rest;
 

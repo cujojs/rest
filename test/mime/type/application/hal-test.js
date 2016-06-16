@@ -14,7 +14,7 @@
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
 
-	define('rest/mime/type/application/hal-test', function (require) {
+	define('rest-test/mime/type/application/hal-test', function (require) {
 
 		var hal, mime, registry, halMime, supports;
 

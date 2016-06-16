@@ -14,7 +14,7 @@
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
 
-	define('rest/interceptor/jsonp-test', function (require) {
+	define('rest-test/interceptor/jsonp-test', function (require) {
 
 		var jsonp, rest, jsonpClient, when;
 

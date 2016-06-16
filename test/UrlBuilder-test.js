@@ -13,7 +13,7 @@
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
-	define('rest/UrlBuilder-test', function (require) {
+	define('rest-test/UrlBuilder-test', function (require) {
 
 		var UrlBuilder = require('rest/UrlBuilder');
 

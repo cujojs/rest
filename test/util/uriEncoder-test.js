@@ -13,7 +13,7 @@
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
-	define('rest/util/uriEncoder-test', function (require) {
+	define('rest-test/util/uriEncoder-test', function (require) {
 
 		var uriEncoder, strings;
 

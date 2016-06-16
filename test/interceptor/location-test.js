@@ -14,7 +14,7 @@
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
 
-	define('rest/interceptor/location-test', function (require) {
+	define('rest-test/interceptor/location-test', function (require) {
 
 		var location, rest;
 

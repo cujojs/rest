@@ -14,7 +14,7 @@
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
 
-	define('rest/interceptor/basicAuth-test', function (require) {
+	define('rest-test/interceptor/basicAuth-test', function (require) {
 
 		var basicAuth, rest;
 

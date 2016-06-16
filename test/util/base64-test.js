@@ -13,7 +13,7 @@
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
-	define('rest/util/base64-test', function (require) {
+	define('rest-test/util/base64-test', function (require) {
 
 		var base64 = require('rest/util/base64');
 

@@ -14,7 +14,7 @@
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
 
-	define('rest/interceptor/oAuth-test', function (require) {
+	define('rest-test/interceptor/oAuth-test', function (require) {
 
 		var oAuth, rest, pubsub;
 

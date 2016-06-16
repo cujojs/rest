@@ -14,7 +14,7 @@
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
 
-	define('rest/util/lazyPromise-test', function (require) {
+	define('rest-test/util/lazyPromise-test', function (require) {
 
 		var lazyPromise = require('rest/util/lazyPromise');
 

@@ -14,7 +14,7 @@
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
 
-	define('rest/interceptor/entity-test', function (require) {
+	define('rest-test/interceptor/entity-test', function (require) {
 
 		var entity, rest;
 

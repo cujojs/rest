@@ -14,7 +14,7 @@
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
 
-	define('rest/interceptor/pathPrefix-test', function (require) {
+	define('rest-test/interceptor/pathPrefix-test', function (require) {
 
 		var pathPrefix, rest;
 

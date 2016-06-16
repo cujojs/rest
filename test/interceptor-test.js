@@ -15,7 +15,7 @@
 	fail = buster.assertions.fail;
 	failOnThrow = buster.assertions.failOnThrow;
 
-	define('rest/interceptor-test', function (require) {
+	define('rest-test/interceptor-test', function (require) {
 
 		var interceptor, rest, when;
 

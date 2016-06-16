@@ -13,7 +13,7 @@
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
-	define('rest/mime/type/text/plain-test', function (require) {
+	define('rest-test/mime/type/text/plain-test', function (require) {
 
 		var plain = require('rest/mime/type/text/plain');
 

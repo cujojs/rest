@@ -14,7 +14,7 @@
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
 
-	define('rest/mime/registry-test', function (require) {
+	define('rest-test/mime/registry-test', function (require) {
 
 		var mimeRegistry, when, registry;
 

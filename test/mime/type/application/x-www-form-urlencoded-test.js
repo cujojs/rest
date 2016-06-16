@@ -13,7 +13,7 @@
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
-	define('rest/mime/type/application/x-www-form-urlencoded-test', function (require) {
+	define('rest-test/mime/type/application/x-www-form-urlencoded-test', function (require) {
 
 		var encodeder = require('rest/mime/type/application/x-www-form-urlencoded');
 

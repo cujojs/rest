@@ -15,7 +15,7 @@
 	fail = buster.assertions.fail;
 	failOnThrow = buster.assertions.failOnThrow;
 
-	define('rest/wire-test', function (require) {
+	define('rest-test/wire-test', function (require) {
 
 		var rest, pathPrefixInterceptor, wire;
 

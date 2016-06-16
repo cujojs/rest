@@ -14,7 +14,7 @@
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
 
-	define('rest/mime-test', function (require) {
+	define('rest-test/mime-test', function (require) {
 
 		var mime;
 

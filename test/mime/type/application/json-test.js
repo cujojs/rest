@@ -13,7 +13,7 @@
 	assert = buster.assertions.assert;
 	refute = buster.assertions.refute;
 
-	define('rest/mime/type/application/json-test', function (require) {
+	define('rest-test/mime/type/application/json-test', function (require) {
 
 		var json = require('rest/mime/type/application/json');
 

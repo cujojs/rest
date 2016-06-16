@@ -14,7 +14,7 @@
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
 
-	define('rest/interceptor/ie/xdomain-test', function (require) {
+	define('rest-test/interceptor/ie/xdomain-test', function (require) {
 
 		var xdomain, rest, client, xdr, xhrCors;
 
@@ -31,8 +31,8 @@
 
 		client = xdomain(defaultClient, { xdrClient: xdrClient });
 
-		xdr = 'XDomainRequest' in window;
-		xhrCors = window.XMLHttpRequest && 'withCredentials' in new window.XMLHttpRequest();
+		xdr = typeof XDomainRequest !== 'undefined';
+		xhrCors = typeof XMLHttpRequest !== 'undefined' && 'withCredentials' in new XMLHttpRequest();
 
 		buster.testCase('rest/interceptor/ie/xdomain', {
 			'for XDomainRequest enabled browsers': {

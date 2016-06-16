@@ -16,7 +16,7 @@
 	fail = buster.assertions.fail;
 	failOnThrow = buster.assertions.failOnThrow;
 
-	define('rest/interceptor/timeout-test', function (require) {
+	define('rest-test/interceptor/timeout-test', function (require) {
 
 		var timeout, rest, when;
 

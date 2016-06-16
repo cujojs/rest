@@ -14,7 +14,7 @@
 	refute = buster.assertions.refute;
 	fail = buster.assertions.fail;
 
-	define('rest/interceptor/template-test', function (require) {
+	define('rest-test/interceptor/template-test', function (require) {
 
 		var template, rest;
 

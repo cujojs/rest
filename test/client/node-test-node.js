@@ -16,7 +16,7 @@
 	fail = buster.assertions.fail;
 	failOnThrow = buster.assertions.failOnThrow;
 
-	define('rest/client/node-test', function (require) {
+	define('rest-test/client/node-test', function (require) {
 
 		var rest, client, http, https, fs, serverHttp, serverHttps;
 
