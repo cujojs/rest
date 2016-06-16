@@ -141,14 +141,12 @@ Our goal is to work in every major JavaScript environment; Node.js and major bro
 If your preferred environment is not supported, please let us know. Some features may not be available in all environments.
 
 Tested environments:
-- Node.js (0.6, 0.8. 0.10, 4, 5)
+- Node.js (0.10, 4, 6)
 - Chrome (stable)
 - Firefox (stable, ESR, should work in earlier versions)
-- Edge
-- IE (6-11)
-- Safari (6-9, iOS 5-9.2, should work in earlier versions)
-- Android (4.0-5.1, should work in earlier versions)
-- Opera (11, 12, should work in earlier versions)
+- IE (11, should work in earlier versions)
+- Safari (8-9, iOS 8-9, should work in earlier versions)
+- Android (4.3-5, should work in earlier versions)
 
 Specific browser test are provided by [Travis CI](https://travis-ci.org/cujojs/rest) and [Sauce Labs' Open Sauce Plan](https://saucelabs.com/opensource). You can see [specific browser test results](https://saucelabs.com/u/cujojs-rest), although odds are they do not reference this specific release/branch/commit.
 
@@ -240,7 +238,15 @@ Change Log
 - MAJOR: Drop hard when.js dependency in favor of ES6 Promise API. See https://github.com/cujojs/when/blob/master/docs/es6-promise-shim.md to use when.js as an ES6 Promise polyfill.
 - Moved path token param replacement from the clients into the `rest/interceptor/params` interceptor, which is also deprecated. The behavior will no longer be applied automatically in the client. Using the `rest/interceptor/template` interceptor is far more powerful and preferred.
 - Fixed an issue preventing uri template exploded values from expanding correctly.
-- Update tested browsers. Removing Safari 5 and iOS 4.3 (no longer supported by SauceLabs). Adding Firefox 38 ESR and Andriod 5.1.
+- Update tested environments:
+  - Android 5.1, 4.4 and 4.3
+  - Chrome latest
+  - Edge latest
+  - Firefox latest, 45 ESR, 38 ESR
+  - Node 0.10, 4, 6
+  - IE 11
+  - iOS 8 and 9
+  - Safari 8 and 9
 - include requested URL on response object
 - mime interceptor no longer sets Content-Type on requests without an entity
 
