@@ -20,8 +20,6 @@
         - [Timeout Interceptor](#module-rest/interceptor/timeout)
     - [Fallback Interceptors](#interceptor-provided-fallback)
         - [JSONP Interceptor](#module-rest/interceptor/jsonp)
-        - [Cross Domain Request for IE Interceptor](#module-rest/interceptor/ie/xdomain)
-        - [ActiveX XHR for IE Interceptor](#module-rest/interceptor/ie/xhr)
 - [Custom Interceptors](#interceptor-custom)
     - [Interceptor Best Practices](#interceptor-custom-practices)
     - [Example Interceptors by Concept](#interceptor-custom-concepts)
@@ -34,7 +32,6 @@
         - [Cancellation](#interceptor-custom-concepts-cancellation)
         - [Shared Request/Response Context](#interceptor-custom-concepts-context)
         - [Async Request/Response](#interceptor-custom-concepts-async)
-        - [Override Parent Client (ComplexRequest)](#interceptor-custom-concepts-parent)
         - [Abort Request (ComplexRequest)](#interceptor-custom-concepts-abort)
 
 
@@ -931,58 +928,6 @@ client({ path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0', para
 ```
 
 
-<a name="module-rest/interceptor/ie/xdomain"></a>
-#### Cross Domain Request for IE Interceptor
-
-`rest/interceptor/ie/xdomain` ([src](../interceptor/ie/xdomain.js))
-
-Utilizes IE's XDomainRequest support via the [XDomainRequest client](clients.md#module-rest/client/xdr) for making cross origin requests if needed, available and a CORS enabled XMLHttpRequest is not available.  XDR request have a number of limitations, see the [XDR client](clients.md#module-rest/client/xdr) for limitation details.  Will not interfere if installed in other environments.
-
-This interceptor should be installed as close to the root of the interceptor chain as possible.  When a XDomainRequest client is needed, the normal parent client will not be invoked.
-
-**Phases**
-
-- request
-
-**Configuration**
-
-*none*
-
-**Example**
-
-```javascript
-client = rest.wrap(xdomain)
-    .wrap(defaultRequest, { params: { api_key: '95f41bfa4faa0f43bf7c24795eabbed4', format: 'rest' } });
-client({ params: { method: 'flickr.test.echo' } }).then(function (response) {
-    // response from flickr
-});
-```
-
-
-<a name="module-rest/interceptor/ie/xhr"></a>
-#### ActiveX XHR for IE Interceptor
-
-`rest/interceptor/ie/xhr` ([src](../interceptor/ie/xhr.js))
-
-Attempts to use an ActiveX XHR replacement if a native XMLHttpRequest object is not available. Useful for IE < 9, which does not natively support XMLHttpRequest.  Will not interfere if installed in other environments.
-
-**Phases**
-- request
-
-**Configuration**
-
-*none*
-
-**Example**
-
-```javascript
-client = rest.wrap(xhr);
-client({}).then(function (response) {
-    // normal XHR response, even in IE without XHR
-});
-```
-
-
 <a name="interceptor-custom"></a>
 ## Custom Interceptors
 
@@ -1197,11 +1142,6 @@ The interceptors provided with rest.js provide are also good examples.  Here are
 **Async Request/Response**
 
 - [rest/interceptor/mime](#module-rest/interceptor/mime)
-
-<a name="interceptor-custom-concepts-parent"></a>
-**Override Parent Client (ComplexRequest)**
-
-- [rest/interceptor/ie/xdomain](#module-rest/interceptor/ie/xdomain)
 
 <a name="interceptor-custom-concepts-abort"></a>
 **Abort Request (ComplexRequest)**

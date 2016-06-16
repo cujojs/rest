@@ -5,7 +5,6 @@
   - [XMLHttpReqest Client](#module-rest/client/xhr)
   - [Node Client](#module-rest/client/node)
   - [JSONP Client](#module-rest/client/jsonp)
-  - [IE XDomainRequest Client](#module-rest/client/xdr)
 
 
 ## Overview
@@ -44,7 +43,7 @@ While it may be tempting to change the default client for application level conc
 
 `rest/client/xhr` ([src](../client/xhr.js))
 
-The default client for browsers.  The XHR client utilizes the XMLHttpRequest object provided by many browsers.  Most every browser has direct support for XHR today.  The `rest/interceptor/ie/xhr` interceptor can provided fall back support for older IE without native XHR.
+The default client for browsers.  The XHR client utilizes the XMLHttpRequest object provided by many browsers.
 
 **Special Properties**
 
@@ -136,20 +135,3 @@ JSONP client for browsers.  Allows basic cross-origin GETs via script tags.  Thi
   <td>pins the name of the callback function, useful for cases where the server doesn't allow custom callback names. Generally not recommended.</td>
 </tr>
 </table>
-
-
-<a name="module-rest/client/xdr"></a>
-### IE XDomainRequest Client
-
-`rest/client/xdr` ([src](../client/xdr.js))
-
-Cross-origin support available within IE, in particular IE 8 and 9.  This client is typically employed via the `rest/interceptor/ie/xdomain` interceptor.  Never used as the default client.
-
-**Know limitations**
-
-- only GET and POST methods are available
-- must use same scheme as origin http-to-http, https-to-https
-- no headers, request or response (the response Content-Type is available)
-- no response status code
-
-[Limitation details](http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx)

@@ -248,6 +248,7 @@ Change Log
   - IE 11
   - iOS 8 and 9
   - Safari 8 and 9
+- Removed old IE XDomainRequest client and xhr and xdr interceptors
 - include requested URL on response object
 - mime interceptor no longer sets Content-Type on requests without an entity
 

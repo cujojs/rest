@@ -17,15 +17,11 @@
 
 	define('rest-test/client/xhr-test', function (require) {
 
-		var xhr, rest, xhrFallback, when, client;
+		var client, rest, when;
 
-		xhr = require('rest/client/xhr');
+		client = require('rest/client/xhr');
 		rest = require('rest');
-		xhrFallback = require('rest/interceptor/ie/xhr');
 		when = require('when');
-
-		// use xhrFallback when XHR is not native
-		client = !XMLHttpRequest ? xhr.wrap(xhrFallback) : xhr;
 
 		buster.testCase('rest/client/xhr', {
 			'should make a GET by default': function () {
@@ -177,7 +173,7 @@
 				requiresSupportFor: { 'no-xhr': !window.XMLHttpRequest },
 				'': function () {
 					var request = { path: '/' };
-					return xhr(request).then(
+					return client(request).then(
 						fail,
 						failOnThrow(function (response) {
 							assert.same(request, response.request);
@@ -194,10 +190,10 @@
 			},
 			'should be the default client': function () {
 				rest.resetDefaultClient();
-				assert.same(xhr, rest.getDefaultClient());
+				assert.same(client, rest.getDefaultClient());
 			},
 			'should support interceptor wrapping': function () {
-				assert(typeof xhr.wrap === 'function');
+				assert(typeof client.wrap === 'function');
 			},
 			'should return a ResponsePromise': function () {
 				assert.isFunction(client().entity);
