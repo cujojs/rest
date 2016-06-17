@@ -234,7 +234,7 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
-.next
+2.0.0
 - MAJOR: Drop hard when.js dependency in favor of ES6 Promise API. See https://github.com/cujojs/when/blob/master/docs/es6-promise-shim.md to use when.js as an ES6 Promise polyfill.
 - MAJOR: AMD modules are no longer supported. curl.js users can use the cjsm11 loader, see https://github.com/cujojs/curl#api-at-a-glance
 - Moved path token param replacement from the clients into the `rest/interceptor/params` interceptor, which is also deprecated. The behavior will no longer be applied automatically in the client. Using the `rest/interceptor/template` interceptor is far more powerful and preferred.
@@ -249,7 +249,6 @@ Change Log
   - iOS 8 and 9
   - Safari 8 and 9
 - Removed old IE XDomainRequest client and xhr and xdr interceptors
-- include requested URL on response object
 - mime interceptor no longer sets Content-Type on requests without an entity
 
 1.3.2

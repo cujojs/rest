@@ -1,6 +1,6 @@
 {
 	"name": "rest",
-	"version": "2.0.0-pre",
+	"version": "2.0.0",
 	"main": "./browser.js",
 	"moduleType": ["node"],
 	"dependencies": {},
