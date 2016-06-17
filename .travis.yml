@@ -42,10 +42,6 @@ matrix:
       env:
         - BROWSERS=test/browsers/edge.json
     - node_js: '0.10'
-      script: 'travis_retry npm run-script sauceme'
-      env:
-        - BROWSERS=test/browsers/edge.json
-    - node_js: '0.10'
       script: 'npm run-script sauceme'
       env:
         - BROWSERS=test/browsers/ie-11.json
@@ -54,17 +50,9 @@ matrix:
       env:
         - BROWSERS=test/browsers/safari-9.json
     - node_js: '0.10'
-      script: 'travis_retry npm run-script sauceme'
-      env:
-        - BROWSERS=test/browsers/safari-9.json
-    - node_js: '0.10'
       script: 'npm run-script sauceme'
       env:
         - BROWSERS=test/browsers/safari-8.json
-    - node_js: '0.10'
-      script: 'travis_retry npm run-script sauceme'
-      env:
-        - BROWSERS=test/browsers/ios-9.2.json
     - node_js: '0.10'
       script: 'travis_retry npm run-script sauceme'
       env:
