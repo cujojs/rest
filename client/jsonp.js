@@ -94,6 +94,7 @@ module.exports = client(function jsonp(request) {
 		request.canceled = false;
 		request.cancel = function cancel() {
 			request.canceled = true;
+			response.error = 'canceled';
 			cleanupScriptNode(response);
 			reject(response);
 		};
@@ -126,5 +127,5 @@ module.exports = client(function jsonp(request) {
 		firstScript = document.getElementsByTagName('script')[0];
 		firstScript.parentNode.insertBefore(script, firstScript);
 
-	});
+	}, request);
 });

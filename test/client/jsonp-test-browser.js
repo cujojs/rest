@@ -81,6 +81,17 @@
 					})
 				);
 			},
+			'should abort the request when canceled': function () {
+				var request = { path: 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=html5' };
+				return client(request).cancel().then(
+					fail,
+					failOnThrow(function (response) {
+						assert.same(request, response.request);
+						assert(request.canceled);
+						assert.same('canceled', response.error);
+					})
+				);
+			},
 			'should error if callback not invoked': function () {
 				var request = { path: '/test/client/fixtures/noop.js' };
 				return client(request).then(

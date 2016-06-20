@@ -25,20 +25,30 @@
 
 		client = mime(function (request) {
 			var page = request.params && request.params.page || 0;
-			return {
-				request: request,
-				headers: {
-					'Content-Type': 'application/hal+json'
-				},
-				entity: JSON.stringify({
-					page: page,
-					_links: {
-						self: { href: request.path },
-						next: { href: request.path + '/next' },
-						search: { href: request.path + '/{?q}', templated: true }
+			return new Promise(function (resolve, reject) {
+				setTimeout(function () {
+					if (request.canceled) {
+						return reject({
+							request: request,
+							error: 'canceled'
+						});
 					}
-				})
-			};
+					resolve({
+						request: request,
+						headers: {
+							'Content-Type': 'application/hal+json'
+						},
+						entity: JSON.stringify({
+							page: page,
+							_links: {
+								self: { href: request.path },
+								next: { href: request.path + '/next' },
+								search: { href: request.path + '/{?q}', templated: true }
+							}
+						})
+					});
+				}, 0);
+			});
 		});
 
 		buster.testCase('rest/util/responsePromise', {
@@ -143,6 +153,35 @@
 					},
 					fail
 				);
+			},
+			'should cancel the request': {
+				'by invoking the cancel method if available': function () {
+					var request = {
+						path: 'http://example.com',
+						cancel: this.spy(function () {
+							this.canceled = true;
+						})
+					};
+					return client(request).cancel().then(
+						function (response) {
+							fail(response);
+						},
+						failOnThrow(function (response) {
+							assert.same(response.request, request);
+							assert.called(request.cancel);
+						})
+					);
+				},
+				'by setting the canceled property if the cancel method is not available': function () {
+					var request = { path: 'http://example.com' };
+					return client(request).cancel().then(
+						fail,
+						failOnThrow(function (response) {
+							assert.same(response.request, request);
+							assert(request.canceled);
+						})
+					);
+				}
 			},
 			'should follow hypermedia reltionships': {
 				'': function () {

@@ -108,27 +108,37 @@ function follow(rels) {
  * Wrap a Promise as an ResponsePromise
  *
  * @param {Promise<Response>} promise the promise for an HTTP Response
+ * @param {Request} request the HTTP Request
  * @returns {ResponsePromise<Response>} wrapped promise for Response with additional helper methods
  */
-function make(promise) {
+function make(promise, request) {
 	promise.status = status;
 	promise.headers = headers;
 	promise.header = header;
 	promise.entity = entity;
 	promise.follow = follow;
+	promise.cancel = function () {
+		if (!request) { return; }
+		if (request.cancel) {
+			request.cancel();
+		} else {
+			request.canceled = true;
+		}
+		return this;
+	};
 	return promise;
 }
 
-function responsePromise(obj, callback, errback) {
-	return make(Promise.resolve(obj).then(callback, errback));
+function responsePromise(obj, callback, errback, request) {
+	return make(Promise.resolve(obj).then(callback, errback), request);
 }
 
 responsePromise.make = make;
-responsePromise.reject = function (val) {
-	return make(Promise.reject(val));
+responsePromise.reject = function (val, request) {
+	return make(Promise.reject(val), request);
 };
-responsePromise.promise = function (func) {
-	return make(new Promise(func));
+responsePromise.promise = function (func, request) {
+	return make(new Promise(func), request);
 };
 
 module.exports = responsePromise;

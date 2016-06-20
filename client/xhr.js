@@ -112,6 +112,7 @@ module.exports = client(function xhr(request) {
 			request.canceled = false;
 			request.cancel = function cancel() {
 				request.canceled = true;
+				response.error = 'canceled';
 				client.abort();
 				reject(response);
 			};
@@ -163,5 +164,5 @@ module.exports = client(function xhr(request) {
 			reject(response);
 		}
 
-	});
+	}, request);
 });

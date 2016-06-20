@@ -492,6 +492,7 @@
 				theInterceptor = interceptor();
 				client = theInterceptor(defaultClient);
 				assert.isFunction(client().entity);
+				assert.isFunction(client().cancel);
 			}
 		});
 

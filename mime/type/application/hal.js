@@ -82,13 +82,14 @@ module.exports = {
 				Object.keys(links).forEach(function (relationship) {
 					var link = links[relationship];
 					if (relationship in resource) { return; }
+					var request = { path: link.href };
 					defineProperty(resource, relationship, responsePromise.make(lazyPromise(function () {
 						if (link.deprecation) { deprecationWarning(relationship, link.deprecation); }
 						if (link.templated === true) {
-							return template(client)({ path: link.href });
+							return template(client)(request);
 						}
-						return client({ path: link.href });
-					})));
+						return client(request);
+					}), request));
 				});
 				defineProperty(resource, name, links);
 				defineProperty(resource, 'clientFor', function (relationship, clientOverride) {

@@ -169,6 +169,17 @@
 					})
 				);
 			},
+			'should abort a request when canceled': function () {
+				var request = { path: '/' };
+				return client(request).cancel().then(
+					fail,
+					failOnThrow(function (response) {
+						assert.same(request, response.request);
+						assert(request.canceled);
+						assert.same('canceled', response.error);
+					})
+				);
+			},
 			'should reject if an XHR impl is not available': {
 				requiresSupportFor: { 'no-xhr': !window.XMLHttpRequest },
 				'': function () {

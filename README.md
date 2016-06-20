@@ -234,6 +234,9 @@ rest.js is made available under the MIT license.  See LICENSE.txt for details.
 Change Log
 ----------
 
+.next
+- Cancel requests via the `cancel` method on the response promise
+
 2.0.0
 - MAJOR: Drop hard when.js dependency in favor of ES6 Promise API. See https://github.com/cujojs/when/blob/master/docs/es6-promise-shim.md to use when.js as an ES6 Promise polyfill.
 - MAJOR: AMD modules are no longer supported. curl.js users can use the cjsm11 loader, see https://github.com/cujojs/curl#api-at-a-glance

@@ -132,7 +132,8 @@ function interceptor(handlers) {
 				},
 				function (error) {
 					return Promise.reject({ request: request, error: error });
-				}
+				},
+				request
 			);
 		}
 

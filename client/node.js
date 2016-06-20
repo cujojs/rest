@@ -86,7 +86,9 @@ module.exports = client(function node(request) {
 		request.canceled = false;
 		request.cancel = function cancel() {
 			request.canceled = true;
+			response.error = 'canceled';
 			clientRequest.abort();
+			reject(response);
 		};
 
 		clientRequest = client.request(options, function (clientResponse) {
@@ -130,5 +132,5 @@ module.exports = client(function node(request) {
 		}
 		clientRequest.end();
 
-	});
+	}, request);
 });

@@ -184,6 +184,12 @@ These methods assume a standard response object. If an interceptor or client ret
   <td>ResponsePromise&lt;Response&gt;</td>
   <td>Traverse to the resource identified by the relationship. An array of relationships will traverse deep into the API following each relationship in turn. Params for templated URIs can be express in the form `{ rel: relationship, params: { ... } }`</td>
 </tr>
+<tr>
+  <td>cancel</td>
+  <td><em>none</em></td>
+  <td><em>self</em></td>
+  <td>Cancels the in-flight request, returning the original response promise. For most Clients, the promise will be rejected with the error property set to 'canceled' and the canceled request property set to true. A Client that supports cancelation is required.</td>
+</tr>
 </table>
 
 
