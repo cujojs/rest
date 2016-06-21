@@ -19,10 +19,10 @@
  * @return {string} the normalized header name
  */
 function normalizeHeaderName(name) {
-	return name.toLowerCase()
-		.split('-')
-		.map(function (chunk) { return chunk.charAt(0).toUpperCase() + chunk.slice(1); })
-		.join('-');
+  return name.toLowerCase()
+    .split('-')
+    .map(function (chunk) { return chunk.charAt(0).toUpperCase() + chunk.slice(1); })
+    .join('-');
 }
 
 module.exports = normalizeHeaderName;

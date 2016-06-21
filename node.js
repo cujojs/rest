@@ -8,7 +8,7 @@
 'use strict';
 
 var rest = require('./client/default'),
-    node = require('./client/node');
+  node = require('./client/node');
 
 rest.setPlatformDefaultClient(node);
 

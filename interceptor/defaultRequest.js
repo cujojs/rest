@@ -14,34 +14,34 @@ mixinUtil = require('../util/mixin');
 
 defaulter = (function () {
 
-	function mixin(prop, target, defaults) {
-		if (prop in target || prop in defaults) {
-			target[prop] = mixinUtil({}, defaults[prop], target[prop]);
-		}
-	}
+  function mixin(prop, target, defaults) {
+    if (prop in target || prop in defaults) {
+      target[prop] = mixinUtil({}, defaults[prop], target[prop]);
+    }
+  }
 
-	function copy(prop, target, defaults) {
-		if (prop in defaults && !(prop in target)) {
-			target[prop] = defaults[prop];
-		}
-	}
+  function copy(prop, target, defaults) {
+    if (prop in defaults && !(prop in target)) {
+      target[prop] = defaults[prop];
+    }
+  }
 
-	var mappings = {
-		method: copy,
-		path: copy,
-		params: mixin,
-		headers: mixin,
-		entity: copy,
-		mixin: mixin
-	};
+  var mappings = {
+    method: copy,
+    path: copy,
+    params: mixin,
+    headers: mixin,
+    entity: copy,
+    mixin: mixin
+  };
 
-	return function (target, defaults) {
-		for (var prop in mappings) {
-			/*jshint forin: false */
-			mappings[prop](prop, target, defaults);
-		}
-		return target;
-	};
+  return function (target, defaults) {
+    for (var prop in mappings) {
+      /*jshint forin: false */
+      mappings[prop](prop, target, defaults);
+    }
+    return target;
+  };
 
 }());
 
@@ -63,7 +63,7 @@ defaulter = (function () {
  * @returns {Client}
  */
 module.exports = interceptor({
-	request: function handleRequest(request, config) {
-		return defaulter(request, config);
-	}
+  request: function handleRequest(request, config) {
+    return defaulter(request, config);
+  }
 });

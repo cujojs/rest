@@ -10,55 +10,55 @@
 'use strict';
 
 function isFormElement(object) {
-	return object &&
-		object.nodeType === 1 && // Node.ELEMENT_NODE
-		object.tagName === 'FORM';
+  return object &&
+    object.nodeType === 1 && // Node.ELEMENT_NODE
+    object.tagName === 'FORM';
 }
 
 function createFormDataFromObject(object) {
-	var formData = new FormData();
+  var formData = new FormData();
 
-	var value;
-	for (var property in object) {
-		if (object.hasOwnProperty(property)) {
-			value = object[property];
+  var value;
+  for (var property in object) {
+    if (object.hasOwnProperty(property)) {
+      value = object[property];
 
-			if (value instanceof File) {
-				formData.append(property, value, value.name);
-			} else if (value instanceof Blob) {
-				formData.append(property, value);
-			} else {
-				formData.append(property, String(value));
-			}
-		}
-	}
+      if (value instanceof File) {
+        formData.append(property, value, value.name);
+      } else if (value instanceof Blob) {
+        formData.append(property, value);
+      } else {
+        formData.append(property, String(value));
+      }
+    }
+  }
 
-	return formData;
+  return formData;
 }
 
 module.exports = {
 
-	write: function (object) {
-		if (typeof FormData === 'undefined') {
-			throw new Error('The multipart/form-data mime serializer requires FormData support');
-		}
+  write: function (object) {
+    if (typeof FormData === 'undefined') {
+      throw new Error('The multipart/form-data mime serializer requires FormData support');
+    }
 
-		// Support FormData directly.
-		if (object instanceof FormData) {
-			return object;
-		}
+    // Support FormData directly.
+    if (object instanceof FormData) {
+      return object;
+    }
 
-		// Support <form> elements.
-		if (isFormElement(object)) {
-			return new FormData(object);
-		}
+    // Support <form> elements.
+    if (isFormElement(object)) {
+      return new FormData(object);
+    }
 
-		// Support plain objects, may contain File/Blob as value.
-		if (typeof object === 'object' && object !== null) {
-			return createFormDataFromObject(object);
-		}
+    // Support plain objects, may contain File/Blob as value.
+    if (typeof object === 'object' && object !== null) {
+      return createFormDataFromObject(object);
+    }
 
-		throw new Error('Unable to create FormData from object ' + object);
-	}
+    throw new Error('Unable to create FormData from object ' + object);
+  }
 
 };

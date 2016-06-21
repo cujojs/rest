@@ -21,10 +21,10 @@ var topics = {};
  * @param {Object} message message to publish
  */
 function publish(topic /* , message... */) {
-	if (!topics[topic]) { return; }
-	topics[topic].apply({}, Array.prototype.slice.call(arguments, 1));
-	// auto cleanup
-	delete topics[topic];
+  if (!topics[topic]) { return; }
+  topics[topic].apply({}, Array.prototype.slice.call(arguments, 1));
+  // auto cleanup
+  delete topics[topic];
 }
 
 /**
@@ -36,10 +36,10 @@ function publish(topic /* , message... */) {
  * @param {Function} callback the callback to receive the message published to the topic
  */
 function subscribe(topic, callback) {
-	topics[topic] = callback;
+  topics[topic] = callback;
 }
 
 module.exports = {
-	publish: publish,
-	subscribe: subscribe
+  publish: publish,
+  subscribe: subscribe
 };

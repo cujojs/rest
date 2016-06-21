@@ -9,12 +9,12 @@
 
 module.exports = {
 
-	read: function (str) {
-		return str;
-	},
+  read: function (str) {
+    return str;
+  },
 
-	write: function (obj) {
-		return obj.toString();
-	}
+  write: function (obj) {
+    return obj.toString();
+  }
 
 };

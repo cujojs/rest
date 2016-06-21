@@ -68,7 +68,7 @@ var client, target, platformDefault;
 client = require('../client');
 
 if (typeof Promise !== 'function' && console && console.log) {
-	console.log('An ES6 Promise implementation is required to use rest.js. See https://github.com/cujojs/when/blob/master/docs/es6-promise-shim.md for using when.js as a Promise polyfill.');
+  console.log('An ES6 Promise implementation is required to use rest.js. See https://github.com/cujojs/when/blob/master/docs/es6-promise-shim.md for using when.js as a Promise polyfill.');
 }
 
 /**
@@ -77,7 +77,7 @@ if (typeof Promise !== 'function' && console && console.log) {
  * @returns {Promise<Response>} a promise the resolves to the HTTP response
  */
 function defaultClient() {
-	return target.apply(void 0, arguments);
+  return target.apply(void 0, arguments);
 }
 
 /**
@@ -85,7 +85,7 @@ function defaultClient() {
  * @param {Client} client the new default client
  */
 defaultClient.setDefaultClient = function setDefaultClient(client) {
-	target = client;
+  target = client;
 };
 
 /**
@@ -93,24 +93,24 @@ defaultClient.setDefaultClient = function setDefaultClient(client) {
  * @returns {Client} the default client
  */
 defaultClient.getDefaultClient = function getDefaultClient() {
-	return target;
+  return target;
 };
 
 /**
  * Reset the default client to the platform default
  */
 defaultClient.resetDefaultClient = function resetDefaultClient() {
-	target = platformDefault;
+  target = platformDefault;
 };
 
 /**
  * @private
  */
 defaultClient.setPlatformDefaultClient = function setPlatformDefaultClient(client) {
-	if (platformDefault) {
-		throw new Error('Unable to redefine platformDefaultClient');
-	}
-	target = platformDefault = client;
+  if (platformDefault) {
+    throw new Error('Unable to redefine platformDefaultClient');
+  }
+  target = platformDefault = client;
 };
 
 module.exports = client(defaultClient);

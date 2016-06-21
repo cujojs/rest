@@ -29,19 +29,19 @@ UrlBuilder = require('../UrlBuilder');
  * @returns {Client}
  */
 module.exports = interceptor({
-	init: function (config) {
-		config.params = config.params || {};
-		return config;
-	},
-	request: function (request, config) {
-		var path, params;
+  init: function (config) {
+    config.params = config.params || {};
+    return config;
+  },
+  request: function (request, config) {
+    var path, params;
 
-		path = request.path || '';
-		params = request.params || {};
+    path = request.path || '';
+    params = request.params || {};
 
-		request.path = new UrlBuilder(path, config.params).append('', params).build();
-		delete request.params;
+    request.path = new UrlBuilder(path, config.params).append('', params).build();
+    delete request.params;
 
-		return request;
-	}
+    return request;
+  }
 });

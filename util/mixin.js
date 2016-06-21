@@ -19,19 +19,19 @@ var empty = {};
  * @return {Object} the destination object
  */
 function mixin(dest /*, sources... */) {
-	var i, l, source, name;
+  var i, l, source, name;
 
-	if (!dest) { dest = {}; }
-	for (i = 1, l = arguments.length; i < l; i += 1) {
-		source = arguments[i];
-		for (name in source) {
-			if (!(name in dest) || (dest[name] !== source[name] && (!(name in empty) || empty[name] !== source[name]))) {
-				dest[name] = source[name];
-			}
-		}
-	}
+  if (!dest) { dest = {}; }
+  for (i = 1, l = arguments.length; i < l; i += 1) {
+    source = arguments[i];
+    for (name in source) {
+      if (!(name in dest) || (dest[name] !== source[name] && (!(name in empty) || empty[name] !== source[name]))) {
+        dest[name] = source[name];
+      }
+    }
+  }
 
-	return dest; // Object
+  return dest; // Object
 }
 
 module.exports = mixin;

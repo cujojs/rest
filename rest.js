@@ -8,7 +8,7 @@
 'use strict';
 
 if (console) {
-	(console.warn || console.log).call(console, 'rest.js: The main module has moved, please switch your configuration to use \'rest/browser\' as the main module for browser applications.');
+  (console.warn || console.log).call(console, 'rest.js: The main module has moved, please switch your configuration to use \'rest/browser\' as the main module for browser applications.');
 }
 
 module.exports = require('./browser');

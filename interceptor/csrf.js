@@ -31,21 +31,21 @@ interceptor = require('../interceptor');
  * @returns {Client}
  */
 module.exports = interceptor({
-	init: function (config) {
-		config.name = config.name || 'X-Csrf-Token';
-		return config;
-	},
-	request: function handleRequest(request, config) {
-		var headers, name, token;
+  init: function (config) {
+    config.name = config.name || 'X-Csrf-Token';
+    return config;
+  },
+  request: function handleRequest(request, config) {
+    var headers, name, token;
 
-		headers = request.headers || (request.headers = {});
-		name = request.csrfTokenName || config.name;
-		token = request.csrfToken || config.token;
+    headers = request.headers || (request.headers = {});
+    name = request.csrfTokenName || config.name;
+    token = request.csrfToken || config.token;
 
-		if (token) {
-			headers[name] = token;
-		}
+    if (token) {
+      headers[name] = token;
+    }
 
-		return request;
-	}
+    return request;
+  }
 });

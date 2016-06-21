@@ -26,25 +26,25 @@ delay = require('../util/delay');
  * @returns {Client}
  */
 module.exports = interceptor({
-	init: function (config) {
-		config.initial = config.initial || 100;
-		config.multiplier = config.multiplier || 2;
-		config.max = config.max || Infinity;
-		return config;
-	},
-	error: function (response, config, meta) {
-		var request;
+  init: function (config) {
+    config.initial = config.initial || 100;
+    config.multiplier = config.multiplier || 2;
+    config.max = config.max || Infinity;
+    return config;
+  },
+  error: function (response, config, meta) {
+    var request;
 
-		request = response.request;
-		request.retry = request.retry || config.initial;
+    request = response.request;
+    request.retry = request.retry || config.initial;
 
-		return delay(request.retry, request).then(function (request) {
-			if (request.canceled) {
-				// cancel here in case client doesn't check canceled flag
-				return Promise.reject({ request: request, error: 'precanceled' });
-			}
-			request.retry = Math.min(request.retry * config.multiplier, config.max);
-			return meta.client(request);
-		});
-	}
+    return delay(request.retry, request).then(function (request) {
+      if (request.canceled) {
+        // cancel here in case client doesn't check canceled flag
+        return Promise.reject({ request: request, error: 'precanceled' });
+      }
+      request.retry = Math.min(request.retry * config.multiplier, config.max);
+      return meta.client(request);
+    });
+  }
 });

@@ -22,17 +22,17 @@ base64 = require('../util/base64');
  * @returns {Client}
  */
 module.exports = interceptor({
-	request: function handleRequest(request, config) {
-		var headers, username, password;
+  request: function handleRequest(request, config) {
+    var headers, username, password;
 
-		headers = request.headers || (request.headers = {});
-		username = request.username || config.username;
-		password = request.password || config.password || '';
+    headers = request.headers || (request.headers = {});
+    username = request.username || config.username;
+    password = request.password || config.password || '';
 
-		if (username) {
-			headers.Authorization = 'Basic ' + base64.encode(username + ':' + password);
-		}
+    if (username) {
+      headers.Authorization = 'Basic ' + base64.encode(username + ':' + password);
+    }
 
-		return request;
-	}
+    return request;
+  }
 });

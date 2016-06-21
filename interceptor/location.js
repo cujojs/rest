@@ -12,8 +12,8 @@ var interceptor;
 interceptor = require('../interceptor');
 
 function isRedirect(response, config) {
-	var matchesRedirectCode = config.code === 0 || (response.status && response.status.code >= config.code);
-	return response.headers && response.headers.Location && matchesRedirectCode;
+  var matchesRedirectCode = config.code === 0 || (response.status && response.status.code >= config.code);
+  return response.headers && response.headers.Location && matchesRedirectCode;
 }
 
 /**
@@ -29,23 +29,23 @@ function isRedirect(response, config) {
  * @returns {Client}
  */
 module.exports = interceptor({
-	init: function (config) {
-		config.code = config.code || 0;
-		return config;
-	},
-	success: function (response, config, client) {
-		var request;
+  init: function (config) {
+    config.code = config.code || 0;
+    return config;
+  },
+  success: function (response, config, client) {
+    var request;
 
-		if (isRedirect(response, config)) {
-			request = response.request || {};
-			client = (config.client || request.originator || client.skip());
+    if (isRedirect(response, config)) {
+      request = response.request || {};
+      client = (config.client || request.originator || client.skip());
 
-			return client({
-				method: 'GET',
-				path: response.headers.Location
-			});
-		}
+      return client({
+        method: 'GET',
+        path: response.headers.Location
+      });
+    }
 
-		return response;
-	}
+    return response;
+  }
 });

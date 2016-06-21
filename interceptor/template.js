@@ -27,20 +27,20 @@ mixin = require('../util/mixin');
  * @returns {Client}
  */
 module.exports = interceptor({
-	init: function (config) {
-		config.params = config.params || {};
-		config.template = config.template || '';
-		return config;
-	},
-	request: function (request, config) {
-		var template, params;
+  init: function (config) {
+    config.params = config.params || {};
+    config.template = config.template || '';
+    return config;
+  },
+  request: function (request, config) {
+    var template, params;
 
-		template = request.path || config.template;
-		params = mixin({}, request.params, config.params);
+    template = request.path || config.template;
+    params = mixin({}, request.params, config.params);
 
-		request.path = uriTemplate.expand(template, params);
-		delete request.params;
+    request.path = uriTemplate.expand(template, params);
+    delete request.params;
 
-		return request;
-	}
+    return request;
+  }
 });

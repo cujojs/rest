@@ -16,12 +16,12 @@
  * @returns {Promise} Promise for the output of the work function
  */
 function attempt(work) {
-	try {
-		return Promise.resolve(work());
-	}
-	catch (e) {
-		return Promise.reject(e);
-	}
+  try {
+    return Promise.resolve(work());
+  }
+  catch (e) {
+    return Promise.reject(e);
+  }
 }
 
 module.exports = attempt;

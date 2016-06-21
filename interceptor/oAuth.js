@@ -14,51 +14,51 @@ UrlBuilder = require('../UrlBuilder');
 pubsub = require('../util/pubsub');
 
 function defaultOAuthCallback(hash) {
-	var params, queryString, regex, m;
+  var params, queryString, regex, m;
 
-	queryString = hash.indexOf('#') === 0 ? hash.substring(1) : hash;
-	params = {};
-	regex = /([^&=]+)=([^&]*)/g;
+  queryString = hash.indexOf('#') === 0 ? hash.substring(1) : hash;
+  params = {};
+  regex = /([^&=]+)=([^&]*)/g;
 
-	m = regex.exec(queryString);
-	do {
-		params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
-		m = regex.exec(queryString);
-	} while (m);
+  m = regex.exec(queryString);
+  do {
+    params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+    m = regex.exec(queryString);
+  } while (m);
 
-	/*jshint camelcase:false */
-	pubsub.publish(params.state, params.token_type + ' ' + params.access_token);
+  /*jshint camelcase:false */
+  pubsub.publish(params.state, params.token_type + ' ' + params.access_token);
 }
 
 function defaultWindowStrategy(url) {
-	var w = window.open(url, '_blank', 'width=500,height=400');
-	return function () {
-		w.close();
-	};
+  var w = window.open(url, '_blank', 'width=500,height=400');
+  return function () {
+    w.close();
+  };
 }
 
 function authorize(config) {
-	var state, url, dismissWindow;
+  var state, url, dismissWindow;
 
-	return new Promise(function (resolve) {
+  return new Promise(function (resolve) {
 
-		state = Math.random() * new Date().getTime();
-		url = new UrlBuilder(config.authorizationUrlBase).build({
-			'response_type': 'token',
-			'redirect_uri': config.redirectUrl,
-			'client_id': config.clientId,
-			'scope': config.scope,
-			'state': state
-		});
+    state = Math.random() * new Date().getTime();
+    url = new UrlBuilder(config.authorizationUrlBase).build({
+      'response_type': 'token',
+      'redirect_uri': config.redirectUrl,
+      'client_id': config.clientId,
+      'scope': config.scope,
+      'state': state
+    });
 
-		dismissWindow = config.windowStrategy(url);
+    dismissWindow = config.windowStrategy(url);
 
-		pubsub.subscribe(state, function (authorization) {
-			dismissWindow();
-			resolve(authorization);
-		});
+    pubsub.subscribe(state, function (authorization) {
+      dismissWindow();
+      resolve(authorization);
+    });
 
-	});
+  });
 }
 
 /**
@@ -94,42 +94,42 @@ function authorize(config) {
  * @returns {Client}
  */
 module.exports = interceptor({
-	init: function (config) {
-		config.redirectUrl = new UrlBuilder(config.redirectUrl).fullyQualify().build();
-		config.windowStrategy = config.windowStrategy || defaultWindowStrategy;
-		config.oAuthCallback = config.oAuthCallback || defaultOAuthCallback;
-		config.oAuthCallbackName = config.oAuthCallbackName || 'oAuthCallback';
+  init: function (config) {
+    config.redirectUrl = new UrlBuilder(config.redirectUrl).fullyQualify().build();
+    config.windowStrategy = config.windowStrategy || defaultWindowStrategy;
+    config.oAuthCallback = config.oAuthCallback || defaultOAuthCallback;
+    config.oAuthCallbackName = config.oAuthCallbackName || 'oAuthCallback';
 
-		window[config.oAuthCallbackName] = config.oAuthCallback;
+    window[config.oAuthCallbackName] = config.oAuthCallback;
 
-		return config;
-	},
-	request: function (request, config) {
-		request.headers = request.headers || {};
+    return config;
+  },
+  request: function (request, config) {
+    request.headers = request.headers || {};
 
-		if (config.token) {
-			request.headers.Authorization = config.token;
-			return request;
-		}
-		else {
-			return authorize(config).then(function (authorization) {
-				request.headers.Authorization = config.token = authorization;
-				return request;
-			});
-		}
-	},
-	response: function (response, config, meta) {
-		if (response.status.code === 401) {
-			// token probably expired, reauthorize
-			return authorize(config).then(function (authorization) {
-				config.token = authorization;
-				return meta.client(response.request);
-			});
-		}
-		else if (response.status.code === 403) {
-			return Promise.reject(response);
-		}
+    if (config.token) {
+      request.headers.Authorization = config.token;
+      return request;
+    }
+    else {
+      return authorize(config).then(function (authorization) {
+        request.headers.Authorization = config.token = authorization;
+        return request;
+      });
+    }
+  },
+  response: function (response, config, meta) {
+    if (response.status.code === 401) {
+      // token probably expired, reauthorize
+      return authorize(config).then(function (authorization) {
+        config.token = authorization;
+        return meta.client(response.request);
+      });
+    }
+    else if (response.status.code === 403) {
+      return Promise.reject(response);
+    }
 
-		return response;
-	}
+    return response;
+  }
 });
