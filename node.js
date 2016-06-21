@@ -5,11 +5,11 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
-var rest = require('./client/default'),
-  node = require('./client/node');
+var rest = require('./client/default')
+var node = require('./client/node')
 
-rest.setPlatformDefaultClient(node);
+rest.setPlatformDefaultClient(node)
 
-module.exports = rest;
+module.exports = rest

@@ -5,56 +5,54 @@
  * @author Scott Andrews
  */
 
+/* eslint-env amd */
+
 (function (buster, define) {
-  'use strict';
+  'use strict'
 
-  var assert, refute, fail, failOnThrow;
-
-  assert = buster.assertions.assert;
-  refute = buster.assertions.refute;
-  fail = buster.assertions.fail;
-  failOnThrow = buster.assertions.failOnThrow;
+  var assert = buster.assertions.assert
+  var fail = buster.assertions.fail
+  var failOnThrow = buster.assertions.failOnThrow
 
   define('rest-test/util/attempt-test', function (require) {
-
-    var attempt = require('rest/util/attempt');
+    var attempt = require('rest/util/attempt')
 
     buster.testCase('rest/util/attempt', {
       'resolves with returned values': function () {
-        function work() {
-          return 'hello';
+        function work () {
+          return 'hello'
         }
 
         return attempt(work).then(
           function (value) {
-            assert.equals('hello', value);
+            assert.equals('hello', value)
           },
           fail
-        );
+        )
       },
       'rejects with thrown values': function () {
-        function work() {
-          throw 'world';
+        function work () {
+          throw 'world'
         }
 
         return attempt(work).then(
           fail,
           failOnThrow(function (value) {
-            assert.equals('world', value);
+            assert.equals('world', value)
           })
-        );
+        )
       }
-    });
-  });
-
+    })
+  })
 }(
   this.buster || require('buster'),
   typeof define === 'function' && define.amd ? define : function (id, factory) {
-    var packageName = id.split(/[\/\-]/)[0], pathToRoot = id.replace(/[^\/]+/g, '..');
-    pathToRoot = pathToRoot.length > 2 ? pathToRoot.substr(3) : pathToRoot;
+    var packageName = id.split(/[\/\-]/)[0]
+    var pathToRoot = id.replace(/[^\/]+/g, '..')
+    pathToRoot = pathToRoot.length > 2 ? pathToRoot.substr(3) : pathToRoot
     factory(function (moduleId) {
-      return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId);
-    });
+      return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId)
+    })
   }
   // Boilerplate for AMD and Node
-));
+))

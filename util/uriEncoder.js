@@ -5,68 +5,65 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
-var charMap;
-
-charMap = (function () {
+var charMap = (function () {
   var strings = {
     alpha: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
-    digit: '0123456789'
-  };
+    digit: '0123456789',
+    genDelims: ':/?#[]@',
+    subDelims: '!$&\'()*+,;='
+  }
 
-  strings.genDelims = ':/?#[]@';
-  strings.subDelims = '!$&\'()*+,;=';
-  strings.reserved = strings.genDelims + strings.subDelims;
-  strings.unreserved = strings.alpha + strings.digit + '-._~';
-  strings.url = strings.reserved + strings.unreserved;
-  strings.scheme = strings.alpha + strings.digit + '+-.';
-  strings.userinfo = strings.unreserved + strings.subDelims + ':';
-  strings.host = strings.unreserved + strings.subDelims;
-  strings.port = strings.digit;
-  strings.pchar = strings.unreserved + strings.subDelims + ':@';
-  strings.segment = strings.pchar;
-  strings.path = strings.segment + '/';
-  strings.query = strings.pchar + '/?';
-  strings.fragment = strings.pchar + '/?';
+  strings.reserved = strings.genDelims + strings.subDelims
+  strings.unreserved = strings.alpha + strings.digit + '-._~'
+  strings.url = strings.reserved + strings.unreserved
+  strings.scheme = strings.alpha + strings.digit + '+-.'
+  strings.userinfo = strings.unreserved + strings.subDelims + ':'
+  strings.host = strings.unreserved + strings.subDelims
+  strings.port = strings.digit
+  strings.pchar = strings.unreserved + strings.subDelims + ':@'
+  strings.segment = strings.pchar
+  strings.path = strings.segment + '/'
+  strings.query = strings.pchar + '/?'
+  strings.fragment = strings.pchar + '/?'
 
   return Object.keys(strings).reduce(function (charMap, set) {
     charMap[set] = strings[set].split('').reduce(function (chars, myChar) {
-      chars[myChar] = true;
-      return chars;
-    }, {});
-    return charMap;
-  }, {});
-}());
+      chars[myChar] = true
+      return chars
+    }, {})
+    return charMap
+  }, {})
+}())
 
-function encode(str, allowed) {
+function encode (str, allowed) {
   if (typeof str !== 'string') {
-    throw new Error('String required for URL encoding');
+    throw new Error('String required for URL encoding')
   }
   return str.split('').map(function (myChar) {
     if (allowed.hasOwnProperty(myChar)) {
-      return myChar;
+      return myChar
     }
-    var code = myChar.charCodeAt(0);
+    var code = myChar.charCodeAt(0)
     if (code <= 127) {
-      var encoded = code.toString(16).toUpperCase();
-       return '%' + (encoded.length % 2 === 1 ? '0' : '') + encoded;
+      var encoded = code.toString(16).toUpperCase()
+      return '%' + (encoded.length % 2 === 1 ? '0' : '') + encoded
+    } else {
+      return encodeURIComponent(myChar).toUpperCase()
     }
-    else {
-      return encodeURIComponent(myChar).toUpperCase();
-    }
-  }).join('');
+  }).join('')
 }
 
-function makeEncoder(allowed) {
-  allowed = allowed || charMap.unreserved;
+function makeEncoder (allowed) {
+  allowed = allowed || charMap.unreserved
   return function (str) {
-    return encode(str, allowed);
-  };
+    return encode(str, allowed)
+  }
 }
 
-function decode(str) {
-  return decodeURIComponent(str);
+function decode (str) {
+  return decodeURIComponent(str)
 }
 
 module.exports = {
@@ -167,4 +164,4 @@ module.exports = {
    */
   encodeFragment: makeEncoder(charMap.fragment)
 
-};
+}

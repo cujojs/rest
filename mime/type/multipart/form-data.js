@@ -5,60 +5,60 @@
  * @author Michael Jackson
  */
 
-/* global FormData, File, Blob */
+'use strict'
 
-'use strict';
+/* eslint-env browser */
 
-function isFormElement(object) {
+function isFormElement (object) {
   return object &&
     object.nodeType === 1 && // Node.ELEMENT_NODE
-    object.tagName === 'FORM';
+    object.tagName === 'FORM'
 }
 
-function createFormDataFromObject(object) {
-  var formData = new FormData();
+function createFormDataFromObject (object) {
+  var formData = new FormData()
 
-  var value;
+  var value
   for (var property in object) {
     if (object.hasOwnProperty(property)) {
-      value = object[property];
+      value = object[property]
 
       if (value instanceof File) {
-        formData.append(property, value, value.name);
+        formData.append(property, value, value.name)
       } else if (value instanceof Blob) {
-        formData.append(property, value);
+        formData.append(property, value)
       } else {
-        formData.append(property, String(value));
+        formData.append(property, String(value))
       }
     }
   }
 
-  return formData;
+  return formData
 }
 
 module.exports = {
 
   write: function (object) {
     if (typeof FormData === 'undefined') {
-      throw new Error('The multipart/form-data mime serializer requires FormData support');
+      throw new Error('The multipart/form-data mime serializer requires FormData support')
     }
 
     // Support FormData directly.
     if (object instanceof FormData) {
-      return object;
+      return object
     }
 
     // Support <form> elements.
     if (isFormElement(object)) {
-      return new FormData(object);
+      return new FormData(object)
     }
 
     // Support plain objects, may contain File/Blob as value.
     if (typeof object === 'object' && object !== null) {
-      return createFormDataFromObject(object);
+      return createFormDataFromObject(object)
     }
 
-    throw new Error('Unable to create FormData from object ' + object);
+    throw new Error('Unable to create FormData from object ' + object)
   }
 
-};
+}

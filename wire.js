@@ -5,30 +5,28 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
-var client, when, pipeline, plugin;
+var client = require('./client/default')
+var when = require('when')
+var pipeline = require('when/pipeline')
 
-client = require('./client/default');
-when = require('when');
-pipeline = require('when/pipeline');
+function normalizeRestFactoryConfig (spec, wire) {
+  var config = {}
 
-function normalizeRestFactoryConfig(spec, wire) {
-  var config = {};
-
-  config.parent = wire(spec.parent || client);
+  config.parent = wire(spec.parent || client)
   config.interceptors = when.all((Array.isArray(spec) ? spec : spec.interceptors || []).map(function (interceptorDef) {
-    var interceptorConfig = interceptorDef.config;
-    delete interceptorDef.config;
+    var interceptorConfig = interceptorDef.config
+    delete interceptorDef.config
     return when.all([
       wire(typeof interceptorDef === 'string' ? { module: interceptorDef } : interceptorDef),
       wire(interceptorConfig)
     ]).spread(function (interceptor, config) {
-      return { interceptor: interceptor, config: config };
-    });
-  }));
+      return { interceptor: interceptor, config: config }
+    })
+  }))
 
-  return config;
+  return config
 }
 
 /**
@@ -37,35 +35,35 @@ function normalizeRestFactoryConfig(spec, wire) {
  * @param spec
  * @param wire
  */
-function restFactory(resolver, spec, wire) {
-  var config = normalizeRestFactoryConfig(spec.rest || spec.options, wire);
+function restFactory (resolver, spec, wire) {
+  var config = normalizeRestFactoryConfig(spec.rest || spec.options, wire)
   return config.parent.then(function (parent) {
     return config.interceptors.then(function (interceptorDefs) {
       pipeline(interceptorDefs.map(function (interceptorDef) {
         return function (parent) {
-          return interceptorDef.interceptor(parent, interceptorDef.config);
-        };
-      }), parent).then(resolver.resolve, resolver.reject);
-    });
-  });
+          return interceptorDef.interceptor(parent, interceptorDef.config)
+        }
+      }), parent).then(resolver.resolve, resolver.reject)
+    })
+  })
 }
 
 /**
  * The plugin instance.  Can be the same for all wiring runs
  */
-plugin = {
+var plugin = {
   resolvers: {
     client: function () {
-      throw new Error('rest.js: client! wire reference resolved is deprecated, use \'rest\' facotry instead');
+      throw new Error('rest.js: client! wire reference resolved is deprecated, use \'rest\' facotry instead')
     }
   },
   factories: {
     rest: restFactory
   }
-};
+}
 
 module.exports = {
-  wire$plugin: function restPlugin(/* ready, destroyed, options */) {
-    return plugin;
+  wire$plugin: function restPlugin (/* ready, destroyed, options */) {
+    return plugin
   }
-};
+}

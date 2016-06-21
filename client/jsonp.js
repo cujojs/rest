@@ -5,55 +5,52 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
-var UrlBuilder, responsePromise, client;
-
-UrlBuilder = require('../UrlBuilder');
-responsePromise = require('../util/responsePromise');
-client = require('../client');
+var UrlBuilder = require('../UrlBuilder')
+var responsePromise = require('../util/responsePromise')
+var client = require('../client')
 
 // consider abstracting this into a util module
-function clearProperty(scope, propertyName) {
+function clearProperty (scope, propertyName) {
   try {
-    delete scope[propertyName];
-  }
-  catch (e) {
+    delete scope[propertyName]
+  } catch (e) {
     // IE doesn't like to delete properties on the window object
     if (propertyName in scope) {
-      scope[propertyName] = void 0;
+      scope[propertyName] = void 0
     }
   }
 }
 
-function cleanupScriptNode(response) {
+function cleanupScriptNode (response) {
   try {
     if (response.raw && response.raw.parentNode) {
-      response.raw.parentNode.removeChild(response.raw);
+      response.raw.parentNode.removeChild(response.raw)
     }
   } catch (e) {
     // ignore
   }
 }
 
-function registerCallback(prefix, resolve, response, name) {
+function registerCallback (prefix, resolve, response, name) {
   if (!name) {
     do {
-      name = prefix + Math.floor(new Date().getTime() * Math.random());
+      name = prefix + Math.floor(new Date().getTime() * Math.random())
     }
-    while (name in window);
+    while (name in window)
   }
 
-  window[name] = function jsonpCallback(data) {
-    response.entity = data;
-    clearProperty(window, name);
-    cleanupScriptNode(response);
+  window[name] = function jsonpCallback (data) {
+    response.entity = data
+    clearProperty(window, name)
+    cleanupScriptNode(response)
     if (!response.request.canceled) {
-      resolve(response);
+      resolve(response)
     }
-  };
+  }
 
-  return name;
+  return name
 }
 
 /**
@@ -72,60 +69,56 @@ function registerCallback(prefix, resolve, response, name) {
  *
  * @returns {Promise<Response>}
  */
-module.exports = client(function jsonp(request) {
+module.exports = client(function jsonp (request) {
   return responsePromise.promise(function (resolve, reject) {
-
-    var callbackName, callbackParams, script, firstScript, response;
-
-    request = typeof request === 'string' ? { path: request } : request || {};
-    response = { request: request };
+    request = typeof request === 'string' ? { path: request } : request || {}
+    var response = { request: request }
 
     if (request.canceled) {
-      response.error = 'precanceled';
-      reject(response);
-      return;
+      response.error = 'precanceled'
+      reject(response)
+      return
     }
 
-    request.callback = request.callback || {};
-    callbackName = registerCallback(request.callback.prefix || 'jsonp', resolve, response, request.callback.name);
-    callbackParams = {};
-    callbackParams[request.callback.param || 'callback'] = callbackName;
+    request.callback = request.callback || {}
+    var callbackName = registerCallback(request.callback.prefix || 'jsonp', resolve, response, request.callback.name)
+    var callbackParams = {}
+    callbackParams[request.callback.param || 'callback'] = callbackName
 
-    request.canceled = false;
-    request.cancel = function cancel() {
-      request.canceled = true;
-      response.error = 'canceled';
-      cleanupScriptNode(response);
-      reject(response);
-    };
+    request.canceled = false
+    request.cancel = function cancel () {
+      request.canceled = true
+      response.error = 'canceled'
+      cleanupScriptNode(response)
+      reject(response)
+    }
 
-    script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.async = true;
-    script.src = response.url = new UrlBuilder(request.path, callbackParams).build();
+    var script = document.createElement('script')
+    script.type = 'text/javascript'
+    script.async = true
+    script.src = response.url = new UrlBuilder(request.path, callbackParams).build()
 
-    function handlePossibleError() {
+    function handlePossibleError () {
       if (typeof window[callbackName] === 'function') {
-        response.error = 'loaderror';
-        clearProperty(window, callbackName);
-        cleanupScriptNode(response);
-        reject(response);
+        response.error = 'loaderror'
+        clearProperty(window, callbackName)
+        cleanupScriptNode(response)
+        reject(response)
       }
     }
     script.onerror = function () {
-      handlePossibleError();
-    };
+      handlePossibleError()
+    }
     script.onload = script.onreadystatechange = function (e) {
       // script tag load callbacks are completely non-standard
       // handle case where onreadystatechange is fired for an error instead of onerror
       if ((e && (e.type === 'load' || e.type === 'error')) || script.readyState === 'loaded') {
-        handlePossibleError();
+        handlePossibleError()
       }
-    };
+    }
 
-    response.raw = script;
-    firstScript = document.getElementsByTagName('script')[0];
-    firstScript.parentNode.insertBefore(script, firstScript);
-
-  }, request);
-});
+    response.raw = script
+    var firstScript = document.getElementsByTagName('script')[0]
+    firstScript.parentNode.insertBefore(script, firstScript)
+  }, request)
+})

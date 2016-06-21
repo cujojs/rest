@@ -5,10 +5,10 @@
  * @author Scott Andrews
  */
 
-var config = exports;
+var config = exports
 
 if (typeof Promise === 'undefined') {
-  require('when/es6-shim/Promise');
+  require('when/es6-shim/Promise')
 }
 
 config['rest:node'] = {
@@ -19,14 +19,14 @@ config['rest:node'] = {
     'test/**/*-test-node.js'
   ],
   testHelpers: ['test/failOnThrow.js']
-};
+}
 
 config['rest:browser'] = {
   environment: 'browser',
   autoRun: false,
   rootPath: '../',
   resources: [
-    //'**', ** is busted in buster
+    // '**', ** is busted in buster
     '*.js',
     'client/**/*.js',
     'interceptor/**/*.js',
@@ -54,4 +54,4 @@ config['rest:browser'] = {
     'test/run.js'
   ],
   testHelpers: ['test/failOnThrow.js']
-};
+}

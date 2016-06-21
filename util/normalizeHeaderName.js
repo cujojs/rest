@@ -5,7 +5,7 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
 /**
  * Normalize HTTP header names using the pseudo camel case.
@@ -18,11 +18,11 @@
  * @param {string} name the raw header name
  * @return {string} the normalized header name
  */
-function normalizeHeaderName(name) {
+function normalizeHeaderName (name) {
   return name.toLowerCase()
     .split('-')
-    .map(function (chunk) { return chunk.charAt(0).toUpperCase() + chunk.slice(1); })
-    .join('-');
+    .map(function (chunk) { return chunk.charAt(0).toUpperCase() + chunk.slice(1) })
+    .join('-')
 }
 
-module.exports = normalizeHeaderName;
+module.exports = normalizeHeaderName

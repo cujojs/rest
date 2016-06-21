@@ -5,164 +5,152 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
-var normalizeHeaderName, responsePromise, client, headerSplitRE;
+/* eslint-env browser */
 
-normalizeHeaderName = require('../util/normalizeHeaderName');
-responsePromise = require('../util/responsePromise');
-client = require('../client');
+var normalizeHeaderName = require('../util/normalizeHeaderName')
+var responsePromise = require('../util/responsePromise')
+var client = require('../client')
 
 // according to the spec, the line break is '\r\n', but doesn't hold true in practice
-headerSplitRE = /[\r|\n]+/;
+var headerSplitRE = /[\r|\n]+/
 
-function parseHeaders(raw) {
+function parseHeaders (raw) {
   // Note: Set-Cookie will be removed by the browser
-  var headers = {};
+  var headers = {}
 
-  if (!raw) { return headers; }
+  if (!raw) { return headers }
 
   raw.trim().split(headerSplitRE).forEach(function (header) {
-    var boundary, name, value;
-    boundary = header.indexOf(':');
-    name = normalizeHeaderName(header.substring(0, boundary).trim());
-    value = header.substring(boundary + 1).trim();
+    var boundary = header.indexOf(':')
+    var name = normalizeHeaderName(header.substring(0, boundary).trim())
+    var value = header.substring(boundary + 1).trim()
     if (headers[name]) {
       if (Array.isArray(headers[name])) {
         // add to an existing array
-        headers[name].push(value);
-      }
-      else {
+        headers[name].push(value)
+      } else {
         // convert single value to array
-        headers[name] = [headers[name], value];
+        headers[name] = [headers[name], value]
       }
-    }
-    else {
+    } else {
       // new, single value
-      headers[name] = value;
+      headers[name] = value
     }
-  });
+  })
 
-  return headers;
+  return headers
 }
 
-function safeMixin(target, source) {
+function safeMixin (target, source) {
   Object.keys(source || {}).forEach(function (prop) {
     // make sure the property already exists as
     // IE 6 will blow up if we add a new prop
     if (source.hasOwnProperty(prop) && prop in target) {
       try {
-        target[prop] = source[prop];
-      }
-      catch (e) {
+        target[prop] = source[prop]
+      } catch (e) {
         // ignore, expected for some properties at some points in the request lifecycle
       }
     }
-  });
+  })
 
-  return target;
+  return target
 }
 
-module.exports = client(function xhr(request) {
+module.exports = client(function xhr (request) {
   return responsePromise.promise(function (resolve, reject) {
-    /*jshint maxcomplexity:20 */
-
-    var client, method, url, headers, entity, headerName, response, XHR;
-
-    request = typeof request === 'string' ? { path: request } : request || {};
-    response = { request: request };
+    request = typeof request === 'string' ? { path: request } : request || {}
+    var response = { request: request }
 
     if (request.canceled) {
-      response.error = 'precanceled';
-      reject(response);
-      return;
+      response.error = 'precanceled'
+      reject(response)
+      return
     }
 
-    XHR = request.engine || XMLHttpRequest;
+    var XHR = request.engine || XMLHttpRequest
     if (!XHR) {
-      reject({ request: request, error: 'xhr-not-available' });
-      return;
+      reject({ request: request, error: 'xhr-not-available' })
+      return
     }
 
-    entity = request.entity;
-    request.method = request.method || (entity ? 'POST' : 'GET');
-    method = request.method;
-    url = response.url = request.path || '';
+    var entity = request.entity
+    request.method = request.method || (entity ? 'POST' : 'GET')
+    var method = request.method
+    var url = response.url = request.path || ''
 
+    var client
     try {
-      client = response.raw = new XHR();
+      client = response.raw = new XHR()
 
       // mixin extra request properties before and after opening the request as some properties require being set at different phases of the request
-      safeMixin(client, request.mixin);
-      client.open(method, url, true);
-      safeMixin(client, request.mixin);
+      safeMixin(client, request.mixin)
+      client.open(method, url, true)
+      safeMixin(client, request.mixin)
 
-      headers = request.headers;
-      for (headerName in headers) {
-        /*jshint forin:false */
+      var headers = request.headers
+      for (var headerName in headers) {
         if (headerName === 'Content-Type' && headers[headerName] === 'multipart/form-data') {
           // XMLHttpRequest generates its own Content-Type header with the
           // appropriate multipart boundary when sending multipart/form-data.
-          continue;
+          continue
         }
 
-        client.setRequestHeader(headerName, headers[headerName]);
+        client.setRequestHeader(headerName, headers[headerName])
       }
 
-      request.canceled = false;
-      request.cancel = function cancel() {
-        request.canceled = true;
-        response.error = 'canceled';
-        client.abort();
-        reject(response);
-      };
+      request.canceled = false
+      request.cancel = function cancel () {
+        request.canceled = true
+        response.error = 'canceled'
+        client.abort()
+        reject(response)
+      }
 
       client.onreadystatechange = function (/* e */) {
-        if (request.canceled) { return; }
+        if (request.canceled) { return }
         if (client.readyState === (XHR.DONE || 4)) {
           response.status = {
             code: client.status,
             text: client.statusText
-          };
-          response.headers = parseHeaders(client.getAllResponseHeaders());
-          response.entity = client.responseText;
+          }
+          response.headers = parseHeaders(client.getAllResponseHeaders())
+          response.entity = client.responseText
 
           // #125 -- Sometimes IE8-9 uses 1223 instead of 204
           // http://stackoverflow.com/questions/10046972/msie-returns-status-code-of-1223-for-ajax-request
           if (response.status.code === 1223) {
-            response.status.code = 204;
+            response.status.code = 204
           }
 
           if (response.status.code > 0) {
             // check status code as readystatechange fires before error event
-            resolve(response);
-          }
-          else {
+            resolve(response)
+          } else {
             // give the error callback a chance to fire before resolving
             // requests for file:// URLs do not have a status code
             setTimeout(function () {
-              resolve(response);
-            }, 0);
+              resolve(response)
+            }, 0)
           }
         }
-      };
+      }
 
       try {
         client.onerror = function (/* e */) {
-          response.error = 'loaderror';
-          reject(response);
-        };
-      }
-      catch (e) {
+          response.error = 'loaderror'
+          reject(response)
+        }
+      } catch (e) {
         // IE 6 will not support error handling
       }
 
-      client.send(entity);
+      client.send(entity)
+    } catch (e) {
+      response.error = 'loaderror'
+      reject(response)
     }
-    catch (e) {
-      response.error = 'loaderror';
-      reject(response);
-    }
-
-  }, request);
-});
+  }, request)
+})

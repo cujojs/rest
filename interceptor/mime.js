@@ -5,24 +5,22 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
-var interceptor, mime, registry, noopConverter, missingConverter, attempt;
+var interceptor = require('../interceptor')
+var mime = require('../mime')
+var registry = require('../mime/registry')
+var attempt = require('../util/attempt')
 
-interceptor = require('../interceptor');
-mime = require('../mime');
-registry = require('../mime/registry');
-attempt = require('../util/attempt');
+var noopConverter = {
+  read: function (obj) { return obj },
+  write: function (obj) { return obj }
+}
 
-noopConverter = {
-  read: function (obj) { return obj; },
-  write: function (obj) { return obj; }
-};
-
-missingConverter = {
-  read: function () { throw 'No read method found on converter'; },
-  write: function () { throw 'No write method found on converter'; }
-};
+var missingConverter = {
+  read: function () { throw 'No read method found on converter' },
+  write: function () { throw 'No write method found on converter' }
+}
 
 /**
  * MIME type support for request and response entities.  Entities are
@@ -46,64 +44,74 @@ missingConverter = {
  * @returns {Client}
  */
 module.exports = interceptor({
-  init: function (config) {
-    config.registry = config.registry || registry;
-    return config;
-  },
-  request: function (request, config) {
-    var type, headers;
 
-    headers = request.headers || (request.headers = {});
-    type = mime.parse(headers['Content-Type'] || config.mime || 'text/plain');
-    headers.Accept = headers.Accept || config.accept || type.raw + ', application/json;q=0.8, text/plain;q=0.5, */*;q=0.2';
+  init: function (config) {
+    config.registry = config.registry || registry
+    return config
+  },
+
+  request: function (request, config) {
+    var headers = request.headers || (request.headers = {})
+    var type = mime.parse(headers['Content-Type'] || config.mime || 'text/plain')
+    headers.Accept = headers.Accept || config.accept || type.raw + ', application/json;q=0.8, text/plain;q=0.5, */*;q=0.2'
 
     if (!('entity' in request)) {
-      return request;
+      return request
     }
 
-    headers['Content-Type'] = type.raw;
+    headers['Content-Type'] = type.raw
 
     return config.registry.lookup(type)['catch'](function () {
       // failed to resolve converter
       if (config.permissive) {
-        return noopConverter;
+        return noopConverter
       }
-      throw 'mime-unknown';
+      throw 'mime-unknown'
     }).then(function (converter) {
-      var client = config.client || request.originator,
-        write = converter.write || missingConverter.write;
+      var client = config.client || request.originator
+      var write = converter.write || missingConverter.write
 
-      return attempt(write.bind(void 0, request.entity, { client: client, request: request, mime: type, registry: config.registry }))
-        ['catch'](function() {
-          throw 'mime-serialization';
-        })
-        .then(function(entity) {
-          request.entity = entity;
-          return request;
-        });
-    });
+      return attempt(write.bind(void 0, request.entity, {
+        client: client,
+        request: request,
+        mime: type,
+        registry: config.registry
+      }))['catch'](function () {
+        throw 'mime-serialization'
+      })
+      .then(function (entity) {
+        request.entity = entity
+        return request
+      })
+    })
   },
+
   response: function (response, config) {
     if (!(response.headers && response.headers['Content-Type'] && response.entity)) {
-      return response;
+      return response
     }
 
-    var type = mime.parse(response.headers['Content-Type']);
+    var type = mime.parse(response.headers['Content-Type'])
 
-    return config.registry.lookup(type)['catch'](function () { return noopConverter; }).then(function (converter) {
-      var client = config.client || response.request && response.request.originator,
-        read = converter.read || missingConverter.read;
+    return config.registry.lookup(type)['catch'](function () { return noopConverter }).then(function (converter) {
+      var client = config.client || response.request && response.request.originator
+      var read = converter.read || missingConverter.read
 
-      return attempt(read.bind(void 0, response.entity, { client: client, response: response, mime: type, registry: config.registry }))
-        ['catch'](function (e) {
-          response.error = 'mime-deserialization';
-          response.cause = e;
-          throw response;
-        })
-        .then(function (entity) {
-          response.entity = entity;
-          return response;
-        });
-    });
+      return attempt(read.bind(void 0, response.entity, {
+        client: client,
+        response: response,
+        mime: type,
+        registry: config.registry
+      }))['catch'](function (e) {
+        response.error = 'mime-deserialization'
+        response.cause = e
+        throw response
+      })
+      .then(function (entity) {
+        response.entity = entity
+        return response
+      })
+    })
   }
-});
+
+})

@@ -5,43 +5,36 @@
  * @author Scott Andrews
  */
 
+/* eslint-env amd */
+
 (function (buster, define) {
-  'use strict';
+  'use strict'
 
-  var assert, refute, fail, failOnThrow;
-
-  assert = buster.assertions.assert;
-  refute = buster.assertions.refute;
-  fail = buster.assertions.fail;
-  failOnThrow = buster.assertions.failOnThrow;
+  var assert = buster.assertions.assert
 
   define('rest-test/node-test', function (require) {
-
-    var rest, defaultClient, node;
-
-    rest = require('rest/node');
-    defaultClient = require('rest/client/default');
-    node = require('rest/client/node');
+    var rest = require('rest/node')
+    var defaultClient = require('rest/client/default')
+    var node = require('rest/client/node')
 
     buster.testCase('rest/node', {
       'should be the default client': function () {
-        assert.same(defaultClient, rest);
+        assert.same(defaultClient, rest)
       },
       'should wrap the node client': function () {
-        assert.same(node, rest.getDefaultClient());
+        assert.same(node, rest.getDefaultClient())
       }
-    });
-
-  });
-
+    })
+  })
 }(
   this.buster || require('buster'),
   typeof define === 'function' && define.amd ? define : function (id, factory) {
-    var packageName = id.split(/[\/\-]/)[0], pathToRoot = id.replace(/[^\/]+/g, '..');
-    pathToRoot = pathToRoot.length > 2 ? pathToRoot.substr(3) : pathToRoot;
+    var packageName = id.split(/[\/\-]/)[0]
+    var pathToRoot = id.replace(/[^\/]+/g, '..')
+    pathToRoot = pathToRoot.length > 2 ? pathToRoot.substr(3) : pathToRoot
     factory(function (moduleId) {
-      return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId);
-    });
+      return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId)
+    })
   }
   // Boilerplate for AMD and Node
-));
+))

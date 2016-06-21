@@ -5,24 +5,23 @@
  * @author Scott Andrews
  */
 
+/* eslint-env amd */
+
 (function (buster, define) {
-  'use strict';
+  'use strict'
 
   define('rest-test/test/run', ['curl/_privileged', 'domReady!'], function (curl) {
-
     var modules = Object.keys(curl.cache).filter(function (moduleId) {
-      return moduleId.match(/-test(-browser)?$/);
-    });
+      return moduleId.match(/-test(-browser)?$/)
+    })
 
-    buster.testRunner.timeout = 5000;
+    buster.testRunner.timeout = 5000
     define('rest-test/test/run-faux', modules, function () {
-      buster.run();
-    });
-
-  });
-
+      buster.run()
+    })
+  })
 }(
   this.buster || require('buster'),
-  typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }
+  typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require) }
   // Boilerplate for AMD and Node
-));
+))

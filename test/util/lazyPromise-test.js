@@ -5,63 +5,58 @@
  * @author Scott Andrews
  */
 
+/* eslint-env amd */
+
 (function (buster, define) {
-  'use strict';
+  'use strict'
 
-  var assert, refute, fail;
-
-  assert = buster.assertions.assert;
-  refute = buster.assertions.refute;
-  fail = buster.assertions.fail;
+  var assert = buster.assertions.assert
+  var refute = buster.assertions.refute
+  var fail = buster.assertions.fail
 
   define('rest-test/util/lazyPromise-test', function (require) {
-
-    var lazyPromise = require('rest/util/lazyPromise');
+    var lazyPromise = require('rest/util/lazyPromise')
 
     buster.testCase('rest/util/lazyPromise', {
       'should not start work until a handler is attached': function () {
-        var promise, spy;
+        var spy = this.spy(function () { return 'lazy' })
+        var promise = lazyPromise(spy)
 
-        spy = this.spy(function () { return 'lazy'; });
-        promise = lazyPromise(spy);
-
-        refute.called(spy);
+        refute.called(spy)
 
         return promise.then(
           function (value) {
-            assert.called(spy);
-            assert.equals('lazy', value);
+            assert.called(spy)
+            assert.equals('lazy', value)
           },
           fail
-        );
+        )
       },
       'should reject if the work function throws': function () {
-        var promise, spy;
+        var spy = this.spy(function () { throw 'lazy' })
+        var promise = lazyPromise(spy)
 
-        spy = this.spy(function () { throw 'lazy'; });
-        promise = lazyPromise(spy);
-
-        refute.called(spy);
+        refute.called(spy)
 
         return promise.then(
           fail,
           function (value) {
-            assert.called(spy);
-            assert.equals('lazy', value);
+            assert.called(spy)
+            assert.equals('lazy', value)
           }
-        );
+        )
       }
-    });
-  });
-
+    })
+  })
 }(
   this.buster || require('buster'),
   typeof define === 'function' && define.amd ? define : function (id, factory) {
-    var packageName = id.split(/[\/\-]/)[0], pathToRoot = id.replace(/[^\/]+/g, '..');
-    pathToRoot = pathToRoot.length > 2 ? pathToRoot.substr(3) : pathToRoot;
+    var packageName = id.split(/[\/\-]/)[0]
+    var pathToRoot = id.replace(/[^\/]+/g, '..')
+    pathToRoot = pathToRoot.length > 2 ? pathToRoot.substr(3) : pathToRoot
     factory(function (moduleId) {
-      return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId);
-    });
+      return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId)
+    })
   }
   // Boilerplate for AMD and Node
-));
+))

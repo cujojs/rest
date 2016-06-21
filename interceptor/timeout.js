@@ -6,11 +6,9 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
-var interceptor;
-
-interceptor = require('../interceptor');
+var interceptor = require('../interceptor')
 
 /**
  * Cancels a request if it takes longer then the timeout value.
@@ -22,41 +20,44 @@ interceptor = require('../interceptor');
  * @returns {Client}
  */
 module.exports = interceptor({
+
   init: function (config) {
-    config.timeout = config.timeout || 0;
-    config.transient = !!config.transient;
-    return config;
+    config.timeout = config.timeout || 0
+    config.transient = !!config.transient
+    return config
   },
+
   request: function (request, config) {
-    var timeout, abort, triggerAbort, transient;
-    timeout = 'timeout' in request ? request.timeout : config.timeout;
-    transient = 'transient' in request ? request.transient : config.transient;
+    var timeout, abort, triggerAbort, transient
+    timeout = 'timeout' in request ? request.timeout : config.timeout
+    transient = 'transient' in request ? request.transient : config.transient
     if (timeout <= 0) {
-      return request;
+      return request
     }
     abort = new Promise(function (resolve, reject) {
-      triggerAbort = reject;
-    });
+      triggerAbort = reject
+    })
     this.timeout = setTimeout(function () {
-      triggerAbort({ request: request, error: 'timeout' });
+      triggerAbort({ request: request, error: 'timeout' })
       if (request.cancel) {
-        request.cancel();
+        request.cancel()
         if (transient) {
           // unmark request as canceled for future requests
-          request.canceled = false;
+          request.canceled = false
         }
+      } else if (!transient) {
+        request.canceled = true
       }
-      else if (!transient) {
-        request.canceled = true;
-      }
-    }, timeout);
-    return new interceptor.ComplexRequest({ request: request, abort: abort });
+    }, timeout)
+    return new interceptor.ComplexRequest({ request: request, abort: abort })
   },
+
   response: function (response) {
     if (this.timeout) {
-      clearTimeout(this.timeout);
-      delete this.timeout;
+      clearTimeout(this.timeout)
+      delete this.timeout
     }
-    return response;
+    return response
   }
-});
+
+})

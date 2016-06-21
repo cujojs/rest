@@ -5,11 +5,9 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
-var interceptor;
-
-interceptor = require('../interceptor');
+var interceptor = require('../interceptor')
 
 /**
  * Applies a Cross-Site Request Forgery protection header to a request
@@ -31,21 +29,22 @@ interceptor = require('../interceptor');
  * @returns {Client}
  */
 module.exports = interceptor({
-  init: function (config) {
-    config.name = config.name || 'X-Csrf-Token';
-    return config;
-  },
-  request: function handleRequest(request, config) {
-    var headers, name, token;
 
-    headers = request.headers || (request.headers = {});
-    name = request.csrfTokenName || config.name;
-    token = request.csrfToken || config.token;
+  init: function (config) {
+    config.name = config.name || 'X-Csrf-Token'
+    return config
+  },
+
+  request: function handleRequest (request, config) {
+    var headers = request.headers || (request.headers = {})
+    var name = request.csrfTokenName || config.name
+    var token = request.csrfToken || config.token
 
     if (token) {
-      headers[name] = token;
+      headers[name] = token
     }
 
-    return request;
+    return request
   }
-});
+
+})

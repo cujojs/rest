@@ -6,208 +6,206 @@
  * @author Scott Andrews
  */
 
+/* eslint-env amd */
+
 (function (buster, define) {
-  'use strict';
+  'use strict'
 
-  var assert, refute, fail, failOnThrow;
-
-  assert = buster.assertions.assert;
-  refute = buster.assertions.refute;
-  fail = buster.assertions.fail;
-  failOnThrow = buster.assertions.failOnThrow;
+  var assert = buster.assertions.assert
+  var refute = buster.assertions.refute
+  var fail = buster.assertions.fail
+  var failOnThrow = buster.assertions.failOnThrow
 
   define('rest-test/client/node-test', function (require) {
+    var rest = require('rest')
+    var client = require('rest/client/node')
+    var http = require('http')
+    var https = require('https')
+    var fs = require('fs')
+    var path = require('path')
 
-    var rest, client, http, https, fs, serverHttp, serverHttps;
-
-    rest = require('rest');
-    client = require('rest/client/node');
-    http = require('http');
-    https = require('https');
-    fs = require('fs');
+    var serverHttp, serverHttps
 
     buster.testCase('rest/client/node', {
       setUp: function () {
-        serverHttp = http.createServer();
+        serverHttp = http.createServer()
         serverHttps = https.createServer({
-          key: fs.readFileSync(__dirname + '/node-ssl.key'),
-          cert: fs.readFileSync(__dirname + '/node-ssl.crt')
-        });
+          key: fs.readFileSync(path.resolve(__dirname, 'node-ssl.key')),
+          cert: fs.readFileSync(path.resolve(__dirname, 'node-ssl.crt'))
+        })
 
-        function handle(request, response) {
-          var requestBody = '';
+        function handle (request, response) {
+          var requestBody = ''
           request.on('data', function (chunk) {
-            requestBody += chunk;
-          });
+            requestBody += chunk
+          })
           request.on('end', function () {
-            var responseBody = requestBody ? requestBody : 'hello world';
+            var responseBody = requestBody || 'hello world'
             response.writeHead(200, 'OK', {
               'content-length': responseBody.length,
               'content-type': 'text/plain'
-            });
-            response.write(responseBody);
-            response.end();
-          });
-          request.on('error', function () { console.log('server error'); });
+            })
+            response.write(responseBody)
+            response.end()
+          })
+          request.on('error', function () { console.log('server error') })
         }
 
-        serverHttp.on('request', handle);
-        serverHttps.on('request', handle);
+        serverHttp.on('request', handle)
+        serverHttps.on('request', handle)
 
         // TODO handle port conflicts
-        serverHttp.listen(8080);
-        serverHttps.listen(8443);
+        serverHttp.listen(8080)
+        serverHttps.listen(8443)
       },
       tearDown: function () {
-        serverHttp.close();
-        serverHttps.close();
+        serverHttp.close()
+        serverHttps.close()
       },
 
       'should make a GET by default': function () {
-        var request = { path: 'http://localhost:8080/' };
+        var request = { path: 'http://localhost:8080/' }
         return client(request).then(function (response) {
-          assert.equals(response.url, 'http://localhost:8080/');
-          assert(response.raw.request instanceof http.ClientRequest);
+          assert.equals(response.url, 'http://localhost:8080/')
+          assert(response.raw.request instanceof http.ClientRequest)
           // assert(response.raw.response instanceof http.ClientResponse);
-          assert(response.raw.response);
-          assert.same(request, response.request);
-          assert.equals(response.request.method, 'GET');
-          assert.equals(response.entity, 'hello world');
-          assert.equals(response.status.code, 200);
-          assert.equals('text/plain', response.headers['Content-Type']);
-          assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
-          refute(request.canceled);
-        })['catch'](fail);
+          assert(response.raw.response)
+          assert.same(request, response.request)
+          assert.equals(response.request.method, 'GET')
+          assert.equals(response.entity, 'hello world')
+          assert.equals(response.status.code, 200)
+          assert.equals('text/plain', response.headers['Content-Type'])
+          assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10))
+          refute(request.canceled)
+        })['catch'](fail)
       },
       'should make an explicit GET': function () {
-        var request = { path: 'http://localhost:8080/', method: 'GET' };
+        var request = { path: 'http://localhost:8080/', method: 'GET' }
         return client(request).then(function (response) {
-          assert.equals(response.url, 'http://localhost:8080/');
-          assert.same(request, response.request);
-          assert.equals(response.request.method, 'GET');
-          assert.equals(response.entity, 'hello world');
-          assert.equals(response.status.code, 200);
-          refute(request.canceled);
-        })['catch'](fail);
+          assert.equals(response.url, 'http://localhost:8080/')
+          assert.same(request, response.request)
+          assert.equals(response.request.method, 'GET')
+          assert.equals(response.entity, 'hello world')
+          assert.equals(response.status.code, 200)
+          refute(request.canceled)
+        })['catch'](fail)
       },
       'should make a POST with an entity': function () {
-        var request = { path: 'http://localhost:8080/', entity: 'echo' };
+        var request = { path: 'http://localhost:8080/', entity: 'echo' }
         return client(request).then(function (response) {
-          assert.equals(response.url, 'http://localhost:8080/');
-          assert.same(request, response.request);
-          assert.equals(response.request.method, 'POST');
-          assert.equals(response.entity, 'echo');
-          assert.equals(response.status.code, 200);
-          assert.equals('text/plain', response.headers['Content-Type']);
-          assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
-          refute(request.canceled);
-        })['catch'](fail);
+          assert.equals(response.url, 'http://localhost:8080/')
+          assert.same(request, response.request)
+          assert.equals(response.request.method, 'POST')
+          assert.equals(response.entity, 'echo')
+          assert.equals(response.status.code, 200)
+          assert.equals('text/plain', response.headers['Content-Type'])
+          assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10))
+          refute(request.canceled)
+        })['catch'](fail)
       },
       'should make an explicit POST with an entity': function () {
-        var request = { path: 'http://localhost:8080/', entity: 'echo', method: 'POST' };
+        var request = { path: 'http://localhost:8080/', entity: 'echo', method: 'POST' }
         return client(request).then(function (response) {
-          assert.equals(response.url, 'http://localhost:8080/');
-          assert.same(request, response.request);
-          assert.equals(response.request.method, 'POST');
-          assert.equals(response.entity, 'echo');
-          refute(request.canceled);
-        })['catch'](fail);
+          assert.equals(response.url, 'http://localhost:8080/')
+          assert.same(request, response.request)
+          assert.equals(response.request.method, 'POST')
+          assert.equals(response.entity, 'echo')
+          refute(request.canceled)
+        })['catch'](fail)
       },
       'should make an https request': function () {
         var request = {
           path: 'https://localhost:8443/',
           mixin: { rejectUnauthorized: false }
-        };
+        }
         return client(request).then(function (response) {
-          assert.equals(response.url, 'https://localhost:8443/');
-          assert(response.raw.request instanceof http.ClientRequest);
+          assert.equals(response.url, 'https://localhost:8443/')
+          assert(response.raw.request instanceof http.ClientRequest)
           // assert(response.raw.response instanceof http.ClientResponse);
-          assert(response.raw.response);
-          assert.same(request, response.request);
-          assert.equals(response.request.method, 'GET');
-          assert.equals(response.entity, 'hello world');
-          assert.equals(response.status.code, 200);
-          assert.equals('text/plain', response.headers['Content-Type']);
-          assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10));
-          refute(request.canceled);
-        })['catch'](fail);
+          assert(response.raw.response)
+          assert.same(request, response.request)
+          assert.equals(response.request.method, 'GET')
+          assert.equals(response.entity, 'hello world')
+          assert.equals(response.status.code, 200)
+          assert.equals('text/plain', response.headers['Content-Type'])
+          assert.equals(response.entity.length, parseInt(response.headers['Content-Length'], 10))
+          refute(request.canceled)
+        })['catch'](fail)
       },
       'should abort the request if canceled': function () {
-        var request, response;
-        request = { path: 'http://localhost:8080/' };
-        client(request).then(
+        var request = { path: 'http://localhost:8080/' }
+        var response = client(request).then(
           fail,
           failOnThrow(function (response) {
-            assert.equals(response.url, 'http://localhost:8080/');
-            assert(request.canceled);
+            assert.equals(response.url, 'http://localhost:8080/')
+            assert(request.canceled)
           })
-        );
-        refute(request.canceled);
-        request.cancel();
-        return response;
+        )
+        refute(request.canceled)
+        request.cancel()
+        return response
       },
       'should propogate request errors': function () {
-        var request = { path: 'http://localhost:1234' };
+        var request = { path: 'http://localhost:1234' }
         return client(request).then(
           fail,
           failOnThrow(function (response) {
-            assert.equals(response.url, 'http://localhost:1234');
-            assert(response.error);
+            assert.equals(response.url, 'http://localhost:1234')
+            assert(response.error)
           })
-        );
+        )
       },
       'should not make a request that has already been canceled': function () {
-        var request = { canceled: true, path: 'http://localhost:1234' };
+        var request = { canceled: true, path: 'http://localhost:1234' }
         return client(request).then(
           fail,
           failOnThrow(function (response) {
-            assert.same(request, response.request);
-            assert(request.canceled);
-            assert.same('precanceled', response.error);
+            assert.same(request, response.request)
+            assert(request.canceled)
+            assert.same('precanceled', response.error)
           })
-        );
+        )
       },
       'should abort a request when canceled': function () {
-        var request = { path: 'http://localhost:1234' };
+        var request = { path: 'http://localhost:1234' }
         return client(request).cancel().then(
           fail,
           failOnThrow(function (response) {
-            assert.same(request, response.request);
-            assert(request.canceled);
-            assert.same('canceled', response.error);
+            assert.same(request, response.request)
+            assert(request.canceled)
+            assert.same('canceled', response.error)
           })
-        );
+        )
       },
       'should normalize a string to a request object': function () {
         return client('http://localhost:8080/').then(function (response) {
-          assert.equals(response.url, 'http://localhost:8080/');
-          assert.same('http://localhost:8080/', response.request.path);
-        })['catch'](fail);
+          assert.equals(response.url, 'http://localhost:8080/')
+          assert.same('http://localhost:8080/', response.request.path)
+        })['catch'](fail)
       },
       'should be the default client': function () {
-        rest.resetDefaultClient();
-        assert.same(client, rest.getDefaultClient());
+        rest.resetDefaultClient()
+        assert.same(client, rest.getDefaultClient())
       },
       'should support interceptor wrapping': function () {
-        assert(typeof client.wrap === 'function');
+        assert(typeof client.wrap === 'function')
       },
       'should return a ResponsePromise': function () {
-        var response = client();
-        response['catch'](function () {});
-        assert.isFunction(response.entity);
+        var response = client()
+        response['catch'](function () {})
+        assert.isFunction(response.entity)
       }
-    });
-
-  });
-
+    })
+  })
 }(
   this.buster || require('buster'),
   typeof define === 'function' && define.amd ? define : function (id, factory) {
-    var packageName = id.split(/[\/\-]/)[0], pathToRoot = id.replace(/[^\/]+/g, '..');
-    pathToRoot = pathToRoot.length > 2 ? pathToRoot.substr(3) : pathToRoot;
+    var packageName = id.split(/[\/\-]/)[0]
+    var pathToRoot = id.replace(/[^\/]+/g, '..')
+    pathToRoot = pathToRoot.length > 2 ? pathToRoot.substr(3) : pathToRoot
     factory(function (moduleId) {
-      return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId);
-    });
+      return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId)
+    })
   }
   // Boilerplate for AMD and Node
-));
+))

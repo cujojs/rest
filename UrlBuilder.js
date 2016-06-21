@@ -5,16 +5,16 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
-var mixin, xWWWFormURLEncoder, origin, urlRE, absoluteUrlRE, fullyQualifiedUrlRE;
+var origin
 
-mixin = require('./util/mixin');
-xWWWFormURLEncoder = require('./mime/type/application/x-www-form-urlencoded');
+var mixin = require('./util/mixin')
+var xWWWFormURLEncoder = require('./mime/type/application/x-www-form-urlencoded')
 
-urlRE = /([a-z][a-z0-9\+\-\.]*:)\/\/([^@]+@)?(([^:\/]+)(:([0-9]+))?)?(\/[^?#]*)?(\?[^#]*)?(#\S*)?/i;
-absoluteUrlRE = /^([a-z][a-z0-9\-\+\.]*:\/\/|\/)/i;
-fullyQualifiedUrlRE = /([a-z][a-z0-9\+\-\.]*:)\/\/([^@]+@)?(([^:\/]+)(:([0-9]+))?)?\//i;
+var urlRE = /([a-z][a-z0-9\+\-\.]*:)\/\/([^@]+@)?(([^:\/]+)(:([0-9]+))?)?(\/[^?#]*)?(\?[^#]*)?(#\S*)?/i
+var absoluteUrlRE = /^([a-z][a-z0-9\-\+\.]*:\/\/|\/)/i
+var fullyQualifiedUrlRE = /([a-z][a-z0-9\+\-\.]*:)\/\/([^@]+@)?(([^:\/]+)(:([0-9]+))?)?\//i
 
 /**
  * Apply params to the template to create a URL.
@@ -26,36 +26,34 @@ fullyQualifiedUrlRE = /([a-z][a-z0-9\+\-\.]*:)\/\/([^@]+@)?(([^:\/]+)(:([0-9]+))
  * @param {Object} params parameters to apply to the template
  * @return {string} the resulting URL
  */
-function buildUrl(template, params) {
+function buildUrl (template, params) {
   // internal builder to convert template with params.
-  var url, name, queryStringParams, queryString, re;
+  var name, re
 
-  url = template;
-  queryStringParams = {};
+  var url = template
+  var queryStringParams = {}
 
   if (params) {
     for (name in params) {
-      /*jshint forin:false */
-      re = new RegExp('\\{' + name + '\\}');
+      re = new RegExp('\\{' + name + '\\}')
       if (re.test(url)) {
-        url = url.replace(re, encodeURIComponent(params[name]), 'g');
-      }
-      else {
-        queryStringParams[name] = params[name];
+        url = url.replace(re, encodeURIComponent(params[name]), 'g')
+      } else {
+        queryStringParams[name] = params[name]
       }
     }
 
-    queryString = xWWWFormURLEncoder.write(queryStringParams);
+    var queryString = xWWWFormURLEncoder.write(queryStringParams)
     if (queryString) {
-      url += url.indexOf('?') === -1 ? '?' : '&';
-      url += queryString;
+      url += url.indexOf('?') === -1 ? '?' : '&'
+      url += queryString
     }
   }
-  return url;
+  return url
 }
 
-function startsWith(str, test) {
-  return str.indexOf(test) === 0;
+function startsWith (str, test) {
+  return str.indexOf(test) === 0
 }
 
 /**
@@ -65,19 +63,18 @@ function startsWith(str, test) {
  * @param {Object} [params] base parameters
  * @constructor
  */
-function UrlBuilder(template, params) {
+function UrlBuilder (template, params) {
   if (!(this instanceof UrlBuilder)) {
     // invoke as a constructor
-    return new UrlBuilder(template, params);
+    return new UrlBuilder(template, params)
   }
 
   if (template instanceof UrlBuilder) {
-    this._template = template.template;
-    this._params = mixin({}, this._params, params);
-  }
-  else {
-    this._template = (template || '').toString();
-    this._params = params || {};
+    this._template = template.template
+    this._params = mixin({}, this._params, params)
+  } else {
+    this._template = (template || '').toString()
+    this._params = params || {}
   }
 }
 
@@ -91,9 +88,9 @@ UrlBuilder.prototype = {
    * @param {Object} [params] params to combine with current params.  New params override existing params
    * @return {UrlBuilder} the new builder
    */
-  append: function (template,  params) {
+  append: function (template, params) {
     // TODO consider query strings and fragments
-    return new UrlBuilder(this._template + template, mixin({}, this._params, params));
+    return new UrlBuilder(this._template + template, mixin({}, this._params, params))
   },
 
   /**
@@ -107,27 +104,25 @@ UrlBuilder.prototype = {
    * @return {UrlBuilder} the fully qualified URL template
    */
   fullyQualify: function () {
-    if (typeof location === 'undefined') { return this; }
-    if (this.isFullyQualified()) { return this; }
+    if (!origin) { return this }
+    if (this.isFullyQualified()) { return this }
 
-    var template = this._template;
+    var template = this._template
 
     if (startsWith(template, '//')) {
-      template = origin.protocol + template;
-    }
-    else if (startsWith(template, '/')) {
-      template = origin.origin + template;
-    }
-    else if (!this.isAbsolute()) {
-      template = origin.origin + origin.pathname.substring(0, origin.pathname.lastIndexOf('/') + 1);
+      template = origin.protocol + template
+    } else if (startsWith(template, '/')) {
+      template = origin.origin + template
+    } else if (!this.isAbsolute()) {
+      template = origin.origin + origin.pathname.substring(0, origin.pathname.lastIndexOf('/') + 1)
     }
 
     if (template.indexOf('/', 8) === -1) {
       // default the pathname to '/'
-      template = template + '/';
+      template = template + '/'
     }
 
-    return new UrlBuilder(template, this._params);
+    return new UrlBuilder(template, this._params)
   },
 
   /**
@@ -136,7 +131,7 @@ UrlBuilder.prototype = {
    * @return {boolean}
    */
   isAbsolute: function () {
-    return absoluteUrlRE.test(this.build());
+    return absoluteUrlRE.test(this.build())
   },
 
   /**
@@ -145,7 +140,7 @@ UrlBuilder.prototype = {
    * @return {boolean}
    */
   isFullyQualified: function () {
-    return fullyQualifiedUrlRE.test(this.build());
+    return fullyQualifiedUrlRE.test(this.build())
   },
 
   /**
@@ -156,12 +151,12 @@ UrlBuilder.prototype = {
    */
   isCrossOrigin: function () {
     if (!origin) {
-      return true;
+      return true
     }
-    var url = this.parts();
+    var url = this.parts()
     return url.protocol !== origin.protocol ||
            url.hostname !== origin.hostname ||
-           url.port !== origin.port;
+           url.port !== origin.port
   },
 
   /**
@@ -174,10 +169,8 @@ UrlBuilder.prototype = {
    * @returns {Object} a 'window.location'-like object
    */
   parts: function () {
-    /*jshint maxcomplexity:20 */
-    var url, parts;
-    url = this.fullyQualify().build().match(urlRE);
-    parts = {
+    var url = this.fullyQualify().build().match(urlRE)
+    var parts = {
       href: url[0],
       protocol: url[1],
       host: url[3] || '',
@@ -186,10 +179,10 @@ UrlBuilder.prototype = {
       pathname: url[7] || '',
       search: url[8] || '',
       hash: url[9] || ''
-    };
-    parts.origin = parts.protocol + '//' + parts.host;
-    parts.port = parts.port || (parts.protocol === 'https:' ? '443' : parts.protocol === 'http:' ? '80' : '');
-    return parts;
+    }
+    parts.origin = parts.protocol + '//' + parts.host
+    parts.port = parts.port || (parts.protocol === 'https:' ? '443' : parts.protocol === 'http:' ? '80' : '')
+    return parts
   },
 
   /**
@@ -199,18 +192,18 @@ UrlBuilder.prototype = {
    * @return {string} the expanded URL
    */
   build: function (params) {
-    return buildUrl(this._template, mixin({}, this._params, params));
+    return buildUrl(this._template, mixin({}, this._params, params))
   },
 
   /**
    * @see build
    */
   toString: function () {
-    return this.build();
+    return this.build()
   }
 
-};
+}
 
-origin = typeof location !== 'undefined' ? new UrlBuilder(location.href).parts() : void 0;
+origin = typeof window !== 'undefined' && window.location ? new UrlBuilder(window.location.href).parts() : void 0
 
-module.exports = UrlBuilder;
+module.exports = UrlBuilder

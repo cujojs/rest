@@ -5,11 +5,11 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
-var rest = require('./client/default'),
-    browser = require('./client/xhr');
+var rest = require('./client/default')
+var browser = require('./client/xhr')
 
-rest.setPlatformDefaultClient(browser);
+rest.setPlatformDefaultClient(browser)
 
-module.exports = rest;
+module.exports = rest

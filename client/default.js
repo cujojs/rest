@@ -5,7 +5,7 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
 /**
  * Plain JS Object containing properties that represent an HTTP request.
@@ -63,12 +63,12 @@
   * @extends Promise
   */
 
-var client, target, platformDefault;
+var target, platformDefault
 
-client = require('../client');
+var client = require('../client')
 
 if (typeof Promise !== 'function' && console && console.log) {
-  console.log('An ES6 Promise implementation is required to use rest.js. See https://github.com/cujojs/when/blob/master/docs/es6-promise-shim.md for using when.js as a Promise polyfill.');
+  console.log('An ES6 Promise implementation is required to use rest.js. See https://github.com/cujojs/when/blob/master/docs/es6-promise-shim.md for using when.js as a Promise polyfill.')
 }
 
 /**
@@ -76,41 +76,41 @@ if (typeof Promise !== 'function' && console && console.log) {
  * @param {Request} the HTTP request
  * @returns {Promise<Response>} a promise the resolves to the HTTP response
  */
-function defaultClient() {
-  return target.apply(void 0, arguments);
+function defaultClient () {
+  return target.apply(void 0, arguments)
 }
 
 /**
  * Change the default client
  * @param {Client} client the new default client
  */
-defaultClient.setDefaultClient = function setDefaultClient(client) {
-  target = client;
-};
+defaultClient.setDefaultClient = function setDefaultClient (client) {
+  target = client
+}
 
 /**
  * Obtain a direct reference to the current default client
  * @returns {Client} the default client
  */
-defaultClient.getDefaultClient = function getDefaultClient() {
-  return target;
-};
+defaultClient.getDefaultClient = function getDefaultClient () {
+  return target
+}
 
 /**
  * Reset the default client to the platform default
  */
-defaultClient.resetDefaultClient = function resetDefaultClient() {
-  target = platformDefault;
-};
+defaultClient.resetDefaultClient = function resetDefaultClient () {
+  target = platformDefault
+}
 
 /**
  * @private
  */
-defaultClient.setPlatformDefaultClient = function setPlatformDefaultClient(client) {
+defaultClient.setPlatformDefaultClient = function setPlatformDefaultClient (client) {
   if (platformDefault) {
-    throw new Error('Unable to redefine platformDefaultClient');
+    throw new Error('Unable to redefine platformDefaultClient')
   }
-  target = platformDefault = client;
-};
+  target = platformDefault = client
+}
 
-module.exports = client(defaultClient);
+module.exports = client(defaultClient)

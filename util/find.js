@@ -5,7 +5,7 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
 module.exports = {
 
@@ -18,14 +18,14 @@ module.exports = {
    * @param {string} prop name of the property to search for
    * @param {Function} callback function to receive the found properties and their parent
    */
-  findProperties: function findProperties(obj, prop, callback) {
-    if (typeof obj !== 'object' || obj === null) { return; }
+  findProperties: function findProperties (obj, prop, callback) {
+    if (typeof obj !== 'object' || obj === null) { return }
     if (prop in obj) {
-      callback(obj[prop], obj, prop);
+      callback(obj[prop], obj, prop)
     }
     Object.keys(obj).forEach(function (key) {
-      findProperties(obj[key], prop, callback);
-    });
+      findProperties(obj[key], prop, callback)
+    })
   }
 
-};
+}

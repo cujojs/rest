@@ -55,9 +55,9 @@ accepting pull requests, and should be as expressive and concise as possible.
 ## Mind the whitespace
 
 Please carefully follow the whitespace and formatting conventions already
-present in the framework.
+present in the framework. rest.js follows [JavaScript Standard Style]().
 
-1. Tabs, not spaces
+1. Spaces (2), not tabs
 1. Unix (LF), not dos (CRLF) line endings
 1. Eliminate all trailing whitespace
 1. Wrap JSDoc at 80 characters
@@ -226,6 +226,7 @@ issue a new pull request when asked to make changes.
 
 [help documentation]: http://help.github.com/send-pull-requests
 [issue tracker]: https://github.com/cujojs/rest/issues
+[JavaScript Standard Style]: http://standardjs.com/
 [mailing list]: https://groups.google.com/forum/#!forum/cujojs
 [fork-and-edit]: https://github.com/blog/844-forking-with-the-edit-button
 [commit guidelines section of Pro Git]: http://progit.org/book/ch5-2.html#commit_guidelines

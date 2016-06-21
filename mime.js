@@ -5,7 +5,7 @@
 * @author Scott Andrews
 */
 
-'use strict';
+'use strict'
 
 /**
  * Parse a MIME type into it's constituent parts
@@ -18,24 +18,22 @@
  *   {Object} params key/value pair of attributes
  * }}
  */
-function parse(mime) {
-  var params, type;
-
-  params = mime.split(';');
-  type = params[0].trim().split('+');
+function parse (mime) {
+  var params = mime.split(';')
+  var type = params[0].trim().split('+')
 
   return {
     raw: mime,
     type: type[0],
     suffix: type[1] ? '+' + type[1] : '',
     params: params.slice(1).reduce(function (params, pair) {
-      pair = pair.split('=');
-      params[pair[0].trim()] = pair[1] ? pair[1].trim() : void 0;
-      return params;
+      pair = pair.split('=')
+      params[pair[0].trim()] = pair[1] ? pair[1].trim() : void 0
+      return params
     }, {})
-  };
+  }
 }
 
 module.exports = {
   parse: parse
-};
+}

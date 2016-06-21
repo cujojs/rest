@@ -5,9 +5,9 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
-var attempt = require('./attempt');
+var attempt = require('./attempt')
 
 /**
  * Create a promise whose work is started only when a handler is registered.
@@ -19,28 +19,26 @@ var attempt = require('./attempt');
  *   returned promise.
  * @returns {Promise} a lazy promise
  */
-function lazyPromise(work) {
-  var started, resolver, promise, then;
-
-  started = false;
-
-  promise = new Promise(function (resolve, reject) {
+function lazyPromise (work) {
+  var started = false
+  var resolver
+  var promise = new Promise(function (resolve, reject) {
     resolver = {
       resolve: resolve,
       reject: reject
-    };
-  });
-  then = promise.then;
+    }
+  })
+  var then = promise.then
 
   promise.then = function () {
     if (!started) {
-      started = true;
-      attempt(work).then(resolver.resolve, resolver.reject);
+      started = true
+      attempt(work).then(resolver.resolve, resolver.reject)
     }
-    return then.apply(promise, arguments);
-  };
+    return then.apply(promise, arguments)
+  }
 
-  return promise;
+  return promise
 }
 
-module.exports = lazyPromise;
+module.exports = lazyPromise

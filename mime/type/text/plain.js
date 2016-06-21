@@ -5,16 +5,16 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
 module.exports = {
 
   read: function (str) {
-    return str;
+    return str
   },
 
   write: function (obj) {
-    return obj.toString();
+    return obj.toString()
   }
 
-};
+}

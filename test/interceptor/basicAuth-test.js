@@ -5,66 +5,62 @@
  * @author Scott Andrews
  */
 
+/* eslint-env amd */
+
 (function (buster, define) {
-  'use strict';
+  'use strict'
 
-  var assert, refute, fail;
-
-  assert = buster.assertions.assert;
-  refute = buster.assertions.refute;
-  fail = buster.assertions.fail;
+  var assert = buster.assertions.assert
+  var refute = buster.assertions.refute
+  var fail = buster.assertions.fail
 
   define('rest-test/interceptor/basicAuth-test', function (require) {
-
-    var basicAuth, rest;
-
-    basicAuth = require('rest/interceptor/basicAuth');
-    rest = require('rest');
+    var basicAuth = require('rest/interceptor/basicAuth')
+    var rest = require('rest')
 
     buster.testCase('rest/interceptor/basicAuth', {
       'should authenticate the requst from the config': function () {
         var client = basicAuth(
-          function (request) { return { request: request }; },
-          { username: 'user', password: 'pass'}
-        );
+          function (request) { return { request: request } },
+          { username: 'user', password: 'pass' }
+        )
         return client({}).then(function (response) {
-          assert.equals('Basic dXNlcjpwYXNz', response.request.headers.Authorization);
-        })['catch'](fail);
+          assert.equals('Basic dXNlcjpwYXNz', response.request.headers.Authorization)
+        })['catch'](fail)
       },
       'should authenticate the requst from the request': function () {
         var client = basicAuth(
-          function (request) { return { request: request }; }
-        );
-        return client({ username: 'user', password: 'pass'}).then(function (response) {
-          assert.equals('Basic dXNlcjpwYXNz', response.request.headers.Authorization);
-        })['catch'](fail);
+          function (request) { return { request: request } }
+        )
+        return client({ username: 'user', password: 'pass' }).then(function (response) {
+          assert.equals('Basic dXNlcjpwYXNz', response.request.headers.Authorization)
+        })['catch'](fail)
       },
       'should not authenticate without a username': function () {
         var client = basicAuth(
-          function (request) { return { request: request }; }
-        );
+          function (request) { return { request: request } }
+        )
         return client({}).then(function (response) {
-          refute.defined(response.request.headers.Authorization);
-        })['catch'](fail);
+          refute.defined(response.request.headers.Authorization)
+        })['catch'](fail)
       },
       'should have the default client as the parent by default': function () {
-        assert.same(rest, basicAuth().skip());
+        assert.same(rest, basicAuth().skip())
       },
       'should support interceptor wrapping': function () {
-        assert(typeof basicAuth().wrap === 'function');
+        assert(typeof basicAuth().wrap === 'function')
       }
-    });
-
-  });
-
+    })
+  })
 }(
   this.buster || require('buster'),
   typeof define === 'function' && define.amd ? define : function (id, factory) {
-    var packageName = id.split(/[\/\-]/)[0], pathToRoot = id.replace(/[^\/]+/g, '..');
-    pathToRoot = pathToRoot.length > 2 ? pathToRoot.substr(3) : pathToRoot;
+    var packageName = id.split(/[\/\-]/)[0]
+    var pathToRoot = id.replace(/[^\/]+/g, '..')
+    pathToRoot = pathToRoot.length > 2 ? pathToRoot.substr(3) : pathToRoot
     factory(function (moduleId) {
-      return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId);
-    });
+      return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId)
+    })
   }
   // Boilerplate for AMD and Node
-));
+))

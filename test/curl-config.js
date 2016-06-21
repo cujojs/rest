@@ -5,7 +5,7 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
 window.curl = {
   packages: [
@@ -17,4 +17,4 @@ window.curl = {
   ],
   // avoid poly/xhr as we need to test the case without it
   preloads: ['poly/object', 'poly/string', 'poly/date', 'poly/array', 'poly/function', 'poly/json']
-};
+}

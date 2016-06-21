@@ -5,12 +5,10 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
-var interceptor, jsonpClient;
-
-interceptor = require('../interceptor');
-jsonpClient = require('../client/jsonp');
+var interceptor = require('../interceptor')
+var jsonpClient = require('../client/jsonp')
 
 /**
  * Allows common configuration of JSONP clients.
@@ -34,16 +32,20 @@ jsonpClient = require('../client/jsonp');
  * @returns {Client}
  */
 module.exports = interceptor({
+
   client: jsonpClient,
+
   init: function (config) {
-    config.callback = config.callback || {};
-    return config;
+    config.callback = config.callback || {}
+    return config
   },
+
   request: function (request, config) {
-    request.callback = request.callback || {};
-    request.callback.param = request.callback.param || config.callback.param;
-    request.callback.prefix = request.callback.prefix || config.callback.prefix;
-    request.callback.name = request.callback.name || config.callback.name;
-    return request;
+    request.callback = request.callback || {}
+    request.callback.param = request.callback.param || config.callback.param
+    request.callback.prefix = request.callback.prefix || config.callback.prefix
+    request.callback.name = request.callback.name || config.callback.name
+    return request
   }
-});
+
+})

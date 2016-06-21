@@ -5,19 +5,17 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
-var interceptor, UrlBuilder;
+var interceptor = require('../interceptor')
+var UrlBuilder = require('../UrlBuilder')
 
-interceptor = require('../interceptor');
-UrlBuilder = require('../UrlBuilder');
-
-function startsWith(str, prefix) {
-  return str.indexOf(prefix) === 0;
+function startsWith (str, prefix) {
+  return str.indexOf(prefix) === 0
 }
 
-function endsWith(str, suffix) {
-  return str.lastIndexOf(suffix) + suffix.length === str.length;
+function endsWith (str, suffix) {
+  return str.lastIndexOf(suffix) + suffix.length === str.length
 }
 
 /**
@@ -29,21 +27,23 @@ function endsWith(str, suffix) {
  * @returns {Client}
  */
 module.exports = interceptor({
+
   request: function (request, config) {
-    var path;
+    var path
 
     if (config.prefix && !(new UrlBuilder(request.path).isFullyQualified())) {
-      path = config.prefix;
+      path = config.prefix
       if (request.path) {
         if (!endsWith(path, '/') && !startsWith(request.path, '/')) {
           // add missing '/' between path sections
-          path += '/';
+          path += '/'
         }
-        path += request.path;
+        path += request.path
       }
-      request.path = path;
+      request.path = path
     }
 
-    return request;
+    return request
   }
-});
+
+})

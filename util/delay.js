@@ -5,7 +5,7 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
 /**
  * Delay the resolution of a promise
@@ -17,14 +17,14 @@
  * @param {Promise|*} [promiseOrValue] value to resolve with
  * @returns {Promise} delayed Promise containing the value
  */
-function delay(wait, promiseOrValue) {
+function delay (wait, promiseOrValue) {
   return Promise.resolve(promiseOrValue).then(function (value) {
     return new Promise(function (resolve) {
       setTimeout(function () {
-        resolve(value);
-      }, wait);
-    });
-  });
+        resolve(value)
+      }, wait)
+    })
+  })
 }
 
-module.exports = delay;
+module.exports = delay

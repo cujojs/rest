@@ -5,7 +5,7 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
 /**
  * Attempt to invoke a function capturing the resulting value as a Promise
@@ -15,13 +15,12 @@
  * @param {function} work function to invoke
  * @returns {Promise} Promise for the output of the work function
  */
-function attempt(work) {
+function attempt (work) {
   try {
-    return Promise.resolve(work());
-  }
-  catch (e) {
-    return Promise.reject(e);
+    return Promise.resolve(work())
+  } catch (e) {
+    return Promise.reject(e)
   }
 }
 
-module.exports = attempt;
+module.exports = attempt

@@ -5,37 +5,34 @@
  * @author Scott Andrews
  */
 
+/* eslint-env amd */
+
 (function (buster, define) {
-  'use strict';
+  'use strict'
 
-  var assert, refute;
-
-  assert = buster.assertions.assert;
-  refute = buster.assertions.refute;
+  var assert = buster.assertions.assert
 
   define('rest-test/util/base64-test', function (require) {
-
-    var base64 = require('rest/util/base64');
+    var base64 = require('rest/util/base64')
 
     buster.testCase('rest/util/base64', {
       'should base64 encode strings': function () {
-        assert.equals('Zm9v', base64.encode('foo'));
+        assert.equals('Zm9v', base64.encode('foo'))
       },
       'should base64 decode strings': function () {
-        assert.equals('foo', base64.decode('Zm9v'));
+        assert.equals('foo', base64.decode('Zm9v'))
       }
-    });
-
-  });
-
+    })
+  })
 }(
   this.buster || require('buster'),
   typeof define === 'function' && define.amd ? define : function (id, factory) {
-    var packageName = id.split(/[\/\-]/)[0], pathToRoot = id.replace(/[^\/]+/g, '..');
-    pathToRoot = pathToRoot.length > 2 ? pathToRoot.substr(3) : pathToRoot;
+    var packageName = id.split(/[\/\-]/)[0]
+    var pathToRoot = id.replace(/[^\/]+/g, '..')
+    pathToRoot = pathToRoot.length > 2 ? pathToRoot.substr(3) : pathToRoot
     factory(function (moduleId) {
-      return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId);
-    });
+      return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId)
+    })
   }
   // Boilerplate for AMD and Node
-));
+))

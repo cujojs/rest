@@ -5,12 +5,12 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
 // A poor man's pub-sub.  A single listener is supported per topic.  When
 // the topic is published, the listener is unsubscribed.
 
-var topics = {};
+var topics = {}
 
 /**
  * Publishes the message to the topic, invoking the listener.
@@ -20,11 +20,11 @@ var topics = {};
  * @param {string} topic the topic to publish to
  * @param {Object} message message to publish
  */
-function publish(topic /* , message... */) {
-  if (!topics[topic]) { return; }
-  topics[topic].apply({}, Array.prototype.slice.call(arguments, 1));
+function publish (topic /* , message... */) {
+  if (!topics[topic]) { return }
+  topics[topic].apply({}, Array.prototype.slice.call(arguments, 1))
   // auto cleanup
-  delete topics[topic];
+  delete topics[topic]
 }
 
 /**
@@ -35,11 +35,11 @@ function publish(topic /* , message... */) {
  * @param {string} topic the topic to listen on
  * @param {Function} callback the callback to receive the message published to the topic
  */
-function subscribe(topic, callback) {
-  topics[topic] = callback;
+function subscribe (topic, callback) {
+  topics[topic] = callback
 }
 
 module.exports = {
   publish: publish,
   subscribe: subscribe
-};
+}

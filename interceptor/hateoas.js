@@ -5,14 +5,12 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
-var interceptor, pathPrefix, rfc5988LinkParser, find;
-
-interceptor = require('../interceptor');
-pathPrefix = require('./pathPrefix');
-rfc5988LinkParser = require('../parsers/rfc5988');
-find = require('../util/find');
+var interceptor = require('../interceptor')
+var pathPrefix = require('./pathPrefix')
+var rfc5988LinkParser = require('../parsers/rfc5988')
+var find = require('../util/find')
 
 /**
  * [Experimental]
@@ -52,87 +50,86 @@ find = require('../util/find');
  * @returns {Client}
  */
 module.exports = interceptor({
+
   init: function (config) {
-    config.target = config.target || '';
-    return config;
+    config.target = config.target || ''
+    return config
   },
+
   response: function (response, config, meta) {
-    var client;
+    var client = config.client || (response.request && response.request.originator) || meta.client
 
-    client = config.client || (response.request && response.request.originator) || meta.client;
-
-    function apply(target, links) {
+    function apply (target, links) {
       links.forEach(function (link) {
         Object.defineProperty(target, link.rel + 'Link', {
           enumerable: false,
           configurable: true,
           value: link
-        });
+        })
         Object.defineProperty(target, link.rel, {
           enumerable: false,
           configurable: true,
           get: function () {
-            var response = client({ path: link.href });
+            var response = client({ path: link.href })
             Object.defineProperty(target, link.rel, {
               enumerable: false,
               configurable: true,
               value: response
-            });
-            return response;
+            })
+            return response
           }
-        });
-      });
+        })
+      })
 
       // if only Proxy was well supported...
       Object.defineProperty(target, 'clientFor', {
         enumerable: false,
-        value: function clientFor(rel, parentClient) {
+        value: function clientFor (rel, parentClient) {
           return pathPrefix(
             parentClient || client,
             { prefix: target[rel + 'Link'].href }
-          );
+          )
         }
-      });
+      })
     }
 
-    function parseLinkHeaders(headers) {
+    function parseLinkHeaders (headers) {
       var links = [];
       [].concat(headers).forEach(function (header) {
         try {
-          links = links.concat(rfc5988LinkParser.parse(header));
-        }
-        catch (e) {
+          links = links.concat(rfc5988LinkParser.parse(header))
+        } catch (e) {
           // ignore
           // TODO consider a debug mode that logs
         }
-      });
-      return links;
+      })
+      return links
     }
 
     if (response.headers && response.headers.Link) {
-      response.links = response.links || {};
-      apply(response.links, parseLinkHeaders(response.headers.Link));
+      response.links = response.links || {}
+      apply(response.links, parseLinkHeaders(response.headers.Link))
     }
 
     find.findProperties(response.entity, 'links', function (obj, host) {
-      var target;
+      var target
 
       if (Array.isArray(host.links)) {
         if (config.target === '') {
-          target = host;
-        }
-        else {
-          target = {};
+          target = host
+        } else {
+          target = {}
           Object.defineProperty(host, config.target, {
             enumerable: false,
             value: target
-          });
+          })
         }
 
-        apply(target, host.links);
+        apply(target, host.links)
       }
-    });
+    })
 
-    return response;
+    return response
   }
-});
+
+})

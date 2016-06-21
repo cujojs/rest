@@ -5,32 +5,26 @@
  * @author Scott Andrews
  */
 
+/* eslint-env amd */
+
 (function (buster, define) {
-  'use strict';
+  'use strict'
 
-  var assert, refute, fail, failOnThrow;
-
-  assert = buster.assertions.assert;
-  refute = buster.assertions.refute;
-  fail = buster.assertions.fail;
-  failOnThrow = buster.assertions.failOnThrow;
+  var assert = buster.assertions.assert
+  var fail = buster.assertions.fail
 
   define('rest-test/wire-test', function (require) {
-
-    var rest, pathPrefixInterceptor, wire;
-
-    rest = require('rest');
-    pathPrefixInterceptor = require('rest/interceptor/pathPrefix');
-    wire = require('wire');
+    var rest = require('rest')
+    var pathPrefixInterceptor = require('rest/interceptor/pathPrefix')
+    var wire = require('wire')
 
     buster.testCase('rest/wire', {
       'should use the rest factory': {
         '': function () {
-          var spec, client;
-          client = function (request) {
-            return { request: request, status: { code: 200 }, headers: { 'Content-Type': 'application/json' }, entity: '{"foo":"bar"}' };
-          };
-          spec = {
+          var client = function (request) {
+            return { request: request, status: { code: 200 }, headers: { 'Content-Type': 'application/json' }, entity: '{"foo":"bar"}' }
+          }
+          var spec = {
             client: {
               rest: {
                 parent: client,
@@ -42,24 +36,23 @@
               }
             },
             $plugins: [{ module: 'rest/wire' }]
-          };
+          }
           return wire(spec, { require: require }).then(function (spec) {
-            assert.same(client, spec.client.skip().skip().skip());
+            assert.same(client, spec.client.skip().skip().skip())
             spec.client({ method: 'post', path: '/', entity: { bleep: 'bloop' } }).then(function (response) {
-              assert.equals('http://example.com/', response.request.path);
-              assert.equals({ foo: 'bar' }, response.entity);
-              assert.equals('{"bleep":"bloop"}', response.request.entity);
-              assert.equals(0, response.request.headers.Accept.indexOf('application/json'));
-              assert.equals('application/json', response.request.headers['Content-Type']);
-            });
-          })['catch'](fail);
+              assert.equals('http://example.com/', response.request.path)
+              assert.equals({ foo: 'bar' }, response.entity)
+              assert.equals('{"bleep":"bloop"}', response.request.entity)
+              assert.equals(0, response.request.headers.Accept.indexOf('application/json'))
+              assert.equals('application/json', response.request.headers['Content-Type'])
+            })
+          })['catch'](fail)
         },
         'with interceptor references': function () {
-          var spec, client;
-          client = function (request) {
-            return { request: request, status: { code: 200 }, headers: { 'Content-Type': 'application/json' }, entity: '{"foo":"bar"}' };
-          };
-          spec = {
+          var client = function (request) {
+            return { request: request, status: { code: 200 }, headers: { 'Content-Type': 'application/json' }, entity: '{"foo":"bar"}' }
+          }
+          var spec = {
             client: {
               rest: {
                 parent: client,
@@ -74,22 +67,21 @@
             pathPrefix: { module: 'rest/interceptor/pathPrefix' },
             errorCode: { module: 'rest/interceptor/errorCode' },
             $plugins: [{ module: 'rest/wire' }]
-          };
+          }
           return wire(spec, { require: require }).then(function (spec) {
-            assert.same(client, spec.client.skip().skip().skip());
+            assert.same(client, spec.client.skip().skip().skip())
             spec.client({ method: 'post', path: '/', entity: { bleep: 'bloop' } }).then(function (response) {
-              assert.equals('http://example.com/', response.request.path);
-              assert.equals({ foo: 'bar' }, response.entity);
-              assert.equals('{"bleep":"bloop"}', response.request.entity);
-              assert.equals(0, response.request.headers.Accept.indexOf('application/json'));
-              assert.equals('application/json', response.request.headers['Content-Type']);
-            });
-          })['catch'](fail);
+              assert.equals('http://example.com/', response.request.path)
+              assert.equals({ foo: 'bar' }, response.entity)
+              assert.equals('{"bleep":"bloop"}', response.request.entity)
+              assert.equals(0, response.request.headers.Accept.indexOf('application/json'))
+              assert.equals('application/json', response.request.headers['Content-Type'])
+            })
+          })['catch'](fail)
         },
         'with interceptor string shortcuts': function () {
-          var spec, client;
-          client = function () {};
-          spec = {
+          var client = function () {}
+          var spec = {
             client: {
               rest: {
                 parent: client,
@@ -101,17 +93,16 @@
               }
             },
             $plugins: [{ module: 'rest/wire' }]
-          };
+          }
           return wire(spec, { require: require }).then(function (spec) {
-            assert.same(client, spec.client.skip().skip().skip());
-          })['catch'](fail);
+            assert.same(client, spec.client.skip().skip().skip())
+          })['catch'](fail)
         },
         'with concrete interceptors': function () {
-          var spec, client;
-          client = function (request) {
-            return { request: request };
-          };
-          spec = {
+          var client = function (request) {
+            return { request: request }
+          }
+          var spec = {
             client: {
               rest: {
                 parent: client,
@@ -121,34 +112,32 @@
               }
             },
             $plugins: [{ module: 'rest/wire' }]
-          };
+          }
           return wire(spec, { require: require }).then(function (spec) {
-            assert.same(client, spec.client.skip());
+            assert.same(client, spec.client.skip())
             spec.client().then(function (response) {
-              assert.equals('thePrefix', response.request.path);
-            });
-          })['catch'](fail);
+              assert.equals('thePrefix', response.request.path)
+            })
+          })['catch'](fail)
         },
         'using the default client': function () {
-          var spec;
-          spec = {
+          var spec = {
             client: {
               rest: [
                 'rest/interceptor/pathPrefix'
               ]
             },
             $plugins: [{ module: 'rest/wire' }]
-          };
+          }
           return wire(spec, { require: require }).then(function (spec) {
-            assert.same(rest, spec.client.skip());
-          })['catch'](fail);
+            assert.same(rest, spec.client.skip())
+          })['catch'](fail)
         },
         'using a referenced parent client': function () {
-          var spec, client;
-          client = function (request) {
-            return { request: request };
-          };
-          spec = {
+          var client = function (request) {
+            return { request: request }
+          }
+          var spec = {
             client: {
               rest: {
                 parent: { $ref: 'parentClient' },
@@ -159,17 +148,16 @@
             },
             parentClient: client,
             $plugins: [{ module: 'rest/wire' }]
-          };
+          }
           return wire(spec, { require: require }).then(function (spec) {
-            assert.same(client, spec.client.skip());
-          })['catch'](fail);
+            assert.same(client, spec.client.skip())
+          })['catch'](fail)
         },
         'wiring interceptor configurations': function () {
-          var spec, client;
-          client = function (request) {
-            return { request: request };
-          };
-          spec = {
+          var client = function (request) {
+            return { request: request }
+          }
+          var spec = {
             client: {
               rest: {
                 parent: client,
@@ -182,27 +170,26 @@
               literal: { prefix: 'useThisOne' }
             },
             $plugins: [{ module: 'rest/wire' }]
-          };
+          }
           return wire(spec, { require: require }).then(function (spec) {
-            assert.same(client, spec.client.skip());
+            assert.same(client, spec.client.skip())
             spec.client().then(function (response) {
-              assert.equals('useThisOne', response.request.path);
-            });
-          })['catch'](fail);
+              assert.equals('useThisOne', response.request.path)
+            })
+          })['catch'](fail)
         }
       }
-    });
-
-  });
-
+    })
+  })
 }(
   this.buster || require('buster'),
   typeof define === 'function' && define.amd ? define : function (id, factory) {
-    var packageName = id.split(/[\/\-]/)[0], pathToRoot = id.replace(/[^\/]+/g, '..');
-    pathToRoot = pathToRoot.length > 2 ? pathToRoot.substr(3) : pathToRoot;
+    var packageName = id.split(/[\/\-]/)[0]
+    var pathToRoot = id.replace(/[^\/]+/g, '..')
+    pathToRoot = pathToRoot.length > 2 ? pathToRoot.substr(3) : pathToRoot
     factory(function (moduleId) {
-      return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId);
-    });
+      return require(moduleId.indexOf(packageName) === 0 ? pathToRoot + moduleId.substr(packageName.length) : moduleId)
+    })
   }
   // Boilerplate for AMD and Node
-));
+))

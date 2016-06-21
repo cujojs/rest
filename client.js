@@ -5,7 +5,7 @@
  * @author Scott Andrews
  */
 
-'use strict';
+'use strict'
 
 /**
  * Add common helper methods to a client impl
@@ -14,17 +14,14 @@
  * @param {Client} [target] target of this client, used when wrapping other clients
  * @returns {Client} the client impl with additional methods
  */
-module.exports = function client(impl, target) {
-
+module.exports = function client (impl, target) {
   if (target) {
-
     /**
      * @returns {Client} the target client
      */
-    impl.skip = function skip() {
-      return target;
-    };
-
+    impl.skip = function skip () {
+      return target
+    }
   }
 
   /**
@@ -34,21 +31,20 @@ module.exports = function client(impl, target) {
    * @param [config] configuration for the interceptor
    * @returns {Client} the newly wrapped client
    */
-  impl.wrap = function wrap(interceptor, config) {
-    return interceptor(impl, config);
-  };
+  impl.wrap = function wrap (interceptor, config) {
+    return interceptor(impl, config)
+  }
 
   /**
    * @deprecated
    */
-  impl.chain = function chain() {
+  impl.chain = function chain () {
     if (typeof console !== 'undefined') {
-      console.log('rest.js: client.chain() is deprecated, use client.wrap() instead');
+      console.log('rest.js: client.chain() is deprecated, use client.wrap() instead')
     }
 
-    return impl.wrap.apply(this, arguments);
-  };
+    return impl.wrap.apply(this, arguments)
+  }
 
-  return impl;
-
-};
+  return impl
+}
