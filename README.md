@@ -148,7 +148,7 @@ Tested environments:
 - Safari (8-9, iOS 8-9, should work in earlier versions)
 - Android (4.3-5, should work in earlier versions)
 
-Specific browser test are provided by [Travis CI](https://travis-ci.org/cujojs/rest) and [Sauce Labs' Open Sauce Plan](https://saucelabs.com/opensource). You can see [specific browser test results](https://saucelabs.com/u/cujojs-rest), although odds are they do not reference this specific release/branch/commit.
+Specific browser test are provided by [Travis CI](https://travis-ci.org/cujojs/rest) and [BrowserStack](https://www.browserstack.com).
 
 
 Getting Started
@@ -237,6 +237,7 @@ Change Log
 .next
 - Cancel requests via the `cancel` method on the response promise
 - Switch linter to eslint and the JavaScript Standard Style rules
+- Switch to BrowserStack from SauceLabs for in browser testing
 
 2.0.0
 - MAJOR: Drop hard when.js dependency in favor of ES6 Promise API. See https://github.com/cujojs/when/blob/master/docs/es6-promise-shim.md to use when.js as an ES6 Promise polyfill.

@@ -39,10 +39,12 @@
   ],
   "dependencies": {},
   "devDependencies": {
+    "browserstack-local": "^1.0.0",
     "curl": "https://github.com/cujojs/curl/tarball/0.7.3",
     "eslint": "^2.13.1",
     "eslint-config-standard": "^5.3.1",
     "poly": "https://github.com/cujojs/poly/tarball/0.5.1",
+    "selenium-webdriver": "^2.53.3",
     "test-support": "~0.4",
     "when": "~3",
     "wire": "~0.9"
@@ -59,6 +61,7 @@
     "tunnel": "sauceme -m",
     "lint": "eslint .",
     "buster": "buster test --node",
-    "sauceme": "sauceme"
+    "sauceme": "sauceme",
+    "browserstack": "node test/selenium-runner.js"
   }
 }

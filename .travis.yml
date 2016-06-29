@@ -1,75 +1,66 @@
----
 language: node_js
 before_install: npm config set ca ''
 env:
   global:
   - BUSTER_TEST_OPT='--reporter specification'
-  - SAUCE_USERNAME=cujojs-rest
-  - SAUCE_ACCESS_KEY='083602fa-1a26-4c55-af2a-9d64a27f546e'
-  - PORT=8000
+  - secure: MVBMvpr37GCdEvm781rl8I1IPvHl8FDFX18valXCTHI+lj0xoAfJgpEFsb0opthnsptC5OmMDgnLCz8+WHm/8yO2Z6oySOAQJL009qZ/FnvZVjWEes2bPhi+7sf4wb4V8+1uvf1aDWlxJMSyabB9P5wR2b6kQAxgwMh1C+lhZTc=
+  - secure: CRvgE3MTh0CF9Ez7QJIhRCfE7RncFfN1DH0qdHjd2JobfTzRSMY917m0zqKIFoJ24vFE7aHAnq9EsaBQCZpi3w2M9I4OAHIMzMy18YtheKEzW0cyH9lKRnOgBI8DodNulJtYj9xj4eSzPkyfUmsTqNq8MChlEeurgbMSwPh/qb0=
 cache:
   directories:
   - node_modules
 sudo: false
 matrix:
   include:
-    - node_js: '0.10'
-      script: 'travis_retry npm run-script lint'
-    - node_js: '0.10'
-      script: 'travis_retry npm run-script buster'
-    - node_js: '4'
-      script: 'travis_retry npm run-script buster'
-    - node_js: '6'
-      script: 'travis_retry npm run-script buster'
-    - node_js: '0.10'
-      script: 'travis_retry npm run-script sauceme'
-      env:
-        - BROWSERS=test/browsers/chrome.json
-    - node_js: '0.10'
-      script: 'travis_retry npm run-script sauceme'
-      env:
-        - BROWSERS=test/browsers/firefox.json
-    - node_js: '0.10'
-      script: 'travis_retry npm run-script sauceme'
-      env:
-        - BROWSERS=test/browsers/firefox-45.json
-    - node_js: '0.10'
-      script: 'travis_retry npm run-script sauceme'
-      env:
-        - BROWSERS=test/browsers/firefox-38.json
-    - node_js: '0.10'
-      script: 'travis_retry npm run-script sauceme'
-      env:
-        - BROWSERS=test/browsers/edge.json
-    - node_js: '0.10'
-      script: 'npm run-script sauceme'
-      env:
-        - BROWSERS=test/browsers/ie-11.json
-    - node_js: '0.10'
-      script: 'travis_retry npm run-script sauceme'
-      env:
-        - BROWSERS=test/browsers/safari-9.json
-    - node_js: '0.10'
-      script: 'npm run-script sauceme'
-      env:
-        - BROWSERS=test/browsers/safari-8.json
-    - node_js: '0.10'
-      script: 'travis_retry npm run-script sauceme'
-      env:
-        - BROWSERS=test/browsers/ios-9.2.json
-    - node_js: '0.10'
-      script: 'travis_retry npm run-script sauceme'
-      env:
-        - BROWSERS=test/browsers/ios-8.4.json
-    - node_js: '0.10'
-      script: 'travis_retry npm run-script sauceme'
-      env:
-        - BROWSERS=test/browsers/android-5.1.json
-    - node_js: '0.10'
-      script: 'travis_retry npm run-script sauceme'
-      env:
-        - BROWSERS=test/browsers/android-4.4.json
-    - node_js: '0.10'
-      script: 'travis_retry npm run-script sauceme'
-      env:
-        - BROWSERS=test/browsers/android-4.3.json
+  - node_js: '4'
+    script: travis_retry npm run-script lint
+  - node_js: '0.10'
+    script: travis_retry npm run-script buster
+  - node_js: '4'
+    script: travis_retry npm run-script buster
+  - node_js: '6'
+    script: travis_retry npm run-script buster
+  - node_js: '4'
+    script: travis_retry npm run-script browserstack
+    env:
+    - BROWSER_NAME=chrome
+  - node_js: '4'
+    script: travis_retry npm run-script browserstack
+    env:
+    - BROWSER_NAME=firefox
+  - node_js: '4'
+    script: travis_retry npm run-script browserstack
+    env:
+    - BROWSER_NAME=firefox
+    - BROWSER_VERSION=45
+  - node_js: '4'
+    script: travis_retry npm run-script browserstack
+    env:
+    - BROWSER_NAME=firefox
+    - BROWSER_VERSION=38
+  - node_js: '4'
+    script: travis_retry npm run-script browserstack
+    env:
+    - BROWSER_NAME=edge
+  - node_js: '4'
+    script: npm run-script browserstack
+    env:
+    - BROWSER_NAME="internet explorer"
+    - BROWSER_VERSION=11
+  - node_js: '4'
+    script: travis_retry npm run-script browserstack
+    env:
+    - BROWSER_NAME=safari
+    - BROWSER_VERSION=9
+  - node_js: '4'
+    script: npm run-script browserstack
+    env:
+    - BROWSER_NAME=safari
+    - BROWSER_VERSION=8
+  - node_js: '4'
+    script: travis_retry npm run-script browserstack
+    env:
+    - BROWSER_NAME=iPad
+  - node_js: '4'
+    script: travis_retry npm run-script browserstack
+    env:
+    - BROWSER_NAME=android

@@ -4,6 +4,7 @@
 .idea
 .project
 .settings
+/browserstack.err
+/local.log
 /node_modules
 /npm-debug.log
-/sauce_connect.log*
