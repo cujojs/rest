@@ -53,7 +53,7 @@
 
  /**
   * Extended when.js Promises/A+ promise with HTTP specific helpers
-  *q
+  *
   * @method entity promise for the HTTP entity
   * @method status promise for the HTTP status code
   * @method headers promise for the HTTP response headers
