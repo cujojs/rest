@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors
+ * Copyright 2015-2018 the original author or authors
  * @license MIT, see LICENSE.txt for details
  *
  * @author Scott Andrews
@@ -34,7 +34,7 @@ module.exports = interceptor({
 
   request: function (request, config) {
     var template = request.path || config.template
-    var params = mixin({}, request.params, config.params)
+    var params = mixin({}, config.params, request.params)
 
     request.path = uriTemplate.expand(template, params)
     delete request.params

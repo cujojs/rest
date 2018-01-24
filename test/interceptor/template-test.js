@@ -64,6 +64,15 @@
       },
       'should support interceptor wrapping': function () {
         assert(typeof template().wrap === 'function')
+      },
+      'should support config params override by request params': function () {
+        var config = { params: { lang: 'en-us', term: 'hypermedia' } }
+        var client = template(parent, config)
+
+        return client({ path: 'http://example.com/dictionary{/term:1,term}{?lang}', params: { term: 'contribution' } }).then(function (response) {
+          assert.same('http://example.com/dictionary/c/contribution?lang=en-us', response.request.path)
+          refute('params' in response.request)
+        })['catch'](fail)
       }
     })
   })
