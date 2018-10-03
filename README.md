@@ -1,6 +1,8 @@
 rest.js
 =======
 
+Note: rest.js is not actively maintained.
+
 Just enough client, as you need it.  Make HTTP requests from a browser or Node.js applying only the client features you need.  Configure a client once, and share it safely throughout your application.  Easily extend with interceptors that wrap the request and/or response, or MIME type converters for rich data formats.
 
 
